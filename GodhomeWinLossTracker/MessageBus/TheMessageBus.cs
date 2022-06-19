@@ -16,10 +16,11 @@ namespace GodhomeWinLossTracker.MessageBus
 
             _handlers = new IHandler[]
             {
-                new BossSceneRecognizer(),
+                new BossChangeDetector(),
                 new Logger(),
-                new FightWinLossGenerator(),
-                new WinLossStatsTracker(mod),
+                new SequenceChangeDetector(),
+                new WinLossGenerator(),
+                new WinLossTracker(mod),
             };
 
             _messages = new();

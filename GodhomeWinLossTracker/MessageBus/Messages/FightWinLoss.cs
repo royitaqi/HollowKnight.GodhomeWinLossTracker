@@ -9,6 +9,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
 {
     internal class FightWinLoss : IMessage
     {
+        public string SequenceName { get; set; }
         public string BossName { get; set; }
         public bool WinLoss { get; set; }
         public bool Registered { get; set; }
@@ -18,7 +19,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
             Debug.Assert(BossName != null);
             string verb = WinLoss ? "Won" : "Lost to";
             string registry = Registered ? " (registered)" : "";
-            return $"{verb} {BossName}{registry}";
+            return $"{verb} {BossName} in {SequenceName}{registry}";
         }
     }
 }

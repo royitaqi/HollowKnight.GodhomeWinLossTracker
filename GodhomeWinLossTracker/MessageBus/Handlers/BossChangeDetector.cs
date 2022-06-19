@@ -8,7 +8,7 @@ using GodhomeWinLossTracker.MessageBus.Messages;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class BossSceneRecognizer: IHandler
+    internal class BossChangeDetector: IHandler
     {
         public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage msg)
         {

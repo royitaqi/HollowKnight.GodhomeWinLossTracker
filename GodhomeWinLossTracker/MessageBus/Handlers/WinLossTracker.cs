@@ -9,9 +9,9 @@ using GodhomeWinLossTracker.MessageBus.Messages;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class WinLossStatsTracker : IHandler
+    internal class WinLossTracker : IHandler
     {
-        public WinLossStatsTracker(GodhomeWinLossTracker mod)
+        public WinLossTracker(GodhomeWinLossTracker mod)
         {
             _mod = mod;
         }
@@ -23,7 +23,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 FightWinLoss msg = message as FightWinLoss;
                 if (!msg.Registered)
                 {
-                    _mod.localData.RegisterWinLoss(logger, "HoG", msg.BossName, msg.WinLoss);
+                    _mod.localData.RegisterWinLoss(logger, msg.SequenceName, msg.BossName, msg.WinLoss);
 
                     // Put the message back as registered (for logging purpose).
                     msg.Registered = true;
