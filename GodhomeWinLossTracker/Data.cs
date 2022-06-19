@@ -8,7 +8,6 @@ namespace GodhomeWinLossTracker
     [Serializable]
     public class LocalData
     {
-        [Serializable]
         public class WinLoss
         {
             public int Win;
