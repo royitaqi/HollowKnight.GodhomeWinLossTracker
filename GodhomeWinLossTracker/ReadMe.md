@@ -20,3 +20,15 @@ A mod to for the game Hollow Knight. Improves p1-p5 training experience by track
 * Display stats in mod menu.
   * Allow changing stats in mod menu.
 * Add a UI in HoG and next to each pantheon to display win rates.
+* [/] See if TKDeath can be tracked by using the `AfterPlayerDeadHook`. See following example.
+
+```
+ModHooks.AfterPlayerDeadHook += ModHooks_AfterPlayerDeadHook;
+        }
+
+        private void ModHooks_AfterPlayerDeadHook()
+        {
+            PlayerData.instance.SetBool("soulLimited", false);
+            //PlayMakerFSM.BroadcastEvent("SOUL LIMITER DOWN");
+        }
+```

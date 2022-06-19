@@ -33,6 +33,7 @@ namespace GodhomeWinLossTracker
 
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
             ModHooks.HeroUpdateHook += OnHeroUpdate;
+            ModHooks.AfterPlayerDeadHook += OnPlayerDeath;
             On.BossSceneController.EndBossScene += OnEndBossScene;
 
             ModDisplay.Initialize();
@@ -56,6 +57,7 @@ namespace GodhomeWinLossTracker
 
             ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
+            ModHooks.AfterPlayerDeadHook -= OnPlayerDeath;
             On.BossSceneController.EndBossScene -= OnEndBossScene;
 
             Log("Unloaded");
@@ -138,6 +140,11 @@ namespace GodhomeWinLossTracker
                 Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
                 ModDisplay.instance.Redraw();
             }
+        }
+
+        private void OnPlayerDeath()
+        {
+            messageBus.Put(new TKDeath());
         }
 
         private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
