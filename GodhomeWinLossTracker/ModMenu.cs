@@ -13,12 +13,7 @@ namespace GodhomeWinLossTracker
         {
             return new Menu("Godhome Win Loss Tracker", new Element[]
             {
-                toggle.CreateToggle("Mod toggle", "Allows disabling the mod"),
-                new MenuButton(
-                    "Export Stats",
-                    "",
-                    _ => ExportStats()
-                ),
+                toggle.CreateToggle("Mod toggle", "Allows disabling the mod")
             });
         }
 
@@ -30,13 +25,5 @@ namespace GodhomeWinLossTracker
             }
             return _menuRef.GetMenuScreen(lastMenu);
         }
-
-        public static void ExportStats()
-        {
-            GodhomeWinLossTracker.instance.Log("Exporting stats");
-
-            GodhomeWinLossTracker.instance.Log("Exported stats");
-        }
-
     }
 }

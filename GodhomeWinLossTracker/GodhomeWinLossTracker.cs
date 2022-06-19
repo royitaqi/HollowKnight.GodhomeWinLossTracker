@@ -21,7 +21,7 @@ namespace GodhomeWinLossTracker
         /// Mod
         ///
 
-        public override string GetVersion() => "v0.0.0.3";
+        public override string GetVersion() => "0.0.3";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
             Log("Initializing mod");

@@ -1,8 +1,3 @@
-# GodhomeWinLossTracker
-
-A mod to for the game Hollow Knight. Improves p1-p5 training experience by tracking win/loss events and rates in Hall of Gods and each pantheons.
-
-
 # TODOs
 
 * [x] Add a mod menu containing one button "Export Stats".
@@ -15,7 +10,7 @@ A mod to for the game Hollow Knight. Improves p1-p5 training experience by track
   * [x] Detect pantheons
   * Detect p1-p5
 * [x] Display UI when registering a win/loss.
-  * Hide UI after a few seconds
+  * [x] Hide UI after a few seconds
   * Add a gray half-transparent background (similar to PantheonsHitCounter)
 * Display stats in mod menu.
   * Allow changing stats in mod menu.
