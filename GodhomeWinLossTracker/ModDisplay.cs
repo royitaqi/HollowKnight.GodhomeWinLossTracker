@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Linq;
+using System.Collections;
+using System.Threading.Tasks;
 using Modding;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,14 +12,16 @@ namespace GodhomeWinLossTracker
         internal static ModDisplay instance;
         private GameObject _canvas;
 
-        public string Text { get; set; }
         private Vector2 TextSize = new(200, 100);
-        private Vector2 TextPosition = new(0.1f, 0.1f); //  + new Vector2(-0.025f, 0.05f)
+        public Vector2 TextPosition = new(0.12f, 0.04f);
+
+        public string Text = "Godhome Win Loss Tracker";
+        public TimeSpan NotificationDuration = TimeSpan.FromSeconds(6);
+        private DateTime _fadeOutTime;
 
         public static void Initialize()
         {
             instance = new ModDisplay();
-            instance.Text = "";
         }
 
         public void Create()
@@ -64,20 +67,25 @@ namespace GodhomeWinLossTracker
             Create();
         }
 
+        public void Notify(string text)
+        {
+            GodhomeWinLossTracker.instance.Log($"ModDisplay::Notify() now={DateTime.Now}");
+            Text = text;
+            _fadeOutTime = DateTime.Now + NotificationDuration;
+            GodhomeWinLossTracker.instance.Log($"ModDisplay::Notify() fadeOut={_fadeOutTime}");
+            Redraw();
 
+            Task.Delay(NotificationDuration).ContinueWith(t => Unnotify());
+        }
 
-        //public void BuildUI()
-        //{
-        //    canvas = new GameObject();
-        //    canvas.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-        //    var scaler = canvas.AddComponent<CanvasScaler>();
-        //    scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        //    scaler.referenceResolution = new Vector2(1920f, 1080f);
-        //    canvas.AddComponent<GraphicRaycaster>();
-
-        //    text = new UI.CanvasText(canvas, new Vector2(500, 500), new Vector2(200, 200), arial, "SOME EXAMPLE TEXT");
-
-        //    DontDestroyOnLoad(canvas);
-        //}
+        private void Unnotify()
+        {
+            GodhomeWinLossTracker.instance.Log($"ModDisplay::Unnotify() woke up {DateTime.Now}");
+            if (DateTime.Now > _fadeOutTime)
+            {
+                GodhomeWinLossTracker.instance.Log($"ModDisplay::Unnotify() destroying");
+                Destroy();
+            }
+        }
     }
 }

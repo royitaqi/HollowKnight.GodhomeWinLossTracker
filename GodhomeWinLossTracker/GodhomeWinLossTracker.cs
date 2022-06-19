@@ -98,6 +98,46 @@ namespace GodhomeWinLossTracker
             {
                 ModDisplay.instance.Hide();
             }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                ModDisplay.instance.Notify("Godhome Win Loss Tracker");
+            }
+            else if (Input.GetKeyDown(KeyCode.F))
+            {
+                ModDisplay.instance.TextPosition = new Vector2(
+                    ModDisplay.instance.TextPosition.x - 0.01f,
+                    ModDisplay.instance.TextPosition.y
+                );
+                Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                ModDisplay.instance.Redraw();
+            }
+            else if (Input.GetKeyDown(KeyCode.H))
+            {
+                ModDisplay.instance.TextPosition = new Vector2(
+                    ModDisplay.instance.TextPosition.x + 0.01f,
+                    ModDisplay.instance.TextPosition.y
+                );
+                Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                ModDisplay.instance.Redraw();
+            }
+            else if (Input.GetKeyDown(KeyCode.T))
+            {
+                ModDisplay.instance.TextPosition = new Vector2(
+                    ModDisplay.instance.TextPosition.x,
+                    ModDisplay.instance.TextPosition.y + 0.01f
+                );
+                Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                ModDisplay.instance.Redraw();
+            }
+            else if (Input.GetKeyDown(KeyCode.G))
+            {
+                ModDisplay.instance.TextPosition = new Vector2(
+                    ModDisplay.instance.TextPosition.x,
+                    ModDisplay.instance.TextPosition.y - 0.01f
+                );
+                Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                ModDisplay.instance.Redraw();
+            }
         }
 
         private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)

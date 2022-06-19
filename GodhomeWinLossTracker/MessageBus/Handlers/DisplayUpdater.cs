@@ -15,8 +15,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             if (message is RegisteredFightWinLoss)
             {
-                ModDisplay.instance.Text = (message as RegisteredFightWinLoss).InnerMessage.ToString();
-                ModDisplay.instance.Redraw();
+                ModDisplay.instance.Notify((message as RegisteredFightWinLoss).InnerMessage.ToString());
             }
         }
     }
