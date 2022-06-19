@@ -17,6 +17,7 @@ namespace GodhomeWinLossTracker.MessageBus
             _handlers = new IHandler[]
             {
                 new BossChangeDetector(),
+                new DisplayUpdater(),
                 new Logger(),
                 new SequenceChangeDetector(),
                 new WinLossGenerator(),
@@ -24,6 +25,7 @@ namespace GodhomeWinLossTracker.MessageBus
             };
 
             _messages = new();
+            _processing = false;
 
             this.Put(new BusEvent { Event = "initialized" });
         }
@@ -32,18 +34,24 @@ namespace GodhomeWinLossTracker.MessageBus
         {
             _messages.Enqueue(message);
 
-            while (_messages.Count() != 0)
+            if (!_processing)
             {
-                IMessage msg = _messages.Dequeue();
-                foreach (IHandler handler in _handlers)
+                _processing = true;
+                while (_messages.Count() != 0)
                 {
-                    handler.OnMessage(this, _logger, msg);
+                    IMessage msg = _messages.Dequeue();
+                    foreach (IHandler handler in _handlers)
+                    {
+                        handler.OnMessage(this, _logger, msg);
+                    }
                 }
+                _processing = false;
             }
         }
 
         private IHandler[] _handlers;
         private Queue<IMessage> _messages;
         private Modding.Loggable _logger;
+        private bool _processing;
     }
 }

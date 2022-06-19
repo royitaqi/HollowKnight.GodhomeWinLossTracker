@@ -35,6 +35,8 @@ namespace GodhomeWinLossTracker
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.BossSceneController.EndBossScene += OnEndBossScene;
 
+            ModDisplay.Initialize();
+
             Log("Initialized mod");
         }
 
@@ -75,6 +77,26 @@ namespace GodhomeWinLossTracker
             {
                 string json = JsonConvert.SerializeObject(localData);
                 Log("Current local data: " + json);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                ModDisplay.instance.Create();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                ModDisplay.instance.Destroy();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                ModDisplay.instance.Redraw();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                ModDisplay.instance.Show();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                ModDisplay.instance.Hide();
             }
         }
 

@@ -21,14 +21,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (message is FightWinLoss)
             {
                 FightWinLoss msg = message as FightWinLoss;
-                if (!msg.Registered)
-                {
-                    _mod.localData.RegisterWinLoss(logger, msg.SequenceName, msg.BossName, msg.WinLoss);
+                _mod.localData.RegisterWinLoss(logger, msg.SequenceName, msg.BossName, msg.WinLoss);
 
-                    // Put the message back as registered (for logging purpose).
-                    msg.Registered = true;
-                    bus.Put(msg);
-                }
+                // Put the message back as registered. This should allow display a UI notification in the game.
+                bus.Put(new RegisteredFightWinLoss { InnerMessage = msg });
             }
         }
 
