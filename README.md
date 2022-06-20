@@ -12,11 +12,14 @@ Whenever the mod detects a win/loss, it shows a small notification at the bottom
 ![example](https://user-images.githubusercontent.com/14790745/174503620-b0abda40-e43f-4e45-bbdb-0d59eb18007d.png)
 
 
-## Find your win/loss stats
+## Find (and update) your win/loss stats
 
-When "Save & Quit", the mod automatically saves stats into the `userX.modded.json` files in your save folder (`X = 1..4`).
+When "Save & Quit", the mod automatically saves stats into the `userX.modded.json` files in your save folder (X = 1..4).
 
 ![example2](https://user-images.githubusercontent.com/14790745/174503737-971c36de-980c-406c-b050-cae6fba8f90f.png)
+
+
+To update the stats, first "Save & Quit", then modify the stats in the `userX.modded.json` files and save the files. The updated stats will be loaded automatically the next time the Hollow Knight save is loaded.
 
 
 ## Turn mod on/off
