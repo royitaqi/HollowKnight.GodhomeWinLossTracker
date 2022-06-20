@@ -43,12 +43,6 @@ namespace GodhomeWinLossTracker
         {
             Debug.Assert(IsBossScene(bossSceneName), "bossSceneName should be passed in valid, i.e. a boss scene");
 
-            // p5
-            if (previousSceneName == "GG_Atrium_Roof" && Array.IndexOf(PantheonBossSceneNames[4], bossSceneName) != -1)
-            {
-                return 4;
-            }
-
             // p1-4
             if (previousSceneName == "GG_Boss_Door_Entrance")
             {
@@ -59,6 +53,16 @@ namespace GodhomeWinLossTracker
                         return p;
                     }
                 }
+            }
+            // p5
+            // Note: One would normally also gate by the condition `previousSceneName == "GG_Atrium_Roof"`.
+            // However, there is an unexpected extra load of the scene GG_Atrium after GG_Atrium_Roof, which messes up with the above condition.
+            // See https://github.com/Clazex/HollowKnight.GodSeekerPlus/issues/30
+            // For now, the workaround is to condition on either scenes after p1-4 have been looked at.
+            else if ((previousSceneName == "GG_Atrium_Roof" || previousSceneName == "GG_Atrium") &&
+                Array.IndexOf(PantheonBossSceneNames[4], bossSceneName) != -1)
+            {
+                return 4;
             }
 
             return null;
