@@ -1,6 +1,6 @@
 # HollowKnight.GodhomeWinLossTracker
 
-GodhomeWinLossTracker is a mod for the game Hollow Knight. It's goal is to improve boss fight training experience in Godhome by tracking per-boss win/loss counts for Hall of Gods and pantheons.
+GodhomeWinLossTracker is a mod for the game Hollow Knight. Its goal is to improve boss fight training experience in Godhome by tracking per-boss win/loss counts for Hall of Gods and pantheons.
 
 The mod is fully automated. It recognizes boss fights, understands which boss is involved, detects win/loss events and tracks running stats.
 
@@ -26,6 +26,5 @@ The mod can be turned on/off from the "Mods" menu.
 
 ## Known bugs / limitations
 
-* Cannot distinguish between p1-5. Planned to support.
-* Boss names (both displayed and saved) are from scene names. They can be different from in-game boss names.
+* Boss names (both displayed and saved) are from scene names. They can be different from in-game localized boss names.
   * E.g. Soul Warrior reads "Mage Knight", Oro & Mato reads "Nailmasters", Hornet Protector reads "Hornet 1", etc

@@ -6,7 +6,7 @@
 * Detect sequence name (HoG, P1-P5)
   * [x] Detect HoG
   * [x] Detect pantheons
-  * Detect p1-p5
+  * [x] Detect p1-p5
 * [x] Display UI when registering a win/loss.
   * [x] Hide UI after a few seconds
   * Add a gray half-transparent background (similar to PantheonsHitCounter)
