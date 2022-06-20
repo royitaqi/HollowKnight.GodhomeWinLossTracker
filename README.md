@@ -28,5 +28,4 @@ The mod can be turned on/off from the "Mods" menu.
 
 * Bug: In some situations, win/loss detection can be wrong.
   * Dying in a fight after killing the boss might be detected as a win. E.g. source of damanage: hazards, minions, projectiles.
-  * When a boss fight contains multiple bosses, win might be detected pre-maturely and multiple times. E.g. Oro & Mato, Vengefly Kings, Oblobbles, Mantis Lords/SoB, God Tamer, Watcher Knights.
 * Limitation: Boss names are displayed in English. No localization yet.
