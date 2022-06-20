@@ -24,19 +24,8 @@ namespace GodhomeWinLossTracker
                 return null;
             }
 
-            // Remove the "GG_" prefix.
-            if (sceneName.StartsWith("GG_"))
-            {
-                sceneName = sceneName.Substring(3);
-            }
-            // Remove the potential "_V" suffix.
-            // This suffix appears for some ascended HoG boss fights which has special arena and/or minions (e.g. The Collector, No Eyes, Soul Warrior, etc).
-            if (sceneName.EndsWith("_V"))
-            {
-                sceneName = sceneName.Substring(0, sceneName.Length - 2);
-            }
-            // Make boss name nicer to look at.
-            return sceneName.Replace("_", " ");
+            Debug.Assert(BossSceneToName.ContainsKey(sceneName), $"Boss scene name {sceneName} should exist in BossSceneToName");
+            return BossSceneToName[sceneName];
         }
 
         private static int? GetPantheonIndex(string previousSceneName, string bossSceneName)
@@ -205,6 +194,65 @@ namespace GodhomeWinLossTracker
                 "GG_Hollow_Knight"     ,
                 "GG_Radiance"          ,
             },
+        };
+
+        private static readonly Dictionary<string, string> BossSceneToName = new()
+        {
+            { "GG_Broken_Vessel", "Broken Vessel" },
+            { "GG_Brooding_Mawlek", "Brooding Mawlek" },
+            { "GG_Brooding_Mawlek_V", "Brooding Mawlek" },
+            { "GG_Collector", "The Collector" },
+            { "GG_Collector_V", "The Collector" },
+            { "GG_Crystal_Guardian", "Crystal Guardian" },
+            { "GG_Crystal_Guardian_2", "Enraged Guardian" },
+            { "GG_Dung_Defender", "Dung Defender" },
+            { "GG_Failed_Champion", "Failed Champion" },
+            { "GG_False_Knight", "False Knight" },
+            { "GG_Flukemarm", "Flukemarm" },
+            { "GG_Ghost_Galien", "Galien" },
+            { "GG_Ghost_Gorb", "Gorb" },
+            { "GG_Ghost_Gorb_V", "Gorb" },
+            { "GG_Ghost_Hu", "Elder Hu" },
+            { "GG_Ghost_Markoth", "Markoth" },
+            { "GG_Ghost_Markoth_V", "Markoth" },
+            { "GG_Ghost_Marmu", "Marmu" },
+            { "GG_Ghost_Marmu_V", "Marmu" },
+            { "GG_Ghost_No_Eyes", "No Eyes" },
+            { "GG_Ghost_No_Eyes_V", "No Eyes" },
+            { "GG_Ghost_Xero", "Xero" },
+            { "GG_Ghost_Xero_V", "Xero" },
+            { "GG_God_Tamer", "God Tamer" },
+            { "GG_Grey_Prince_Zote", "Grey Prince Zote" },
+            { "GG_Grimm", "Troupe Master Grimm" },
+            { "GG_Grimm_Nightmare", "Nightmare King Grimm" },
+            { "GG_Gruz_Mother", "Gruz Mother" },
+            { "GG_Gruz_Mother_V", "Gruz Mother" },
+            { "GG_Hive_Knight", "Hive Knight" },
+            { "GG_Hollow_Knight", "Pure Vessel" },
+            { "GG_Hornet_1", "Hornet (Protector)" },
+            { "GG_Hornet_2", "Hornet (Sentinel)" },
+            { "GG_Lost_Kin", "Lost Kin" },
+            { "GG_Mage_Knight", "Soul Warrior" },
+            { "GG_Mage_Knight_V", "Soul Warrior" },
+            { "GG_Mantis_Lords", "Mantis Lords" },
+            { "GG_Mantis_Lords_V", "Sisters of Battle" },
+            { "GG_Mega_Moss_Charger", "Massive Moss Charger" },
+            { "GG_Nailmasters", "Brothers Oro & Mato" },
+            { "GG_Nosk", "Nosk" },
+            { "GG_Nosk_Hornet", "Winged Nosk" },
+            { "GG_Oblobbles", "Oblobbles" },
+            { "GG_Painter", "Paintmaster Sheo" },
+            { "GG_Radiance", "Absolute Radiance" },
+            { "GG_Sly", "Great Nailsage Sly" },
+            { "GG_Soul_Master", "Soul Master" },
+            { "GG_Soul_Tyrant", "Soul Tyrant" },
+            { "GG_Traitor_Lord", "Traitor Lord" },
+            { "GG_Uumuu", "Uumuu" },
+            { "GG_Uumuu_V", "Uumuu" },
+            { "GG_Vengefly", "Vengefly King" },
+            { "GG_Vengefly_V", "Vengefly King" },
+            { "GG_Watcher_Knights", "Watcher Knight" },
+            { "GG_White_Defender", "White Defender" },
         };
     }
 }
