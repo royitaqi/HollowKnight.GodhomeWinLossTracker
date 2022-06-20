@@ -14,7 +14,7 @@ namespace GodhomeWinLossTracker.MessageBus
         {
             _logger = mod;
 
-            _handlers = new IHandler[]
+            _handlers = new List<IHandler>
             {
                 new BossChangeDetector(),
                 new DisplayUpdater(),
@@ -23,7 +23,7 @@ namespace GodhomeWinLossTracker.MessageBus
                 new WinLossTracker(mod),
             };
 #if DEBUG
-            _handlers.Append(new Logger());
+            _handlers.Add(new Logger());
 #endif
 
             _messages = new();
@@ -51,7 +51,7 @@ namespace GodhomeWinLossTracker.MessageBus
             }
         }
 
-        private IHandler[] _handlers;
+        private List<IHandler> _handlers;
         private Queue<IMessage> _messages;
         private Modding.Loggable _logger;
         private bool _processing;
