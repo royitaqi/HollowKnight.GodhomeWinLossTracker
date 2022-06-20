@@ -15,7 +15,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (msg is SceneChange)
             {
                 string sceneName = (msg as SceneChange).Name;
-                Debug.Assert(sceneName != null);
+                DevUtils.Assert(sceneName != null, "sceneName shouldn't be null");
 
                 string bossName = GodhomeUtils.GetNullableBossName(sceneName);
                 if (bossName != null)

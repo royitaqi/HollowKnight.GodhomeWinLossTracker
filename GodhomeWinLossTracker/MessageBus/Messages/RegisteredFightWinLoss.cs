@@ -13,7 +13,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
 
         public override string ToString()
         {
-            Debug.Assert(InnerMessage != null);
+            DevUtils.Assert(InnerMessage != null, "InnerMessage shouldn't be null");
             return $"{InnerMessage} (registered)";
         }
     }

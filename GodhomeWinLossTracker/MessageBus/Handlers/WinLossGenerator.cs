@@ -15,7 +15,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (message is SequenceChange)
             {
                 SequenceChange msg = message as SequenceChange;
-                Debug.Assert(msg.Name != null);
+                DevUtils.Assert(msg.Name != null, "Sequence name shouldn't be null");
                 _currentSequence = msg.Name;
             }
             else if (message is BossChange)
@@ -42,7 +42,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (message is BossDeath)
             {
-                Debug.Assert(_currentBoss != null, "Shouldn't see boss death event when there is no current boss");
+                DevUtils.Assert(_currentBoss != null, "Shouldn't see boss death event when there is no current boss");
                 _currentKillsRequiredToWin--;
 
                 // Achieving the required deaths to win. Mark a win.

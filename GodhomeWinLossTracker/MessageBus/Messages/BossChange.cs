@@ -7,8 +7,8 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
         public BossChange() { }
         public BossChange(string bossName, string sceneName)
         {
-            Debug.Assert(BossName != null);
-            Debug.Assert(SceneName != null);
+            DevUtils.Assert(bossName != null, "bossName shouldn't be null");
+            DevUtils.Assert(sceneName != null, "sceneName shouldn't be null");
 
             BossName = bossName;
             SceneName = sceneName;

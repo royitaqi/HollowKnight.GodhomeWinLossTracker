@@ -24,13 +24,13 @@ namespace GodhomeWinLossTracker
                 return null;
             }
 
-            Debug.Assert(BossSceneToName.ContainsKey(sceneName), $"Boss scene name {sceneName} should exist in BossSceneToName");
+            DevUtils.Assert(BossSceneToName.ContainsKey(sceneName), $"Boss scene name {sceneName} should exist in BossSceneToName");
             return BossSceneToName[sceneName];
         }
 
         private static int? GetPantheonIndex(string previousSceneName, string bossSceneName)
         {
-            Debug.Assert(IsBossScene(bossSceneName), "bossSceneName should be passed in valid, i.e. a boss scene");
+            DevUtils.Assert(IsBossScene(bossSceneName), "bossSceneName should be passed in valid, i.e. a boss scene");
 
             // p1-4
             if (previousSceneName == "GG_Boss_Door_Entrance")
@@ -59,7 +59,7 @@ namespace GodhomeWinLossTracker
 
         internal static string GetSequenceName(string previousSceneName, string bossSceneName)
         {
-            Debug.Assert(IsBossScene(bossSceneName), "bossSceneName should be passed in valid, i.e. a boss scene");
+            DevUtils.Assert(IsBossScene(bossSceneName), "bossSceneName should be passed in valid, i.e. a boss scene");
 
             if (previousSceneName == "GG_Workshop")
             {
@@ -79,7 +79,7 @@ namespace GodhomeWinLossTracker
         // The same boss name in different difficulties can require different number of kills. E.g. Vengefly Kings
         internal static int GetKillsRequiredToWin(string bossSceneName)
         {
-            Debug.Assert(IsBossScene(bossSceneName), "bossSceneName should be passed in valid, i.e. a boss scene");
+            DevUtils.Assert(IsBossScene(bossSceneName), "bossSceneName should be passed in valid, i.e. a boss scene");
             if (BossSceneToKillsRequiredToWin.ContainsKey(bossSceneName))
             {
                 return BossSceneToKillsRequiredToWin[bossSceneName];

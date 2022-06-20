@@ -16,7 +16,8 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
 
         public override string ToString()
         {
-            Debug.Assert(BossName != null);
+            DevUtils.Assert(SequenceName != null, "SequenceName shouldn't be null");
+            DevUtils.Assert(BossName != null, "BossName shouldn't be null");
             string verb = WinLoss ? "Won" : "Lost to";
             return $"{verb} {BossName} in {SequenceName}";
         }
