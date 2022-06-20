@@ -18,7 +18,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 Debug.Assert(sceneName != null);
 
                 string bossName = GodhomeUtils.GetNullableBossName(sceneName);
-                bus.Put(new BossChange { Name = bossName });
+                if (bossName != null)
+                {
+                    bus.Put(new BossChange(bossName, sceneName));
+                }
+                else
+                {
+                    bus.Put(new BossChange());
+                }
             }
         }
     }

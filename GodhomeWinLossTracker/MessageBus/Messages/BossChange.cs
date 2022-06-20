@@ -1,18 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {
     internal class BossChange : IMessage
     {
-        public string Name { get; set; }
+        public BossChange() { }
+        public BossChange(string bossName, string sceneName)
+        {
+            Debug.Assert(BossName != null);
+            Debug.Assert(SceneName != null);
+
+            BossName = bossName;
+            SceneName = sceneName;
+        }
+
+        public bool IsNoBoss() => BossName == null;
+
+        public string BossName { get; }
+        public string SceneName { get; }
 
         public override string ToString()
         {
-            string displayName = Name ?? "null";
+            string displayName = IsNoBoss() ? "null" : $"{BossName} ({SceneName})";
             return $"Boss changed to {displayName}";
         }
     }

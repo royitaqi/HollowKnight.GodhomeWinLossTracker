@@ -75,6 +75,23 @@ namespace GodhomeWinLossTracker
             return null;
         }
 
+        // This is tracked by boss scene name.
+        // The same boss name in different difficulties can require different number of kills. E.g. Vengefly Kings
+        internal static int GetKillsRequiredToWin(string bossSceneName)
+        {
+            Debug.Assert(IsBossScene(bossSceneName), "bossSceneName should be passed in valid, i.e. a boss scene");
+            if (BossSceneToKillsRequiredToWin.ContainsKey(bossSceneName))
+            {
+                return BossSceneToKillsRequiredToWin[bossSceneName];
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
+
+
         private static readonly HashSet<string> NonBossScenes = new HashSet<string>
         {
             "End_Game_Completion",
@@ -91,6 +108,108 @@ namespace GodhomeWinLossTracker
             "GG_Unn",
             "GG_Workshop",
             "GG_Wyrm",
+        };
+
+        private static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new Dictionary<string, int>
+        {
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Vengefly_V
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Vengefly_V
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to Vengefly King (GG_Vengefly_V)
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Sequence changed to HoG
+            //[INFO]:[GodhomeWinLossTracker] - OnEndBossScene
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss died
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Vengefly King in HoG
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Vengefly King in HoG (registered)
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to null
+            { "GG_Vengefly_V", 1 },
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Nailmasters
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Nailmasters
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to Brothers Oro & Mato (GG_Nailmasters)
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Sequence changed to HoG
+            //[INFO]:[GodhomeWinLossTracker] - OnEndBossScene
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss died // 2nd phase
+            //[INFO]:[GodhomeWinLossTracker] - OnEndBossScene
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss died // 2nd phase
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Brothers Oro & Mato in HoG
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Brothers Oro & Mato in HoG (registered)
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to null
+            { "GG_Nailmasters", 2 },
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Oblobbles
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Oblobbles
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to Oblobbles (GG_Oblobbles)
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Sequence changed to HoG
+            //[INFO]:[GodhomeWinLossTracker] - OnEndBossScene
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss died
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Oblobbles in HoG
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Oblobbles in HoG (registered)
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to null
+            { "GG_Oblobbles", 1 },
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Mantis_Lords
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Mantis_Lords
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to Mantis Lords (GG_Mantis_Lords)
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Sequence changed to HoG
+            //[INFO]:[GodhomeWinLossTracker] - OnEndBossScene
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss died
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Mantis Lords in HoG
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Mantis Lords in HoG (registered)
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to null
+            { "GG_Mantis_Lords", 1 },
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Mantis_Lords_V
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Mantis_Lords_V
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to Sisters of Battle (GG_Mantis_Lords_V)
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Sequence changed to HoG
+            //[INFO]:[GodhomeWinLossTracker] - OnEndBossScene
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss died
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Sisters of Battle in HoG
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Sisters of Battle in HoG (registered)
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to null
+            { "GG_Mantis_Lords_V", 1 },
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_God_Tamer
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_God_Tamer
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to God Tamer (GG_God_Tamer)
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Sequence changed to HoG
+            //[INFO]:[GodhomeWinLossTracker] - OnEndBossScene
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss died
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won God Tamer in HoG
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won God Tamer in HoG (registered)
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to null
+            { "GG_God_Tamer", 1 },
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Watcher_Knights
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Watcher_Knights
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to Watcher Knight (GG_Watcher_Knights)
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Sequence changed to HoG
+            //[INFO]:[GodhomeWinLossTracker] - OnEndBossScene
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss died
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Watcher Knight in HoG
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Watcher Knight in HoG (registered)
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to null
+            { "GG_Watcher_Knights", 1 },
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Radiance
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Radiance
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to Absolute Radiance (GG_Radiance)
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Sequence changed to HoG
+            //[INFO]:[GodhomeWinLossTracker] - OnEndBossScene
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss died
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Absolute Radiance in HoG
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Won Absolute Radiance in HoG (registered)
+            //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Workshop
+            //[INFO]:[GodhomeWinLossTracker] - Message on bus: Boss changed to null
+            { "GG_Radiance", 1 },
         };
 
         private static readonly string[][] PantheonBossSceneNames = new string[][] {

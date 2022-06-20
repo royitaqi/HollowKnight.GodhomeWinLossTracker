@@ -10,6 +10,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
     internal class FightWinLoss : IMessage
     {
         public string SequenceName { get; set; }
+        // Fight win/loss are tracked by boss names, not boss scene names.
         public string BossName { get; set; }
         public bool WinLoss { get; set; }
 

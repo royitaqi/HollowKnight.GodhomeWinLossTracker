@@ -20,7 +20,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (message is BossChange)
             {
-                // If there is a current boss, it means it hasn't met its required number of deaths.
+                // If there is a current boss, it means it hasn't met its required number of kills.
                 // A boss change in this case means that the current boss isn't fully finished, hence a loss.
                 if (_currentBoss != null)
                 {
@@ -28,12 +28,21 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }
 
                 // Initialize to new boss.
-                _currentBoss = (message as BossChange).Name;
-                _currentKillsRequiredToWin = GetKillsRequiredToWin(_currentBoss);
+                BossChange msg = message as BossChange;
+                if (msg.IsNoBoss())
+                {
+                    _currentBoss = null;
+                    _currentKillsRequiredToWin = -1;
+                }
+                else
+                {
+                    _currentBoss = msg.BossName;
+                    _currentKillsRequiredToWin = GodhomeUtils.GetKillsRequiredToWin(msg.SceneName);
+                }
             }
             else if (message is BossDeath)
             {
-                Debug.Assert(_currentBoss == null);
+                Debug.Assert(_currentBoss != null, "Shouldn't see boss death event when there is no current boss");
                 _currentKillsRequiredToWin--;
 
                 // Achieving the required deaths to win. Mark a win.
@@ -45,28 +54,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }
             }
         }
-
-        private int GetKillsRequiredToWin(string bossName)
-        {
-            if (bossName == null)
-            {
-                return -1;
-            }
-            else if (KillsRequiredToWin.ContainsKey(bossName))
-            {
-                return KillsRequiredToWin[bossName];
-            }
-            else
-            {
-                return 1;
-            }
-        }
-
-
-        private static readonly Dictionary<string, int> KillsRequiredToWin = new Dictionary<string, int>
-        {
-            {"Nailmasters", 2 },
-        };
 
         private string _currentSequence = null;
         private string _currentBoss = null;
