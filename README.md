@@ -14,7 +14,7 @@ Whenever the mod detects a win/loss, it shows a small notification at the bottom
 
 ## Find your win/loss stats
 
-When you "Save & Quite", the mod automatically saves stats into the `userX.modded.json` files (X = 1-4) in your save folder.
+When you "Save & Quit", the mod automatically saves stats into the `userX.modded.json` files in your save folder (`X = 1..4`).
 
 ![example2](https://user-images.githubusercontent.com/14790745/174503737-971c36de-980c-406c-b050-cae6fba8f90f.png)
 
