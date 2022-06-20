@@ -69,21 +69,23 @@ namespace GodhomeWinLossTracker
 
         public void Notify(string text)
         {
-            GodhomeWinLossTracker.instance.Log($"ModDisplay::Notify() now={DateTime.Now}");
+            // Set up the text and a time to remove the notification.
             Text = text;
             _fadeOutTime = DateTime.Now + NotificationDuration;
-            GodhomeWinLossTracker.instance.Log($"ModDisplay::Notify() fadeOut={_fadeOutTime}");
+
+            // Show the notification.
             Redraw();
 
+            // Schedule the unnotify for a chance to remove the notification.
             Task.Delay(NotificationDuration).ContinueWith(t => Unnotify());
         }
 
         private void Unnotify()
         {
-            GodhomeWinLossTracker.instance.Log($"ModDisplay::Unnotify() woke up {DateTime.Now}");
+            // There can be multiple notifications going on in overlapping timespan.
+            // Only destroy the notification object if the current time has gone beyond the fade out time.
             if (DateTime.Now > _fadeOutTime)
             {
-                GodhomeWinLossTracker.instance.Log($"ModDisplay::Unnotify() destroying");
                 Destroy();
             }
         }

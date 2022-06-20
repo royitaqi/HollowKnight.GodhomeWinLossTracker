@@ -21,24 +21,25 @@ namespace GodhomeWinLossTracker
         /// Mod
         ///
 
-        public override string GetVersion() => "0.0.3";
+        public override string GetVersion() => "0.0.4";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
-            Log("Initializing mod");
-
             instance = this;
 
             messageBus = new();
             messageBus.Initialize(this);
 
+            // Production hooks
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
-            ModHooks.HeroUpdateHook += OnHeroUpdate;
-            ModHooks.AfterPlayerDeadHook += OnPlayerDeath;
             On.BossSceneController.EndBossScene += OnEndBossScene;
 
-            ModDisplay.Initialize();
+#if DEBUG
+            // Debug hooks
+            ModHooks.HeroUpdateHook += OnHeroUpdate;
+            ModHooks.AfterPlayerDeadHook += OnPlayerDeath;
+#endif
 
-            Log("Initialized mod");
+            ModDisplay.Initialize();
         }
 
         ///
@@ -53,14 +54,15 @@ namespace GodhomeWinLossTracker
         ///
         public void Unload()
         {
-            Log("Unloading");
-
+            // Production hooks
             ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
-            ModHooks.HeroUpdateHook -= OnHeroUpdate;
-            ModHooks.AfterPlayerDeadHook -= OnPlayerDeath;
             On.BossSceneController.EndBossScene -= OnEndBossScene;
 
-            Log("Unloaded");
+#if DEBUG
+            // Debug hooks
+            ModHooks.HeroUpdateHook -= OnHeroUpdate;
+            ModHooks.AfterPlayerDeadHook -= OnPlayerDeath;
+#endif
         }
 
         /// 
@@ -73,6 +75,16 @@ namespace GodhomeWinLossTracker
             return sceneName;
         }
 
+        private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
+        {
+            // At least one boss died.
+            // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
+            messageBus.Put(new BossDeath());
+
+            orig(self);
+        }
+
+#if DEBUG
         private void OnHeroUpdate()
         {
             if (Input.GetKeyDown(KeyCode.O))
@@ -146,15 +158,7 @@ namespace GodhomeWinLossTracker
         {
             messageBus.Put(new TKDeath());
         }
-
-        private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
-        {
-            // At least one boss died.
-            // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
-            messageBus.Put(new BossDeath());
-
-            orig(self);
-        }
+#endif
 
         ///
         /// IGlobalSettings<GlobalData>
