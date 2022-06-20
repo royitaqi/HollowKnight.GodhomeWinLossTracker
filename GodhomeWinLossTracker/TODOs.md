@@ -1,5 +1,3 @@
-# TODOs
-
 * [x] Add a mod menu containing one button "Export Stats".
   * [x] Gather win/loss stats into internal state.
   * [/] At the press of "Export Stats", log stats into into ModLog.txt
