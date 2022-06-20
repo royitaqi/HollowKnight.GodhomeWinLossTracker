@@ -14,19 +14,23 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             if (msg is SceneChange)
             {
-                string sceneName = (msg as SceneChange).Name;
-                Debug.Assert(sceneName != null);
+                string currentSceneName = (msg as SceneChange).Name;
+                Debug.Assert(currentSceneName != null);
 
-                // Update the bus with latest recognized sequence
-                if (sceneName == "GG_Workshop")
+                if (GodhomeUtils.IsBossScene(currentSceneName))
                 {
-                    bus.Put(new SequenceChange { Name = "HoG" });
+                    string sequenceName = GodhomeUtils.GetSequenceName(_previousSceneName, currentSceneName);
+                    if (sequenceName != null)
+                    {
+                        bus.Put(new SequenceChange { Name = sequenceName });
+                    }
                 }
-                else if (sceneName == "GG_Boss_Door_Entrance")
-                {
-                    bus.Put(new SequenceChange { Name = "pantheons" });
-                }
+
+                // Record the current scene name, so that it can be used in the next round as the previous scene name.
+                _previousSceneName = currentSceneName;
             }
         }
+
+        private string _previousSceneName;
     }
 }

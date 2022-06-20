@@ -21,9 +21,13 @@ namespace GodhomeWinLossTracker
         /// Mod
         ///
 
-        public override string GetVersion() => "0.0.4";
+        public override string GetVersion() => "0.0.5";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
+#if DEBUG
+            Log("Initializing mod");
+#endif
+
             instance = this;
 
             messageBus = new();
@@ -40,6 +44,10 @@ namespace GodhomeWinLossTracker
 #endif
 
             ModDisplay.Initialize();
+
+#if DEBUG
+            Log("Initialized");
+#endif
         }
 
         ///
@@ -54,6 +62,10 @@ namespace GodhomeWinLossTracker
         ///
         public void Unload()
         {
+#if DEBUG
+            Log("Unloading");
+#endif
+
             // Production hooks
             ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
             On.BossSceneController.EndBossScene -= OnEndBossScene;
@@ -62,6 +74,8 @@ namespace GodhomeWinLossTracker
             // Debug hooks
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
             ModHooks.AfterPlayerDeadHook -= OnPlayerDeath;
+
+            Log("Unloaded");
 #endif
         }
 
@@ -71,12 +85,20 @@ namespace GodhomeWinLossTracker
 
         private string OnSceneLoad(string sceneName)
         {
+#if DEBUG
+            Log($"OnSceneLoad: {sceneName}");
+#endif
+
             messageBus.Put(new SceneChange { Name = sceneName });
             return sceneName;
         }
 
         private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
         {
+#if DEBUG
+            Log($"OnEndBossScene");
+#endif
+
             // At least one boss died.
             // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
             messageBus.Put(new BossDeath());
