@@ -2,7 +2,7 @@
 
 GodhomeWinLossTracker is a mod for the game Hollow Knight. Its goal is to improve boss fight training experience in Godhome by tracking per-boss win/loss counts for Hall of Gods and pantheons.
 
-The mod is fully automated. It recognizes boss fights, understands which boss is involved, detects win/loss events and tracks running stats.
+The mod is fully automatic. It recognizes boss fights, understands which boss is involved, detects win/loss events and tracks running stats.
 
 
 ## Win/Loss events
@@ -14,7 +14,7 @@ Whenever the mod detects a win/loss, it shows a small notification at the bottom
 
 ## Find your win/loss stats
 
-When you "Save & Quit", the mod automatically saves stats into the `userX.modded.json` files in your save folder (`X = 1..4`).
+When "Save & Quit", the mod automatically saves stats into the `userX.modded.json` files in your save folder (`X = 1..4`).
 
 ![example2](https://user-images.githubusercontent.com/14790745/174503737-971c36de-980c-406c-b050-cae6fba8f90f.png)
 
@@ -26,5 +26,7 @@ The mod can be turned on/off from the "Mods" menu.
 
 ## Known bugs / limitations
 
-* Boss names (both displayed and saved) are from scene names. They can be different from in-game localized boss names.
-  * E.g. Soul Warrior reads "Mage Knight", Oro & Mato reads "Nailmasters", Hornet Protector reads "Hornet 1", etc
+* Bug: In some situations, win/loss detection can be wrong.
+  * Dying in a fight after killing the boss might be detected as a win. E.g. source of damanage: hazards, minions, projectiles.
+  * When a boss fight contains multiple bosses, win might be detected pre-maturely and multiple times. E.g. Oro & Mato, Vengefly Kings, Oblobbles, Mantis Lords/SoB, God Tamer, Watcher Knights.
+* Limitation: Boss names are displayed in English. No localization yet.
