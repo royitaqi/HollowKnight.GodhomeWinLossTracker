@@ -42,6 +42,12 @@ namespace GodhomeWinLossTracker
         public int myGlobalData = 999;
     }
 
+    [Serializable]
+    public class SaveData
+    {
+        public List<RawWinLoss> RawWinLossRecords = new();
+    }
+
     public class RawWinLoss
     {
         public long EpochMs { get; set; }

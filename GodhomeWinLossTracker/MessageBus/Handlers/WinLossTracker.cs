@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using GodhomeWinLossTracker.MessageBus.Messages;
-using GodhomeWinLossTracker.HKQuickSettings;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -30,8 +29,5 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         }
 
         private readonly GodhomeWinLossTracker _mod;
-
-        [QuickSetting(true, "")]
-        private List<RawWinLoss> _rawRecords = new();
     }
 }

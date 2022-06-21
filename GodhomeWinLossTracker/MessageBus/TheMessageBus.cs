@@ -18,6 +18,7 @@ namespace GodhomeWinLossTracker.MessageBus
             {
                 new BossChangeDetector(),
                 new DisplayUpdater(),
+                new SaveLoad(mod),
                 new SequenceChangeDetector(),
                 new WinLossGenerator(),
                 new WinLossTracker(mod),

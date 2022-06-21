@@ -16,6 +16,7 @@ namespace GodhomeWinLossTracker
         private TheMessageBus messageBus;
         public GlobalData globalData = new GlobalData();
         internal LocalData localData = new LocalData();
+        internal SaveData saveData = new SaveData();
 
         ///
         /// Mod
@@ -191,7 +192,15 @@ namespace GodhomeWinLossTracker
         /// 
         /// ILocalSettings<LocalData>
         ///
-        public void OnLoadLocal(LocalData data) => localData = data;
-        public LocalData OnSaveLocal() => localData;
+        public void OnLoadLocal(LocalData data)
+        {
+            localData = data;
+            messageBus.Put(new LoadLocalData());
+        }
+        public LocalData OnSaveLocal()
+        {
+            messageBus.Put(new SaveLocalData());
+            return localData;
+        }
     }
 }
