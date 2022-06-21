@@ -31,8 +31,7 @@ namespace GodhomeWinLossTracker
 
             instance = this;
 
-            messageBus = new();
-            messageBus.Initialize(this);
+            messageBus = new(this);
 
             // Production hooks
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
@@ -194,12 +193,30 @@ namespace GodhomeWinLossTracker
         ///
         public void OnLoadLocal(LocalData data)
         {
+#if DEBUG
+            Log("Loading local data");
+#endif
             localData = data;
-            messageBus.Put(new LoadLocalData());
+            if (messageBus != null)
+            {
+                messageBus.Put(new LoadLocalData());
+            }
+#if DEBUG
+            Log("Loaded local data");
+#endif
         }
         public LocalData OnSaveLocal()
         {
-            messageBus.Put(new SaveLocalData());
+#if DEBUG
+            Log("Saving local data");
+#endif
+            if (messageBus != null)
+            {
+                messageBus.Put(new SaveLocalData());
+            }
+#if DEBUG
+            Log("Saved local data");
+#endif
             return localData;
         }
     }

@@ -10,7 +10,7 @@ namespace GodhomeWinLossTracker.MessageBus
 {
     internal class TheMessageBus
     {
-        public void Initialize(GodhomeWinLossTracker mod)
+        public TheMessageBus(GodhomeWinLossTracker mod)
         {
             _logger = mod;
 
