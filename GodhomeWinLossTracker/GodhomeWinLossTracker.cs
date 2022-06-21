@@ -13,38 +13,33 @@ namespace GodhomeWinLossTracker
     public class GodhomeWinLossTracker : Mod, IGlobalSettings<GlobalData>, ILocalSettings<LocalData>, ICustomMenuMod, ITogglableMod
     {
         internal static GodhomeWinLossTracker instance;
-        private TheMessageBus messageBus;
+        internal TheMessageBus messageBus;
         public GlobalData globalData = new GlobalData();
         internal LocalData localData = new LocalData();
+        internal FolderData folderData = new FolderData();
 
         ///
         /// Mod
         ///
 
-        public override string GetVersion() => "0.0.7.0";
+        public override string GetVersion() => "0.0.8.0";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
             Log("Initializing mod");
 #endif
-
             instance = this;
 
-            messageBus = new();
-            messageBus.Initialize(this);
+            messageBus = new(this);
 
             // Production hooks
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
             On.BossSceneController.EndBossScene += OnEndBossScene;
-
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
-            ModHooks.AfterPlayerDeadHook += OnPlayerDeath;
 #endif
-
             ModDisplay.Initialize();
-
 #if DEBUG
             Log("Initialized");
 #endif
@@ -65,15 +60,12 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log("Unloading");
 #endif
-
             // Production hooks
             ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
             On.BossSceneController.EndBossScene -= OnEndBossScene;
-
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
-            ModHooks.AfterPlayerDeadHook -= OnPlayerDeath;
 
             Log("Unloaded");
 #endif
@@ -88,7 +80,6 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log($"OnSceneLoad: {sceneName}");
 #endif
-
             messageBus.Put(new SceneChange { Name = sceneName });
             return sceneName;
         }
@@ -98,7 +89,6 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log($"OnEndBossScene");
 #endif
-
             // At least one boss died.
             // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
             messageBus.Put(new BossDeath());
@@ -111,8 +101,10 @@ namespace GodhomeWinLossTracker
         {
             if (Input.GetKeyDown(KeyCode.O))
             {
-                string json = JsonConvert.SerializeObject(localData);
+                string json = JsonConvert.SerializeObject(folderData);
                 Log("Current local data: " + json);
+
+                messageBus.Put(new SaveFolderData());
             }
             else if (Input.GetKeyDown(KeyCode.Alpha8))
             {
@@ -175,11 +167,6 @@ namespace GodhomeWinLossTracker
                 ModDisplay.instance.Redraw();
             }
         }
-
-        private void OnPlayerDeath()
-        {
-            messageBus.Put(new TKDeath());
-        }
 #endif
 
         ///
@@ -191,7 +178,36 @@ namespace GodhomeWinLossTracker
         /// 
         /// ILocalSettings<LocalData>
         ///
-        public void OnLoadLocal(LocalData data) => localData = data;
-        public LocalData OnSaveLocal() => localData;
+        public void OnLoadLocal(LocalData data)
+        {
+            localData = data;
+#if DEBUG
+            Log($"Loading local data (slot {localData.ProfileID})");
+#endif
+            // actual read
+            if (messageBus != null)
+            {
+                messageBus.Put(new LoadFolderData());
+            }
+#if DEBUG
+            Log($"Loaded local data (slot {localData.ProfileID})");
+#endif
+        }
+        public LocalData OnSaveLocal()
+        {
+            localData.ProfileID = GameManager.instance.profileID;
+#if DEBUG
+            Log($"Saving local data (slot {localData.ProfileID})");
+#endif
+            // actual save
+            if (messageBus != null)
+            {
+                messageBus.Put(new SaveFolderData());
+            }
+#if DEBUG
+            Log($"Saved local data (slot {localData.ProfileID})");
+#endif
+            return localData;
+        }
     }
 }

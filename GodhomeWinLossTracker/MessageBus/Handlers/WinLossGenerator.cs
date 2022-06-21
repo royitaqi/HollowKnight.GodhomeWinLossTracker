@@ -24,19 +24,19 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 // A boss change in this case means that the current boss isn't fully finished, hence a loss.
                 if (_currentBoss != null)
                 {
-                    bus.Put(new FightWinLoss { SequenceName = _currentSequence, BossName = _currentBoss, WinLoss = false });
+                    EmitRecord(bus, false);
                 }
 
                 // Initialize to new boss.
                 BossChange msg = message as BossChange;
                 if (msg.IsNoBoss())
                 {
-                    _currentBoss = null;
-                    _currentKillsRequiredToWin = -1;
+                    Reset();
                 }
                 else
                 {
-                    _currentBoss = msg.BossName;
+                    _currentBoss = msg;
+                    _fightStartGameTime = DevUtils.GetTimestampEpochMs();
                     _currentKillsRequiredToWin = GodhomeUtils.GetKillsRequiredToWin(msg.SceneName);
                 }
             }
@@ -47,16 +47,39 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
                 // Achieving the required deaths to win. Mark a win.
                 if (_currentKillsRequiredToWin == 0) {
-                    bus.Put(new FightWinLoss { SequenceName = _currentSequence, BossName = _currentBoss, WinLoss = true });
-
-                    _currentBoss = null;
-                    _currentKillsRequiredToWin = -1;
+                    EmitRecord(bus, true);
+                    Reset();
                 }
             }
         }
 
+        private void EmitRecord(TheMessageBus bus, bool winLoss)
+        {
+            bus.Put(new RawWinLoss(
+                DateTime.Now.ToString("yyyy'-'MM'-'dd HH':'mm':'ss"),
+                _currentSequence,
+                _currentBoss.BossName,
+                _currentBoss.SceneName,
+                winLoss ? 1 : 0,
+                winLoss ? 0 : 1,
+                DevUtils.GetTimestampEpochMs() - _fightStartGameTime, // fightLengthMs
+                RawWinLoss.Sources.Mod
+            ));
+        }
+
+        private void Reset()
+        {
+            _currentBoss = null;
+            _fightStartGameTime = -1;
+            _currentKillsRequiredToWin = -1;
+        }
+
+        // Always have the latest sequence name, even when not in a boss fight.
         private string _currentSequence = null;
-        private string _currentBoss = null;
+        // Null value means currently no boss.
+        // Non-null value means currently fighting a boss.
+        private BossChange _currentBoss = null;
+        private long _fightStartGameTime = -1;
         private int _currentKillsRequiredToWin = -1;
     }
 }
