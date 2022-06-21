@@ -50,7 +50,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void SaveLocalData()
         {
             string filename = GetDataSavePath();
-            string jsonString = JsonConvert.SerializeObject(_mod.localData);
+            string jsonString = JsonConvert.SerializeObject(_mod.localData, Formatting.Indented);
             File.WriteAllText(filename, jsonString);
         }
 

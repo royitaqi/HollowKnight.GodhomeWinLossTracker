@@ -112,6 +112,8 @@ namespace GodhomeWinLossTracker
             {
                 string json = JsonConvert.SerializeObject(localData);
                 Log("Current local data: " + json);
+
+                messageBus.Put(new SaveLocalData());
             }
             else if (Input.GetKeyDown(KeyCode.Alpha8))
             {
