@@ -28,7 +28,6 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log("Initializing mod");
 #endif
-
             instance = this;
 
             messageBus = new(this);
@@ -36,15 +35,11 @@ namespace GodhomeWinLossTracker
             // Production hooks
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
             On.BossSceneController.EndBossScene += OnEndBossScene;
-
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
-            ModHooks.AfterPlayerDeadHook += OnPlayerDeath;
 #endif
-
             ModDisplay.Initialize();
-
 #if DEBUG
             Log("Initialized");
 #endif
@@ -65,15 +60,12 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log("Unloading");
 #endif
-
             // Production hooks
             ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
             On.BossSceneController.EndBossScene -= OnEndBossScene;
-
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
-            ModHooks.AfterPlayerDeadHook -= OnPlayerDeath;
 
             Log("Unloaded");
 #endif
@@ -88,7 +80,6 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log($"OnSceneLoad: {sceneName}");
 #endif
-
             messageBus.Put(new SceneChange { Name = sceneName });
             return sceneName;
         }
@@ -98,7 +89,6 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log($"OnEndBossScene");
 #endif
-
             // At least one boss died.
             // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
             messageBus.Put(new BossDeath());
@@ -177,11 +167,6 @@ namespace GodhomeWinLossTracker
                 ModDisplay.instance.Redraw();
             }
         }
-
-        private void OnPlayerDeath()
-        {
-            messageBus.Put(new TKDeath());
-        }
 #endif
 
         ///
@@ -195,7 +180,6 @@ namespace GodhomeWinLossTracker
         ///
         public void OnLoadLocal(LocalData data)
         {
-            Log($"DEBUG: {PlayerData.instance.profileID}");
             localData = data;
 #if DEBUG
             Log($"Loading local data (slot {localData.ProfileID})");
