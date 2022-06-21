@@ -15,19 +15,19 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
             Mod = 1,
         }
 
-        public RawWinLoss(string sequenceName, string bossName, string sceneName, bool winLoss, long fightLengthMs, Sources source)
+        public RawWinLoss(string timestamp, string sequenceName, string bossName, string sceneName, int wins, int losses, long fightLengthMs, Sources source)
         {
+            DevUtils.Assert(timestamp!= null, "timestamp shouldn't be null");
             DevUtils.Assert(sequenceName != null, "sequenceName shouldn't be null");
             DevUtils.Assert(bossName != null, "bossName shouldn't be null");
             DevUtils.Assert(sceneName != null, "sceneName shouldn't be null");
 
-            Timestamp = DateTime.Now.ToString("yyyy'-'MM'-'dd HH':'mm':'ss");
-
+            Timestamp = timestamp;
             SequenceName = sequenceName;
             BossName = bossName;
             SceneName = sceneName;
-            Wins = winLoss ? 1 : 0;
-            Losses = winLoss ? 0 : 1;
+            Wins = wins;
+            Losses = losses;
             FightLengthMs = fightLengthMs;
             Source = source;
         }

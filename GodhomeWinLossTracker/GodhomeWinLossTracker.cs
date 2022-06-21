@@ -10,13 +10,13 @@ using Newtonsoft.Json;
 
 namespace GodhomeWinLossTracker
 {
-    public class GodhomeWinLossTracker : Mod, IGlobalSettings<GlobalData>, ILocalSettings<EmptyLocalData>, ICustomMenuMod, ITogglableMod
+    public class GodhomeWinLossTracker : Mod, IGlobalSettings<GlobalData>, ILocalSettings<LocalData>, ICustomMenuMod, ITogglableMod
     {
         internal static GodhomeWinLossTracker instance;
         private TheMessageBus messageBus;
         public GlobalData globalData = new GlobalData();
         internal LocalData localData = new LocalData();
-        internal EmptyLocalData emptyLocalData = new EmptyLocalData();
+        internal FolderData folderData = new FolderData();
 
         ///
         /// Mod
@@ -111,7 +111,7 @@ namespace GodhomeWinLossTracker
         {
             if (Input.GetKeyDown(KeyCode.O))
             {
-                string json = JsonConvert.SerializeObject(localData);
+                string json = JsonConvert.SerializeObject(folderData);
                 Log("Current local data: " + json);
 
                 messageBus.Put(new SaveLocalData());
@@ -193,43 +193,36 @@ namespace GodhomeWinLossTracker
         /// 
         /// ILocalSettings<LocalData>
         ///
-        public void OnLoadLocal(EmptyLocalData data)
+        public void OnLoadLocal(LocalData data)
         {
+            localData = data;
 #if DEBUG
-            Log("Loading local data");
+            Log($"Loading local data (slot {localData.ProfileID})");
 #endif
-
-            // fake read
-            emptyLocalData = data;
-
             // actual read
             if (messageBus != null)
             {
                 messageBus.Put(new LoadLocalData());
             }
-
 #if DEBUG
-            Log("Loaded local data");
+            Log($"Loaded local data (slot {localData.ProfileID})");
 #endif
         }
-        public EmptyLocalData OnSaveLocal()
+        public LocalData OnSaveLocal()
         {
+            localData.ProfileID = GameManager.instance.profileID;
 #if DEBUG
-            Log("Saving local data");
+            Log($"Saving local data (slot {localData.ProfileID})");
 #endif
-
             // actual save
             if (messageBus != null)
             {
                 messageBus.Put(new SaveLocalData());
             }
-
 #if DEBUG
-            Log("Saved local data");
+            Log($"Saved local data (slot {localData.ProfileID})");
 #endif
-
-            // fake save
-            return emptyLocalData;
+            return localData;
         }
     }
 }

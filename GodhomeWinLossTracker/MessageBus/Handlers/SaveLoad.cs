@@ -50,7 +50,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void SaveLocalData()
         {
             string filename = GetDataSavePath();
-            string jsonString = JsonConvert.SerializeObject(_mod.localData, Formatting.Indented);
+            string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
             File.WriteAllText(filename, jsonString);
             _mod.Log($"{filename} saved: {jsonString}");
         }
@@ -61,18 +61,19 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (File.Exists(filename))
             {
                 string jsonString = File.ReadAllText(filename);
-                _mod.localData = JsonConvert.DeserializeObject<LocalData>(jsonString);
-                _mod.Log($"{filename} loaded: {_mod.localData}");
+                _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
+                _mod.Log($"{filename} loaded: {jsonString}");
             }
             else
             {
+                _mod.folderData = new FolderData();
                 _mod.Log($"{filename} doesn't exist. New/empty local data will be used.");
             }
         }
 
         private string GetDataSavePath()
         {
-            int slot = GameManager.instance.profileID;
+            int slot = _mod.localData.ProfileID;
             return $"{LocalDirectory}/Data.Save{slot}.json";
         }
 

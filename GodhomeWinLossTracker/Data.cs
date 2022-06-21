@@ -7,7 +7,7 @@ using GodhomeWinLossTracker.MessageBus.Messages;
 namespace GodhomeWinLossTracker
 {
     [Serializable]
-    public class LocalData
+    public class FolderData
     {
         public List<RawWinLoss> RawRecords = new();
     }
@@ -18,5 +18,9 @@ namespace GodhomeWinLossTracker
         public int myGlobalData = 999;
     }
 
-    public class EmptyLocalData { }
+    [Serializable]
+    public class LocalData
+    {
+        public int ProfileID = 0;
+    }
 }
