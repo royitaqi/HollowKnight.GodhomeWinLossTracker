@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {
-    internal class LoadLocalData : IMessage
+    internal class SaveFolderData : IMessage
     {
         public override string ToString()
         {
-            return "Load local data";
+            return "Save folder data";
         }
     }
 }

@@ -13,7 +13,7 @@ namespace GodhomeWinLossTracker
     public class GodhomeWinLossTracker : Mod, IGlobalSettings<GlobalData>, ILocalSettings<LocalData>, ICustomMenuMod, ITogglableMod
     {
         internal static GodhomeWinLossTracker instance;
-        private TheMessageBus messageBus;
+        internal TheMessageBus messageBus;
         public GlobalData globalData = new GlobalData();
         internal LocalData localData = new LocalData();
         internal FolderData folderData = new FolderData();
@@ -22,7 +22,7 @@ namespace GodhomeWinLossTracker
         /// Mod
         ///
 
-        public override string GetVersion() => "0.0.7.0";
+        public override string GetVersion() => "0.0.8.0";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
@@ -104,7 +104,7 @@ namespace GodhomeWinLossTracker
                 string json = JsonConvert.SerializeObject(folderData);
                 Log("Current local data: " + json);
 
-                messageBus.Put(new SaveLocalData());
+                messageBus.Put(new SaveFolderData());
             }
             else if (Input.GetKeyDown(KeyCode.Alpha8))
             {
@@ -187,7 +187,7 @@ namespace GodhomeWinLossTracker
             // actual read
             if (messageBus != null)
             {
-                messageBus.Put(new LoadLocalData());
+                messageBus.Put(new LoadFolderData());
             }
 #if DEBUG
             Log($"Loaded local data (slot {localData.ProfileID})");
@@ -202,7 +202,7 @@ namespace GodhomeWinLossTracker
             // actual save
             if (messageBus != null)
             {
-                messageBus.Put(new SaveLocalData());
+                messageBus.Put(new SaveFolderData());
             }
 #if DEBUG
             Log($"Saved local data (slot {localData.ProfileID})");
