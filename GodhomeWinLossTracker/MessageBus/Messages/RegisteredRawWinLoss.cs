@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {
-    internal class RegisteredFightWinLoss : IMessage
+    internal class RegisteredRawWinLoss : IMessage
     {
-        public FightWinLoss InnerMessage { get; set; }
+        public RawWinLoss InnerMessage { get; set; }
 
         public override string ToString()
         {

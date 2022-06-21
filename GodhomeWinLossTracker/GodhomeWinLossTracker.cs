@@ -16,7 +16,6 @@ namespace GodhomeWinLossTracker
         private TheMessageBus messageBus;
         public GlobalData globalData = new GlobalData();
         internal LocalData localData = new LocalData();
-        internal SaveData saveData = new SaveData();
 
         ///
         /// Mod

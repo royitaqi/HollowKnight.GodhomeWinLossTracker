@@ -18,5 +18,10 @@ namespace GodhomeWinLossTracker
             }
 #endif
         }
+
+        public static long GetTimestampEpochMs()
+        {
+            return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        }
     }
 }

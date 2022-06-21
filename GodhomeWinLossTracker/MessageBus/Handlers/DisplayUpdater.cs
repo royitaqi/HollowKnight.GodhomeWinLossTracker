@@ -13,9 +13,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
     {
         public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage message)
         {
-            if (message is RegisteredFightWinLoss)
+            if (message is RegisteredRawWinLoss)
             {
-                ModDisplay.instance.Notify((message as RegisteredFightWinLoss).InnerMessage.ToString());
+                ModDisplay.instance.Notify((message as RegisteredRawWinLoss).InnerMessage.ToString());
             }
         }
     }

@@ -13,7 +13,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class SaveLoad : IHandler
     {
-        private static readonly string LocalDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker/";
+        private static readonly string LocalDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
 
         public SaveLoad(GodhomeWinLossTracker mod)
         {
@@ -25,19 +25,45 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             if (message is SaveLocalData)
             {
-                File.WriteAllText(LocalDirectory + "/tmp.txt", "test");
+                try
+                {
+                    SaveLocalData();
+                }
+                catch (IOException exception)
+                {
+                    logger.LogError($"Failed to save local data: {exception}");
+                }
             }
             else if (message is LoadLocalData)
             {
                 try
                 {
-                    bus.Put(new BusEvent { Event = File.ReadAllText(LocalDirectory + "/tmp.txt") });
+                    LoadLocalData();
                 }
-                catch (IOException)
+                catch (IOException exception)
                 {
-                    bus.Put(new BusEvent { Event = $"Couldn't read {LocalDirectory}/tmp.txt" });
+                    logger.LogError($"Failed to load local data: {exception}");
                 }
+            }
+        }
 
+        private void SaveLocalData()
+        {
+            string jsonString = JsonConvert.SerializeObject(_mod.localData);
+            File.WriteAllText(LocalDirectory + "/tmp.txt", jsonString);
+        }
+
+        private void LoadLocalData()
+        {
+            string filename = LocalDirectory + "/tmp.txt";
+            if (File.Exists(filename))
+            {
+                string jsonString = File.ReadAllText(filename);
+                _mod.localData = JsonConvert.DeserializeObject<LocalData>(jsonString);
+            }
+            else
+            {
+                _mod.Log($"{filename} doesn't exist. New/empty local data will be used.");
             }
         }
 
