@@ -14,18 +14,18 @@ namespace GodhomeWinLossTracker.MessageBus
         {
             _logger = mod;
 
-            _handlers = new List<IHandler>
-            {
+            _handlers = new List<IHandler>();
+#if DEBUG
+            _handlers.Add(new Logger());
+#endif
+            _handlers.AddRange(new IHandler[] {
                 new BossChangeDetector(),
                 new DisplayUpdater(),
                 new SaveLoad(mod),
                 new SequenceChangeDetector(),
                 new WinLossGenerator(),
-                new WinLossTracker(mod),
-            };
-#if DEBUG
-            _handlers.Add(new Logger());
-#endif
+                new WinLossTracker(mod)
+            });
 
             _messages = new();
             _processing = false;

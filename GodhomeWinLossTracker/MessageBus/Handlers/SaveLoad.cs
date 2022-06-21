@@ -52,6 +52,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             string filename = GetDataSavePath();
             string jsonString = JsonConvert.SerializeObject(_mod.localData, Formatting.Indented);
             File.WriteAllText(filename, jsonString);
+            _mod.Log($"{filename} saved: {jsonString}");
         }
 
         private void LoadLocalData()
@@ -61,6 +62,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 string jsonString = File.ReadAllText(filename);
                 _mod.localData = JsonConvert.DeserializeObject<LocalData>(jsonString);
+                _mod.Log($"{filename} loaded: {_mod.localData}");
             }
             else
             {
