@@ -41,6 +41,9 @@ namespace GodhomeWinLossTracker
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             ModHooks.AfterPlayerDeadHook += OnPlayerDeath;
+
+            On.BossSceneController.CheckBossesDead += BossSceneController_CheckBossesDead;
+            //On.BossSceneController.EndSceneDelayed += BossSceneController_EndSceneDelayed;
 #endif
 
             ModDisplay.Initialize();
@@ -48,6 +51,20 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log("Initialized");
 #endif
+        }
+
+        //private IEnumerator BossSceneController_EndSceneDelayed(On.BossSceneController.orig_EndSceneDelayed orig, BossSceneController self)
+        //{
+        //    messageBus.Put(new BusEvent { Event = "EndSceneDelayed enter" });
+        //    yield return new WaitForSeconds(5);
+        //    messageBus.Put(new BusEvent { Event = "EndSceneDelayed leave" });
+        //}
+
+        private void BossSceneController_CheckBossesDead(On.BossSceneController.orig_CheckBossesDead orig, BossSceneController self)
+        {
+            messageBus.Put(new BusEvent { Event = "CheckBossesDead before" });
+            orig(self);
+            messageBus.Put(new BusEvent { Event = "CheckBossesDead end" });
         }
 
         ///
@@ -74,6 +91,9 @@ namespace GodhomeWinLossTracker
             // Debug hooks
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
             ModHooks.AfterPlayerDeadHook -= OnPlayerDeath;
+
+            On.BossSceneController.CheckBossesDead -= BossSceneController_CheckBossesDead;
+            //On.BossSceneController.EndSceneDelayed -= BossSceneController_EndSceneDelayed;
 
             Log("Unloaded");
 #endif
