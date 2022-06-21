@@ -41,4 +41,14 @@ namespace GodhomeWinLossTracker
     {
         public int myGlobalData = 999;
     }
+
+    public class RawWinLoss
+    {
+        public long EpochMs { get; set; }
+        public string SequenceName { get; set; }
+        public string BossName { get; set; }
+        public string SceneName { get; set; }
+        public bool WinLoss { get; set; }
+        public long FightLengthMs { get; set; }
+    }
 }
