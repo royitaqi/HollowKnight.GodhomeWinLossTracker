@@ -17,4 +17,6 @@ namespace GodhomeWinLossTracker
     {
         public int myGlobalData = 999;
     }
+
+    public class EmptyLocalData { }
 }

@@ -10,12 +10,13 @@ using Newtonsoft.Json;
 
 namespace GodhomeWinLossTracker
 {
-    public class GodhomeWinLossTracker : Mod, IGlobalSettings<GlobalData>, ILocalSettings<LocalData>, ICustomMenuMod, ITogglableMod
+    public class GodhomeWinLossTracker : Mod, IGlobalSettings<GlobalData>, ILocalSettings<EmptyLocalData>, ICustomMenuMod, ITogglableMod
     {
         internal static GodhomeWinLossTracker instance;
         private TheMessageBus messageBus;
         public GlobalData globalData = new GlobalData();
         internal LocalData localData = new LocalData();
+        internal EmptyLocalData emptyLocalData = new EmptyLocalData();
 
         ///
         /// Mod
@@ -192,33 +193,43 @@ namespace GodhomeWinLossTracker
         /// 
         /// ILocalSettings<LocalData>
         ///
-        public void OnLoadLocal(LocalData data)
+        public void OnLoadLocal(EmptyLocalData data)
         {
 #if DEBUG
             Log("Loading local data");
 #endif
-            localData = data;
+
+            // fake read
+            emptyLocalData = data;
+
+            // actual read
             if (messageBus != null)
             {
                 messageBus.Put(new LoadLocalData());
             }
+
 #if DEBUG
             Log("Loaded local data");
 #endif
         }
-        public LocalData OnSaveLocal()
+        public EmptyLocalData OnSaveLocal()
         {
 #if DEBUG
             Log("Saving local data");
 #endif
+
+            // actual save
             if (messageBus != null)
             {
                 messageBus.Put(new SaveLocalData());
             }
+
 #if DEBUG
             Log("Saved local data");
 #endif
-            return localData;
+
+            // fake save
+            return emptyLocalData;
         }
     }
 }
