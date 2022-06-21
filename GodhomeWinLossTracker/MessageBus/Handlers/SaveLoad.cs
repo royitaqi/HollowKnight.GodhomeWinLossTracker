@@ -49,13 +49,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private void SaveLocalData()
         {
+            string filename = GetDataSavePath();
             string jsonString = JsonConvert.SerializeObject(_mod.localData);
-            File.WriteAllText(LocalDirectory + "/tmp.txt", jsonString);
+            File.WriteAllText(filename, jsonString);
         }
 
         private void LoadLocalData()
         {
-            string filename = LocalDirectory + "/tmp.txt";
+            string filename = GetDataSavePath();
             if (File.Exists(filename))
             {
                 string jsonString = File.ReadAllText(filename);
@@ -65,6 +66,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 _mod.Log($"{filename} doesn't exist. New/empty local data will be used.");
             }
+        }
+
+        private string GetDataSavePath()
+        {
+            int slot = GameManager.instance.profileID;
+            return $"{LocalDirectory}/Data.Save{slot}.json";
         }
 
         private readonly GodhomeWinLossTracker _mod;

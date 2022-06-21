@@ -21,7 +21,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
             DevUtils.Assert(bossName != null, "bossName shouldn't be null");
             DevUtils.Assert(sceneName != null, "sceneName shouldn't be null");
 
-            Timestamp = DateTime.Now;
+            Timestamp = DateTime.Now.ToString("yyyy'-'MM'-'dd HH':'mm':'ss");
 
             SequenceName = sequenceName;
             BossName = bossName;
@@ -37,7 +37,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
             return $"{verb} {BossName} in {SequenceName}";
         }
 
-        public DateTime Timestamp { get; private set; }
+        public string Timestamp { get; private set; }
         public string SequenceName { get; private set; }
         public string BossName { get; private set; }
         public string SceneName { get; private set; }
