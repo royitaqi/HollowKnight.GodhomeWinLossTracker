@@ -195,6 +195,7 @@ namespace GodhomeWinLossTracker
         ///
         public void OnLoadLocal(LocalData data)
         {
+            Log($"DEBUG: {PlayerData.instance.profileID}");
             localData = data;
 #if DEBUG
             Log($"Loading local data (slot {localData.ProfileID})");
