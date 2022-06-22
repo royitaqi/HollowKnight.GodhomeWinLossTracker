@@ -180,6 +180,8 @@ namespace GodhomeWinLossTracker
         ///
         public void OnLoadLocal(LocalData data)
         {
+            Log($"DEBUG PlayerData.instance.profileID = {PlayerData.instance.profileID}");
+            Log($"DEBUG GameManager.instance.profileID = {GameManager.instance.profileID}");
             localData = data;
 #if DEBUG
             Log($"Loading local data (slot {localData.ProfileID})");
@@ -195,6 +197,8 @@ namespace GodhomeWinLossTracker
         }
         public LocalData OnSaveLocal()
         {
+            Log($"DEBUG PlayerData.instance.profileID = {PlayerData.instance.profileID}");
+            Log($"DEBUG GameManager.instance.profileID = {GameManager.instance.profileID}");
             localData.ProfileID = GameManager.instance.profileID;
 #if DEBUG
             Log($"Saving local data (slot {localData.ProfileID})");
