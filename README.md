@@ -9,17 +9,33 @@ The mod is fully automatic. It recognizes boss fights, understands which boss is
 
 Whenever the mod detects a win/loss, it shows a small notification at the bottom left corner of the game to indicate that the event has been recorded.
 
-![example](https://user-images.githubusercontent.com/14790745/174503620-b0abda40-e43f-4e45-bbdb-0d59eb18007d.png)
+![Hollow Knight 2022-06-21 17-48-03 a](https://user-images.githubusercontent.com/14790745/174921467-d980e3f8-1230-45ba-a8b9-acfed7b93d56.png)
 
 
-## Find (and update) your win/loss stats
 
-When "Save & Quit", the mod automatically saves stats into the `userX.modded.json` files in your save folder (X = 1..4).
+## Find (and update) your stats
 
-![example2](https://user-images.githubusercontent.com/14790745/174503737-971c36de-980c-406c-b050-cae6fba8f90f.png)
+When "Save & Quit", the mod automatically saves stats into files `Data.SaveX.json` (X=1..4) in the game's save folder. **To find on a PC:** press `Windows + R`, put in `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker"`, press `ENTER`).
 
 
-To update the stats, first "Save & Quit", then modify the stats in the `userX.modded.json` files and save the files. The updated stats will be loaded automatically the next time the Hollow Knight save is loaded.
+**To update the stats**, first "Save & Quit", then modify the `Data.SaveX.json` files and save the files. The updated stats will be automatically loaded the next time the same game save is loaded.
+
+
+## Automatic (local) backup of your stats
+
+Whenever a game save is loaded, its corresponding `Data.SaveX.json` file is backed up into the `backup` subfolder.
+
+
+## Export your stats in TSV format
+
+The mod supports exporting your stats into tab-separated values (TSV) format for further data analysis.
+
+**How to:** When a game save is loaded in the game, go into the "Mods" menu, select "GodhomeWinLossTracker", then "Export stats as TSV". A notification will show up when the export is success.
+
+![Hollow Knight 2022-06-21 17-48-32 a](https://user-images.githubusercontent.com/14790745/174921490-2089c19b-f5cb-420e-b2df-724bf16e68ed.png)
+
+
+This will generate `GodhomeWinLossTracker/Export.SaveX.txt` (in TSV format). This file can then be viewed directly in any text editing app or be imported into spreadsheet apps for data analysis.
 
 
 ## Turn mod on/off
