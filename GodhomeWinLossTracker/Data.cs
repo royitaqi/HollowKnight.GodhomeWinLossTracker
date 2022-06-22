@@ -15,7 +15,7 @@ namespace GodhomeWinLossTracker
     [Serializable]
     public class GlobalData
     {
-        public int myGlobalData = 999;
+        public bool AutoExport = false;
     }
 
     [Serializable]

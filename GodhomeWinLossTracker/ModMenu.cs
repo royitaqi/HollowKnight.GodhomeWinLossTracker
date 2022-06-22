@@ -15,9 +15,18 @@ namespace GodhomeWinLossTracker
             return new Menu("Godhome Win Loss Tracker", new Element[]
             {
                 toggle.CreateToggle("Mod toggle", "Allows disabling the mod"),
+                new HorizontalOption(
+                    "Auto export",
+                    "... stats at game save as TSV",
+                    new []{ "Off", "On" },
+                    selectedIndex => {
+                        GodhomeWinLossTracker.instance.globalData.AutoExport = selectedIndex == 1;
+                    },
+                    () => GodhomeWinLossTracker.instance.globalData.AutoExport ? 1 : 0
+                ),
                 new MenuButton(
-                    "Export stats as TSV",
-                    "",
+                    "Export stats",
+                    "... as TSV",
                     _ => ExportStatsAsTsv()
                 ),
             });

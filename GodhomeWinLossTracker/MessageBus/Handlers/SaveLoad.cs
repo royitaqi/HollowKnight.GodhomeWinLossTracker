@@ -27,40 +27,24 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             if (message is SaveFolderData)
             {
-                try
+                SaveFolderData(logger);
+                if (_mod.globalData.AutoExport)
                 {
-                    SaveFolderData();
-                }
-                catch (IOException exception)
-                {
-                    logger.LogError($"Failed to save folder data: {exception}");
+                    ExportFolderData(logger);
                 }
             }
             else if (message is LoadFolderData)
             {
-                try
-                {
-                    LoadFolderData();
-                }
-                catch (IOException exception)
-                {
-                    logger.LogError($"Failed to load folder data: {exception}");
-                }
+                LoadFolderData(logger);
+                BackupFolderData(logger);
             }
             else if (message is ExportFolderData)
             {
-                try
-                {
-                    ExportFolderData();
-                }
-                catch (IOException exception)
-                {
-                    logger.LogError($"Failed to export folder data: {exception}");
-                }
+                ExportFolderData(logger);
             }
         }
 
-        private void SaveFolderData()
+        private void SaveFolderData(Modding.Loggable logger)
         {
             string filename = GetDataSaveFilename();
             // Skip if not a valid profile ID
@@ -71,14 +55,41 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             string path = Path.Combine(ModSaveDirectory, filename);
 
             string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
-            
+
             File.WriteAllText(path, jsonString);
 #if DEBUG
             _mod.Log($"{path} saved: {_mod.folderData.RawRecords.Count} records");
 #endif
         }
 
-        private void LoadFolderData()
+        private void LoadFolderData(Modding.Loggable logger)
+        {
+            string filename = GetDataSaveFilename();
+            // Skip if not a valid profile ID
+            if (filename == null)
+            {
+                return;
+            }
+            string path = Path.Combine(ModSaveDirectory, filename);
+
+            if (File.Exists(path))
+            {
+                string jsonString = File.ReadAllText(path);
+                _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
+#if DEBUG
+                _mod.Log($"{path} loaded: {_mod.folderData.RawRecords.Count} records");
+#endif
+            }
+            else
+            {
+                _mod.folderData = new FolderData();
+#if DEBUG
+                _mod.Log($"{path} doesn't exist. New/empty folder data will be used.");
+#endif
+            }
+        }
+
+        private void BackupFolderData(Modding.Loggable logger)
         {
             string filename = GetDataSaveFilename();
             // Skip if not a valid profile ID
@@ -93,27 +104,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
             if (File.Exists(path))
             {
-                string jsonString = File.ReadAllText(path);
-                _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
-#if DEBUG
-                _mod.Log($"{path} loaded: {_mod.folderData.RawRecords.Count} records");
-#endif
-
                 File.Copy(path, backupPath);
 #if DEBUG
-                _mod.Log($"{path} backedup to {backupPath}");
-#endif
-            }
-            else
-            {
-                _mod.folderData = new FolderData();
-#if DEBUG
-                _mod.Log($"{path} doesn't exist. New/empty folder data will be used.");
+                _mod.Log($"{path} backed up to {backupPath}");
 #endif
             }
         }
 
-        private void ExportFolderData()
+        private void ExportFolderData(Modding.Loggable logger)
         {
             string filename = GetExportSaveFilename();
             // Skip if not a valid profile ID
