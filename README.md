@@ -12,13 +12,13 @@ Whenever the mod detects a win/loss, it shows a small notification at the bottom
 ![Hollow Knight 2022-06-21 17-48-03 a](https://user-images.githubusercontent.com/14790745/174921467-d980e3f8-1230-45ba-a8b9-acfed7b93d56.png)
 
 
-
 ## Find (and update) your stats
 
-When "Save & Quit", the mod automatically saves stats into files `Data.SaveX.json` (X=1..4) in the game's save folder. **To find on a PC:** press `Windows + R`, put in `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker"`, press `ENTER`).
+When "Save & Quit", the mod automatically saves stats into files `Data.SaveX.json` (X=1..4) in the game's save folder.
 
+**To find on a PC:** Press `Windows + R`, put in `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker"`, press `ENTER`).
 
-**To update the stats**, first "Save & Quit", then modify the `Data.SaveX.json` files and save the files. The updated stats will be automatically loaded the next time the same game save is loaded.
+**To update the stats:** First "Save & Quit", then modify the `Data.SaveX.json` files and save the files. The updated stats will be automatically loaded the next time the same game save is loaded.
 
 
 ## Automatic (local) backup of your stats
@@ -33,7 +33,6 @@ The mod supports exporting your stats into tab-separated values (TSV) format for
 **How to:** When a game save is loaded in the game, go into the "Mods" menu, select "GodhomeWinLossTracker", then "Export stats as TSV". A notification will show up when the export is success.
 
 ![Hollow Knight 2022-06-21 17-48-32 a](https://user-images.githubusercontent.com/14790745/174921490-2089c19b-f5cb-420e-b2df-724bf16e68ed.png)
-
 
 This will generate `GodhomeWinLossTracker/Export.SaveX.txt` (in TSV format). This file can then be viewed directly in any text editing app or be imported into spreadsheet apps for data analysis.
 
