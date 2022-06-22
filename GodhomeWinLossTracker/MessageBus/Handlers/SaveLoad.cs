@@ -73,7 +73,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
             
             File.WriteAllText(path, jsonString);
+#if DEBUG
             _mod.Log($"{path} saved: {jsonString}");
+#endif
         }
 
         private void LoadFolderData()
@@ -93,15 +95,21 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
+#if DEBUG
                 _mod.Log($"{path} loaded: {jsonString}");
+#endif
 
                 File.Copy(path, backupPath);
+#if DEBUG
                 _mod.Log($"{path} backedup to {backupPath}");
+#endif
             }
             else
             {
                 _mod.folderData = new FolderData();
+#if DEBUG
                 _mod.Log($"{path} doesn't exist. New/empty folder data will be used.");
+#endif
             }
         }
 
@@ -123,7 +131,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     sw.WriteLine($"{r.Timestamp}\t{r.SequenceName}\t{r.BossName}\t{r.SceneName}\t{r.Wins}\t{r.Losses}\t{r.FightLengthMs}\t{r.Source}");
                 }
             }
+#if DEBUG
             _mod.Log($"{path} exported: {_mod.folderData.RawRecords.Count} lines");
+#endif
             _mod.messageBus.Put(new ExportedFolderData { Filename = filename });
         }
 
