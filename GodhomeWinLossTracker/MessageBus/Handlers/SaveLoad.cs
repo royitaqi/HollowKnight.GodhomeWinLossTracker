@@ -13,12 +13,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class SaveLoad : IHandler
     {
-        private static readonly string FolderDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
+        private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
+        private static readonly string ModBackupDirectory = ModSaveDirectory + "/backup";
 
         public SaveLoad(GodhomeWinLossTracker mod)
         {
             _mod = mod;
-            Directory.CreateDirectory(FolderDirectory);
+            Directory.CreateDirectory(ModSaveDirectory);
+            Directory.CreateDirectory(ModBackupDirectory);
         }
 
         public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage message)
@@ -61,7 +63,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void SaveFolderData()
         {
             string filename = GetDataSaveFilename();
-            string path = Path.Combine(FolderDirectory, filename);
+            string path = Path.Combine(ModSaveDirectory, filename);
 
             string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
             
@@ -72,13 +74,19 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void LoadFolderData()
         {
             string filename = GetDataSaveFilename();
-            string path = Path.Combine(FolderDirectory, filename);
+            string path = Path.Combine(ModSaveDirectory, filename);
+
+            string backupSuffix = DateTime.Now.ToString("yyyyMMdd.HHmmss.fff") + ".json";
+            string backupPath = Path.Combine(ModBackupDirectory, $"{filename}.{backupSuffix}");
 
             if (File.Exists(path))
             {
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
                 _mod.Log($"{path} loaded: {jsonString}");
+
+                File.Copy(path, backupPath);
+                _mod.Log($"{path} backedup to {backupPath}");
             }
             else
             {
@@ -90,7 +98,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void ExportFolderData()
         {
             string filename = GetExportSaveFilename();
-            string path = Path.Combine(FolderDirectory, filename);
+            string path = Path.Combine(ModSaveDirectory, filename);
 
             using (var sw = new System.IO.StreamWriter(path))
             {
