@@ -34,7 +34,7 @@ The mod supports exporting your stats into tab-separated values (TSV) format for
 
 ![Hollow Knight 2022-06-21 17-48-32 a](https://user-images.githubusercontent.com/14790745/174921490-2089c19b-f5cb-420e-b2df-724bf16e68ed.png)
 
-This will generate `GodhomeWinLossTracker/Export.SaveX.txt` (in TSV format). This file can then be viewed directly in any text editing app or be imported into spreadsheet apps for data analysis (an example [data analysis spreadsheet](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing)).
+This will generate `GodhomeWinLossTracker/Export.SaveX.txt` (in TSV format). This file can then be viewed directly in any text editing app or be imported into spreadsheet apps for data analysis ([an example](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing) data analysis spreadsheet).
 
 
 ## Turn mod on/off
