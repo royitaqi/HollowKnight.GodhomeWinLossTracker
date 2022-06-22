@@ -74,7 +74,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             
             File.WriteAllText(path, jsonString);
 #if DEBUG
-            _mod.Log($"{path} saved: {jsonString}");
+            _mod.Log($"{path} saved: {_mod.folderData.RawRecords.Count} records");
 #endif
         }
 
@@ -96,7 +96,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
 #if DEBUG
-                _mod.Log($"{path} loaded: {jsonString}");
+                _mod.Log($"{path} loaded: {_mod.folderData.RawRecords.Count} records");
 #endif
 
                 File.Copy(path, backupPath);
