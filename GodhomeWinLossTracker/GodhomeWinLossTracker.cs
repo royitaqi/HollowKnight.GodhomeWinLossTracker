@@ -7,6 +7,7 @@ using UnityEngine;
 using GodhomeWinLossTracker.MessageBus;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using Newtonsoft.Json;
+using Vasi;
 
 namespace GodhomeWinLossTracker
 {
@@ -104,8 +105,20 @@ namespace GodhomeWinLossTracker
             {
                 string json = JsonConvert.SerializeObject(folderData);
                 Log("Current local data: " + json);
-
-                messageBus.Put(new SaveFolderData());
+            }
+            else if (Input.GetKeyDown(KeyCode.U))
+            {
+                Log("DEBUG hooking");
+                // Test out FSM approach
+                PlayMakerFSM fsm = GameObject.Find("Knight").transform.Find("Hero Death").gameObject.LocateMyFSM("Hero Death Anim");
+                fsm.GetState("Anim Start").AddMethod(()
+                    =>
+                {
+                    Log("DEBUG It's a dream :OOO");
+                    PlayerData.instance.SetInt("health", 2);
+                    PlayerData.instance.SetInt("geo", 99);
+                });
+                Log("DEBUG hooked");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha8))
             {
