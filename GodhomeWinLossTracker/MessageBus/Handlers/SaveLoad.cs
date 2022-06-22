@@ -63,6 +63,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void SaveFolderData()
         {
             string filename = GetDataSaveFilename();
+            // Skip if not a valid profile ID
+            if (filename == null)
+            {
+                return;
+            }
             string path = Path.Combine(ModSaveDirectory, filename);
 
             string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
@@ -74,6 +79,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void LoadFolderData()
         {
             string filename = GetDataSaveFilename();
+            // Skip if not a valid profile ID
+            if (filename == null)
+            {
+                return;
+            }
             string path = Path.Combine(ModSaveDirectory, filename);
 
             string backupSuffix = DateTime.Now.ToString("yyyyMMdd.HHmmss.fff") + ".json";
@@ -98,6 +108,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void ExportFolderData()
         {
             string filename = GetExportSaveFilename();
+            // Skip if not a valid profile ID
+            if (filename == null)
+            {
+                return;
+            }
             string path = Path.Combine(ModSaveDirectory, filename);
 
             using (var sw = new System.IO.StreamWriter(path))
@@ -115,12 +130,20 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private string GetDataSaveFilename()
         {
             int slot = _mod.localData.ProfileID;
+            if (slot == 0)
+            {
+                return null;
+            }
             return $"Data.Save{slot}.json";
         }
 
         private string GetExportSaveFilename()
         {
             int slot = _mod.localData.ProfileID;
+            if (slot == 0)
+            {
+                return null;
+            }
             return $"Export.Save{slot}.txt";
         }
 
