@@ -27,8 +27,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 if (!fsmHooked)
                 {
 #if DEBUG
-                    _mod.Log("Hooking FSM event: Hero Death\\Hero Death Anim\\Anim Start");
+                    _mod.Log("Hooking FSM event: TK dream death");
 #endif
+                    // This FSM event detects TK dream death.
+                    // For TK real death, use "Map Zone" instead of "Anim Start".
                     GameObject
                         .Find("Knight").transform
                         .Find("Hero Death").gameObject
@@ -36,7 +38,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                         .GetState("Anim Start")
                         .AddMethod(OnHeroDeathAnimStartInDream);
 #if DEBUG
-                    _mod.Log("Hooked FSM event: Hero Death\\Hero Death Anim\\Anim Start");
+                    _mod.Log("Hooked FSM event: TK dream death");
 #endif
                     fsmHooked = true;
                 }
