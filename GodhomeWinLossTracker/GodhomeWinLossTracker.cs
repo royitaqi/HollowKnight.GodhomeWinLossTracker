@@ -114,7 +114,7 @@ namespace GodhomeWinLossTracker
                 fsm.GetState("Anim Start").AddMethod(()
                     =>
                 {
-                    Log("DEBUG It's a dream :OOO");
+                    Log("DEBUG TK death");
                     PlayerData.instance.SetInt("health", 2);
                     PlayerData.instance.SetInt("geo", 99);
                 });
