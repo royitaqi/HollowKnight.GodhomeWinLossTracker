@@ -7,6 +7,7 @@ using UnityEngine;
 using GodhomeWinLossTracker.MessageBus;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using Newtonsoft.Json;
+using Vasi;
 
 namespace GodhomeWinLossTracker
 {
@@ -23,7 +24,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.1.1.1";
+        public override string GetVersion() => "0.1.2.0";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
@@ -88,7 +89,7 @@ namespace GodhomeWinLossTracker
         private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
         {
 #if DEBUG
-            Log($"OnEndBossScene");
+            Log("OnEndBossScene");
 #endif
             // At least one boss died.
             // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
@@ -104,8 +105,39 @@ namespace GodhomeWinLossTracker
             {
                 string json = JsonConvert.SerializeObject(folderData);
                 Log("Current local data: " + json);
-
-                messageBus.Put(new SaveFolderData());
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                Log("DEBUG hooking Anim Start");
+                GameObject.Find("Knight").transform.Find("Hero Death").gameObject.LocateMyFSM("Hero Death Anim").GetState("Anim Start").AddMethod(() =>
+                {
+                    Log("DEBUG Anim Start");
+                    PlayerData.instance.SetInt("health", 2);
+                    PlayerData.instance.SetInt("geo", 20);
+                });
+                Log("DEBUG hooked Anim Start");
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                Log("DEBUG hooking Map Zone");
+                GameObject.Find("Knight").transform.Find("Hero Death").gameObject.LocateMyFSM("Hero Death Anim").GetState("Map Zone").AddMethod(() =>
+                {
+                    Log("DEBUG Map Zone");
+                    PlayerData.instance.SetInt("health", 3);
+                    PlayerData.instance.SetInt("geo", 30);
+                });
+                Log("DEBUG hooked Map Zone");
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                Log("DEBUG hooking UpSlash");
+                GameObject.Find("Knight").transform.Find("UpSlash").gameObject.LocateMyFSM("damages_enemy").GetState("Send Event").AddMethod(() =>
+                {
+                    Log("DEBUG UpSlash");
+                    PlayerData.instance.SetInt("health", 4);
+                    PlayerData.instance.SetInt("geo", 40);
+                });
+                Log("DEBUG hooked UpSlash");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha8))
             {

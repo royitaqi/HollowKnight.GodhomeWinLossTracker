@@ -23,6 +23,7 @@ namespace GodhomeWinLossTracker.MessageBus
                 new DisplayUpdater(),
                 new SaveLoad(mod),
                 new SequenceChangeDetector(),
+                new TKDeathDetector(mod),
                 new WinLossGenerator(),
                 new WinLossTracker(mod)
             });

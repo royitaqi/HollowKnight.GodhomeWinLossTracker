@@ -20,20 +20,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (message is BossChange)
             {
-                // If there is a current boss, it means it hasn't met its required number of kills.
-                // A boss change in this case means that the current boss isn't fully finished, hence a loss.
-                if (_currentBoss != null)
-                {
-                    EmitRecord(bus, false);
-                }
+                // It should never happen that there is a current boss and there is a boss change.
+                // A boss fight should end either with a win or a loss. Both should have led to a reset, clearing the current boss to null.
+                DevUtils.Assert(_currentBoss == null, "It should never happen that there is a current boss and there is a boss change");
 
                 // Initialize to new boss.
                 BossChange msg = message as BossChange;
-                if (msg.IsNoBoss())
-                {
-                    Reset();
-                }
-                else
+                if (!msg.IsNoBoss())
                 {
                     _currentBoss = msg;
                     _fightStartGameTime = DevUtils.GetTimestampEpochMs();
@@ -50,6 +43,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     EmitRecord(bus, true);
                     Reset();
                 }
+            }
+            else if (message is TKDreamDeath)
+            {
+                DevUtils.Assert(_currentBoss != null, "Shouldn't see boss death event when there is no current boss");
+
+                // TK died in dream fight. Mark a loss.
+                EmitRecord(bus, false);
+                Reset();
             }
         }
 
