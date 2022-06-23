@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {
-    internal class TKDeath : IMessage
+    internal class TKDreamDeath : IMessage
     {
         public override string ToString()
         {
-            return "TK died";
+            return "TK died in dream";
         }
     }
 }

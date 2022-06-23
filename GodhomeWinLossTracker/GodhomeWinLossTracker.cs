@@ -89,7 +89,7 @@ namespace GodhomeWinLossTracker
         private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
         {
 #if DEBUG
-            Log($"OnEndBossScene");
+            Log("OnEndBossScene");
 #endif
             // At least one boss died.
             // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
