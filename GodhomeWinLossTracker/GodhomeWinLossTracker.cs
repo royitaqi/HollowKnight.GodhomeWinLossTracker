@@ -106,19 +106,38 @@ namespace GodhomeWinLossTracker
                 string json = JsonConvert.SerializeObject(folderData);
                 Log("Current local data: " + json);
             }
-            else if (Input.GetKeyDown(KeyCode.U))
+            else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                Log("DEBUG hooking");
-                // Test out FSM approach
-                PlayMakerFSM fsm = GameObject.Find("Knight").transform.Find("Hero Death").gameObject.LocateMyFSM("Hero Death Anim");
-                fsm.GetState("Anim Start").AddMethod(()
-                    =>
+                Log("DEBUG hooking Anim Start");
+                GameObject.Find("Knight").transform.Find("Hero Death").gameObject.LocateMyFSM("Hero Death Anim").GetState("Anim Start").AddMethod(() =>
                 {
-                    Log("DEBUG TK death");
+                    Log("DEBUG Anim Start");
                     PlayerData.instance.SetInt("health", 2);
-                    PlayerData.instance.SetInt("geo", 99);
+                    PlayerData.instance.SetInt("geo", 20);
                 });
-                Log("DEBUG hooked");
+                Log("DEBUG hooked Anim Start");
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                Log("DEBUG hooking Map Zone");
+                GameObject.Find("Knight").transform.Find("Hero Death").gameObject.LocateMyFSM("Hero Death Anim").GetState("Map Zone").AddMethod(() =>
+                {
+                    Log("DEBUG Map Zone");
+                    PlayerData.instance.SetInt("health", 3);
+                    PlayerData.instance.SetInt("geo", 30);
+                });
+                Log("DEBUG hooked Map Zone");
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                Log("DEBUG hooking UpSlash");
+                GameObject.Find("Knight").transform.Find("UpSlash").gameObject.LocateMyFSM("damages_enemy").GetState("Send Event").AddMethod(() =>
+                {
+                    Log("DEBUG UpSlash");
+                    PlayerData.instance.SetInt("health", 4);
+                    PlayerData.instance.SetInt("geo", 40);
+                });
+                Log("DEBUG hooked UpSlash");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha8))
             {
