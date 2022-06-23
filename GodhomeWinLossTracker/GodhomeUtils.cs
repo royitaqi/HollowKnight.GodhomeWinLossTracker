@@ -8,12 +8,12 @@ namespace GodhomeWinLossTracker
     {
         internal static bool IsBossScene(string sceneName)
         {
-            return !NonBossScenes.Contains(sceneName);
+            return BossSceneToName.ContainsKey(sceneName);
         }
 
         internal static bool IsNonBossScene(string sceneName)
         {
-            return NonBossScenes.Contains(sceneName);
+            return !BossSceneToName.ContainsKey(sceneName);
         }
 
         internal static string GetNullableBossName(string sceneName)
@@ -89,26 +89,6 @@ namespace GodhomeWinLossTracker
                 return 1;
             }
         }
-
-
-
-        private static readonly HashSet<string> NonBossScenes = new HashSet<string>
-        {
-            "End_Game_Completion",
-            "GG_Atrium",
-            "GG_Atrium_Roof",
-            "GG_Blue_Room",
-            "GG_Boss_Door_Entrance",
-            "GG_End_Sequence",
-            "GG_End_Sequence",
-            "GG_Engine",
-            "GG_Engine_Prime",
-            "GG_Engine_Root",
-            "GG_Spa",
-            "GG_Unn",
-            "GG_Workshop",
-            "GG_Wyrm",
-        };
 
         private static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new Dictionary<string, int>
         {
