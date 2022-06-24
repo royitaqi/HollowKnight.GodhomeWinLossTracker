@@ -10,6 +10,25 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class WinLossGenerator : IHandler
     {
+        // Facts:
+        // A. It's possible to see BossDeath event after TKDreamDeath event.
+        //   * This can happen when the boss has long death animation and has minions/hazards to kill TK while the death animation is playing. One example is The Collector.
+        // B. It's possible to see TKDreamDeath event after BossDeath event.
+        //   * This can happen when the boss has minions/hazards to kill TK after the boss' death. One example is Gruz Mother.
+        // C. It's possible to see BossDeath event after boss change.
+        //   * See video and log:
+        //     * https://www.youtube.com/watch?v=mjFlYRexdMM
+        //     * https://www.youtube.com/watch?v=3lrYMDBB3ic
+        //     * Note that, although both videos share the same event sequence, they register as different result (one win, the other loss).
+
+        // Logic of detecting wins and losses:
+        // 1. During boss fights, boss kills and TK dream deaths are memorized. No win/loss will be registered.
+        // 2. All wins and losses will be registered at the end of boss fights:
+        //   2.1 If there was TK dream death, register a loss.
+        //   2.2 If kill count meet required count, register a win.
+        //   2.3 Otherwise, register a loss (i.e. player leave fight without winning nor dying).
+        //   2.4 Always: reset and/or prepare according to next boss.
+        // 3. Boss kills and TK dream deaths outside boss fights will be ignored.
         public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage message)
         {
             if (message is SequenceChange)
@@ -18,39 +37,64 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 DevUtils.Assert(msg.Name != null, "Sequence name shouldn't be null");
                 _currentSequence = msg.Name;
             }
+            else if (message is TKDreamDeath)
+            {
+                if (_currentBoss != null)
+                {
+                    // 1
+                    _tkDreamDeaths++;
+                }
+                else
+                {
+                    // 3
+                }
+            }
+            else if (message is BossDeath)
+            {
+                if (_currentBoss != null)
+                {
+                    // 1
+                    _bossKills++;
+                }
+                else
+                {
+                    // 3
+                }
+                
+            }
             else if (message is BossChange)
             {
-                // It should never happen that there is a current boss and there is a boss change.
-                // A boss fight should end either with a win or a loss. Both should have led to a reset, clearing the current boss to null.
-                DevUtils.Assert(_currentBoss == null, "It should never happen that there is a current boss and there is a boss change");
+                // 2
+                // If a boss fight was on going (and hasn't been concluded yet), it's time to conclude the boss fight and register either a win or a loss.
+                if (_currentBoss != null)
+                {
+                    DevUtils.Assert(_tkDreamDeaths == 0 || _tkDreamDeaths == 1, "TK can only die zero or one time during a boss fight");
+                    if (_tkDreamDeaths > 0)
+                    {
+                        // 2.1
+                        EmitRecord(bus, false);
+                    }
+                    else
+                    {
+                        int requiredBossKills = GodhomeUtils.GetKillsRequiredToWin(_currentBoss.SceneName);
+                        DevUtils.Assert(_bossKills <= requiredBossKills, "Actually boss kill counts should never exceed required counts");
+
+                        // 2.2 and 2.3
+                        EmitRecord(bus, _bossKills == requiredBossKills);
+                    }
+                    // 2.4
+                    Reset();
+                }
 
                 // Initialize to new boss.
                 BossChange msg = message as BossChange;
                 if (!msg.IsNoBoss())
                 {
                     _currentBoss = msg;
+                    _tkDreamDeaths = 0;
+                    _bossKills = 0;
                     _fightStartGameTime = DevUtils.GetTimestampEpochMs();
-                    _currentKillsRequiredToWin = GodhomeUtils.GetKillsRequiredToWin(msg.SceneName);
                 }
-            }
-            else if (message is BossDeath)
-            {
-                DevUtils.Assert(_currentBoss != null, "Shouldn't see boss death event when there is no current boss");
-                _currentKillsRequiredToWin--;
-
-                // Achieving the required deaths to win. Mark a win.
-                if (_currentKillsRequiredToWin == 0) {
-                    EmitRecord(bus, true);
-                    Reset();
-                }
-            }
-            else if (message is TKDreamDeath)
-            {
-                DevUtils.Assert(_currentBoss != null, "Shouldn't see boss death event when there is no current boss");
-
-                // TK died in dream fight. Mark a loss.
-                EmitRecord(bus, false);
-                Reset();
             }
         }
 
@@ -71,8 +115,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void Reset()
         {
             _currentBoss = null;
+            _tkDreamDeaths = -1;
+            _bossKills = -1;
             _fightStartGameTime = -1;
-            _currentKillsRequiredToWin = -1;
         }
 
         // Always have the latest sequence name, even when not in a boss fight.
@@ -80,7 +125,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         // Null value means currently no boss.
         // Non-null value means currently fighting a boss.
         private BossChange _currentBoss = null;
+        private int _tkDreamDeaths = -1;
+        private int _bossKills = -1;
         private long _fightStartGameTime = -1;
-        private int _currentKillsRequiredToWin = -1;
     }
 }

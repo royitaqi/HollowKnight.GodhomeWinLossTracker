@@ -24,7 +24,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.1.2.0";
+        public override string GetVersion() => "0.1.3.0";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
