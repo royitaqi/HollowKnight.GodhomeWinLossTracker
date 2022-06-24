@@ -53,6 +53,11 @@ namespace GodhomeWinLossTracker.MessageBus
             }
         }
 
+        public void Subscribe(IHandler handler)
+        {
+            _handlers.Add(handler);
+        }
+
         private List<IHandler> _handlers;
         private Queue<IMessage> _messages;
         private Modding.Loggable _logger;
