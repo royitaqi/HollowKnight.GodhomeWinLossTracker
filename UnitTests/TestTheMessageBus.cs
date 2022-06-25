@@ -52,8 +52,9 @@ namespace UnitTests
                 new Echo("1"),
                 new Echo("2"),
             };
-            var inputMessages = new[] { new BusEvent { Event = "0" } };
+            var inputMessages = new[] { new BusEvent { Event = "0" }, new BusEvent { Event = "1" } };
             var expectedMessages = new[] {
+                // 0 be put onto bus
                 new BusEvent { Event = "0" },
                 // 0 processed by echo 1
                 new BusEvent { Event = "01" },
@@ -68,6 +69,22 @@ namespace UnitTests
                 // 02 processed by echo 2
                 new BusEvent { Event = "022" },
                 // 011, 012, 021, 022 processed by echo 1 and 2
+                // ---
+                // 1 be put onto bus
+                new BusEvent { Event = "1" },
+                // 1 processed by echo 1
+                new BusEvent { Event = "11" },
+                // 1 processed by echo 2
+                new BusEvent { Event = "12" },
+                // 11 processed by echo 1
+                new BusEvent { Event = "111" },
+                // 11 processed by echo 2
+                new BusEvent { Event = "112" },
+                // 12 processed by echo 1
+                new BusEvent { Event = "121" },
+                // 12 processed by echo 2
+                new BusEvent { Event = "122" },
+                // 111, 112, 121, 122 processed by echo 1 and 2
             };
 
             TestUtils.TestMessageBus(
