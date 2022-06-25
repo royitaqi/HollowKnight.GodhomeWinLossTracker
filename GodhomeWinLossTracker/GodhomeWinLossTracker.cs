@@ -87,7 +87,33 @@ namespace GodhomeWinLossTracker
             Log($"DEBUG bossNameKey = {bossNameKey}");
             Log($"DEBUG descriptionSheet = {descriptionSheet}");
             Log($"DEBUG descriptionKey = {descriptionKey}");
+            Log($"DEBUG self.tier1Button.button.name = {self.tier1Button.button.name}");
+            Log($"DEBUG self.tier2Button.button.name = {self.tier2Button.button.name}");
+            Log($"DEBUG self.tier3Button.button.name = {self.tier3Button.button.name}");
+            Log($"DEBUG self.bossNameText.text = {self.bossNameText.text}");
+            Log($"DEBUG self.descriptionText.text = {self.descriptionText.text}");
+
+            self.bossNameText.text = "DEBUG 1";
+            self.descriptionText.text = "DEBUG 2";
+
             orig(self, bossStatue, bossNameSheet, bossNameKey, descriptionSheet, descriptionKey);
+
+            Log($"DEBUG2 BossChallengeUI_Setup");
+            Log($"DEBUG2 bossStatue.bossScene.Tier1Scene = {bossStatue.bossScene.Tier1Scene}");
+            Log($"DEBUG2 bossStatue.bossScene.Tier2Scene = {bossStatue.bossScene.Tier2Scene}");
+            Log($"DEBUG2 bossStatue.bossScene.Tier3Scene = {bossStatue.bossScene.Tier3Scene}");
+            Log($"DEBUG2 bossNameSheet = {bossNameSheet}");
+            Log($"DEBUG2 bossNameKey = {bossNameKey}");
+            Log($"DEBUG2 descriptionSheet = {descriptionSheet}");
+            Log($"DEBUG2 descriptionKey = {descriptionKey}");
+            Log($"DEBUG2 self.tier1Button.button.name = {self.tier1Button.button.name}");
+            Log($"DEBUG2 self.tier2Button.button.name = {self.tier2Button.button.name}");
+            Log($"DEBUG2 self.tier3Button.button.name = {self.tier3Button.button.name}");
+            Log($"DEBUG2 self.bossNameText.text = {self.bossNameText.text}");
+            Log($"DEBUG2 self.descriptionText.text = {self.descriptionText.text}");
+
+            self.bossNameText.text = "DEBUG 3";
+            self.descriptionText.text = "DEBUG 4";
         }
 
         ///
