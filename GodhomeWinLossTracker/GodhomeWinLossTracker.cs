@@ -121,6 +121,12 @@ namespace GodhomeWinLossTracker
                 string json = JsonConvert.SerializeObject(folderData);
                 Log("Current local data: " + json);
             }
+            else if (Input.GetKeyDown(KeyCode.I))
+            {
+                GameManager gm = GameManager.instance;
+                Log($"DEBUG gm.PlayTime = {gm.PlayTime}");
+                Log($"DEBUG DevUtils.GetTimestampEpochMs() = {DevUtils.GetTimestampEpochMs()}");
+            }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 Log("DEBUG hooking Anim Start");
