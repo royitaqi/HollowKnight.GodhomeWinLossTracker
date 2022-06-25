@@ -10,7 +10,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class SequenceChangeDetector: IHandler
     {
-        public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage msg)
+        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
             if (msg is SceneChange)
             {

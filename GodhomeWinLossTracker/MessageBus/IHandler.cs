@@ -8,6 +8,6 @@ namespace GodhomeWinLossTracker.MessageBus
 {
     internal interface IHandler
     {
-        abstract void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage msg);
+        abstract void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg);
     }
 }

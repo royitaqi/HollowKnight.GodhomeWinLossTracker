@@ -10,24 +10,10 @@ namespace GodhomeWinLossTracker.MessageBus
 {
     internal class TheMessageBus
     {
-        public TheMessageBus(GodhomeWinLossTracker mod)
+        public TheMessageBus(IGodhomeWinLossTracker mod, IEnumerable<IHandler> handlers)
         {
             _logger = mod;
-
-            _handlers = new List<IHandler>();
-#if DEBUG
-            _handlers.Add(new Logger());
-#endif
-            _handlers.AddRange(new IHandler[] {
-                new BossChangeDetector(),
-                new DisplayUpdater(),
-                new SaveLoad(mod),
-                new SequenceChangeDetector(),
-                new TKDeathDetector(mod),
-                new WinLossGenerator(),
-                new WinLossTracker(mod)
-            });
-
+            _handlers = new List<IHandler>(handlers);
             _messages = new();
             _processing = false;
 
@@ -53,14 +39,9 @@ namespace GodhomeWinLossTracker.MessageBus
             }
         }
 
-        public void Subscribe(IHandler handler)
-        {
-            _handlers.Add(handler);
-        }
-
         private List<IHandler> _handlers;
         private Queue<IMessage> _messages;
-        private Modding.Loggable _logger;
+        private Modding.ILogger _logger;
         private bool _processing;
     }
 }

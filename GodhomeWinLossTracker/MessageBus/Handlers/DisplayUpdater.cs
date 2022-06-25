@@ -11,7 +11,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class DisplayUpdater : IHandler
     {
-        public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage message)
+        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
             // For RegisteredRawWinLoss, we need to display the inner message.
             if (message is RegisteredRawWinLoss)

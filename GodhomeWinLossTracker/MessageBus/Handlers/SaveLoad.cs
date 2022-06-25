@@ -13,38 +13,39 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class SaveLoad : IHandler
     {
-        private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
+        //private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
+        private static readonly string ModSaveDirectory = "C:/Users/Roy/AppData/LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker";
         private static readonly string ModBackupDirectory = ModSaveDirectory + "/backup";
 
-        public SaveLoad(GodhomeWinLossTracker mod)
+        public SaveLoad(IGodhomeWinLossTracker mod)
         {
             _mod = mod;
             Directory.CreateDirectory(ModSaveDirectory);
             Directory.CreateDirectory(ModBackupDirectory);
         }
 
-        public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage message)
+        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
             if (message is SaveFolderData)
             {
-                SaveFolderData(logger);
+                SaveFolderData(bus, logger);
                 if (_mod.globalData.AutoExport)
                 {
-                    ExportFolderData(logger);
+                    ExportFolderData(bus, logger);
                 }
             }
             else if (message is LoadFolderData)
             {
-                LoadFolderData(logger);
-                BackupFolderData(logger);
+                LoadFolderData(bus, logger);
+                BackupFolderData(bus, logger);
             }
             else if (message is ExportFolderData)
             {
-                ExportFolderData(logger);
+                ExportFolderData(bus, logger);
             }
         }
 
-        private void SaveFolderData(Modding.Loggable logger)
+        private void SaveFolderData(TheMessageBus bus, Modding.ILogger logger)
         {
             string filename = GetDataSaveFilename();
             // Skip if not a valid profile ID
@@ -58,11 +59,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
             File.WriteAllText(path, jsonString);
 #if DEBUG
-            _mod.Log($"{path} saved: {_mod.folderData.RawRecords.Count} records");
+            logger.Log($"{path} saved: {_mod.folderData.RawRecords.Count} records");
 #endif
         }
 
-        private void LoadFolderData(Modding.Loggable logger)
+        private void LoadFolderData(TheMessageBus bus, Modding.ILogger logger)
         {
             string filename = GetDataSaveFilename();
             // Skip if not a valid profile ID
@@ -77,19 +78,19 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
 #if DEBUG
-                _mod.Log($"{path} loaded: {_mod.folderData.RawRecords.Count} records");
+                logger.Log($"{path} loaded: {_mod.folderData.RawRecords.Count} records");
 #endif
             }
             else
             {
                 _mod.folderData = new FolderData();
 #if DEBUG
-                _mod.Log($"{path} doesn't exist. New/empty folder data will be used.");
+                logger.Log($"{path} doesn't exist. New/empty folder data will be used.");
 #endif
             }
         }
 
-        private void BackupFolderData(Modding.Loggable logger)
+        private void BackupFolderData(TheMessageBus bus, Modding.ILogger logger)
         {
             string filename = GetDataSaveFilename();
             // Skip if not a valid profile ID
@@ -106,12 +107,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 File.Copy(path, backupPath);
 #if DEBUG
-                _mod.Log($"{path} backed up to {backupPath}");
+                logger.Log($"{path} backed up to {backupPath}");
 #endif
             }
         }
 
-        private void ExportFolderData(Modding.Loggable logger)
+        private void ExportFolderData(TheMessageBus bus, Modding.ILogger logger)
         {
             string filename = GetExportSaveFilename();
             // Skip if not a valid profile ID
@@ -130,9 +131,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }
             }
 #if DEBUG
-            _mod.Log($"{path} exported: {_mod.folderData.RawRecords.Count} lines");
+            logger.Log($"{path} exported: {_mod.folderData.RawRecords.Count} lines");
 #endif
-            _mod.messageBus.Put(new ExportedFolderData { Filename = filename });
+            bus.Put(new ExportedFolderData { Filename = filename });
         }
 
         private string GetDataSaveFilename()
@@ -155,6 +156,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             return $"Export.Save{slot}.txt";
         }
 
-        private readonly GodhomeWinLossTracker _mod;
+        private readonly IGodhomeWinLossTracker _mod;
     }
 }

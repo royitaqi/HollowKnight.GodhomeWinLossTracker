@@ -23,4 +23,11 @@ namespace GodhomeWinLossTracker
     {
         public int ProfileID = 0;
     }
+
+    internal interface IDataHolder
+    {
+        public GlobalData globalData { get; set; }
+        public LocalData localData { get; set; }
+        public FolderData folderData { get; set; }
+    }
 }

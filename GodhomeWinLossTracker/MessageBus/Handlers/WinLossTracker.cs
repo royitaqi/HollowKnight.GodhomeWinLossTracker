@@ -11,12 +11,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class WinLossTracker : IHandler
     {
-        public WinLossTracker(GodhomeWinLossTracker mod)
+        public WinLossTracker(IGodhomeWinLossTracker mod)
         {
             _mod = mod;
         }
 
-        public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage message)
+        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
             if (message is RawWinLoss)
             {
@@ -28,6 +28,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
         }
 
-        private readonly GodhomeWinLossTracker _mod;
+        private readonly IGodhomeWinLossTracker _mod;
     }
 }
