@@ -38,7 +38,7 @@ namespace GodhomeWinLossTracker
                 new MessageBus.Handlers.Logger(),
 #endif
                 new BossChangeDetector(),
-                new DisplayUpdater(),
+                new DisplayUpdater(this),
                 new SaveLoad(this),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
