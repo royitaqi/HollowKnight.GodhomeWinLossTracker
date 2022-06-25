@@ -16,8 +16,26 @@ namespace GodhomeWinLossTracker
             {
                 toggle.CreateToggle("Mod toggle", "Allows disabling the mod"),
                 new HorizontalOption(
+                    "Notify detected win/loss",
+                    "",
+                    new []{ "Off", "On" },
+                    selectedIndex => {
+                        GodhomeWinLossTracker.instance.globalData.NotifyForRecord = selectedIndex == 1;
+                    },
+                    () => GodhomeWinLossTracker.instance.globalData.NotifyForRecord ? 1 : 0
+                ),
+                new HorizontalOption(
+                    "Notify successful exports",
+                    "",
+                    new []{ "Off", "On" },
+                    selectedIndex => {
+                        GodhomeWinLossTracker.instance.globalData.NotifyForExport = selectedIndex == 1;
+                    },
+                    () => GodhomeWinLossTracker.instance.globalData.NotifyForExport ? 1 : 0
+                ),
+                new HorizontalOption(
                     "Auto export stats",
-                    "... as TSV when saving games",
+                    "when saving games",
                     new []{ "Off", "On" },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.AutoExport = selectedIndex == 1;
@@ -25,8 +43,8 @@ namespace GodhomeWinLossTracker
                     () => GodhomeWinLossTracker.instance.globalData.AutoExport ? 1 : 0
                 ),
                 new MenuButton(
-                    "Export stats",
-                    "... as TSV",
+                    "Export stats now",
+                    "",
                     _ => ExportStatsAsTsv()
                 ),
             });
