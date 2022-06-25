@@ -125,6 +125,7 @@ namespace GodhomeWinLossTracker
             {
                 GameManager gm = GameManager.instance;
                 Log($"DEBUG gm.PlayTime = {gm.PlayTime,0:F5}");
+                Log($"DEBUG gm.PlayTime * 1000 = {gm.PlayTime * 1000,0:F5}");
                 Log($"DEBUG DevUtils.GetTimestampEpochMs() = {DevUtils.GetTimestampEpochMs()}");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
