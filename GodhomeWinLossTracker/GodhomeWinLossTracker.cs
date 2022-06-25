@@ -55,11 +55,39 @@ namespace GodhomeWinLossTracker
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.BossDoorChallengeUI.ShowSequence += ApplyBindingStates;
             On.BossDoorChallengeUI.HideSequence += RecordBindingStates;
+            On.BossChallengeUI.Setup += BossChallengeUI_Setup;
+            On.BossChallengeUI.Start += BossChallengeUI_Start;
+            On.BossChallengeUI.Hide += BossChallengeUI_Hide;
 #endif
             ModDisplay.Initialize();
 #if DEBUG
             Log("Initialized");
 #endif
+        }
+
+        private void BossChallengeUI_Hide(On.BossChallengeUI.orig_Hide orig, BossChallengeUI self)
+        {
+            Log("DEBUG BossChallengeUI_Hide");
+            orig(self);
+        }
+
+        private void BossChallengeUI_Start(On.BossChallengeUI.orig_Start orig, BossChallengeUI self)
+        {
+            Log("DEBUG BossChallengeUI_Start");
+            orig(self);
+        }
+
+        private void BossChallengeUI_Setup(On.BossChallengeUI.orig_Setup orig, BossChallengeUI self, BossStatue bossStatue, string bossNameSheet, string bossNameKey, string descriptionSheet, string descriptionKey)
+        {
+            Log($"DEBUG BossChallengeUI_Setup");
+            Log($"DEBUG bossStatue.bossScene.Tier1Scene = {bossStatue.bossScene.Tier1Scene}");
+            Log($"DEBUG bossStatue.bossScene.Tier2Scene = {bossStatue.bossScene.Tier2Scene}");
+            Log($"DEBUG bossStatue.bossScene.Tier3Scene = {bossStatue.bossScene.Tier3Scene}");
+            Log($"DEBUG bossNameSheet = {bossNameSheet}");
+            Log($"DEBUG bossNameKey = {bossNameKey}");
+            Log($"DEBUG descriptionSheet = {descriptionSheet}");
+            Log($"DEBUG descriptionKey = {descriptionKey}");
+            orig(self, bossStatue, bossNameSheet, bossNameKey, descriptionSheet, descriptionKey);
         }
 
         ///
