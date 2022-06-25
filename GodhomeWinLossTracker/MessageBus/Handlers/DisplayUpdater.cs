@@ -18,9 +18,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
-            logger.Log($"DEBUG _mod.globalData.NotifyForRecord = {_mod.globalData.NotifyForRecord}");
-            logger.Log($"DEBUG _mod.globalData.NotifyForExport = {_mod.globalData.NotifyForExport}");
-
             // For RegisteredRawWinLoss, we need to display the inner message.
             if (message is RegisteredRawWinLoss)
             {
