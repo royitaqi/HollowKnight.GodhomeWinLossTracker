@@ -53,6 +53,8 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
+            On.BossDoorChallengeUI.ShowSequence += ApplyBindingStates;
+            On.BossDoorChallengeUI.HideSequence += RecordBindingStates;
 #endif
             ModDisplay.Initialize();
 #if DEBUG
@@ -83,6 +85,8 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
+            On.BossDoorChallengeUI.ShowSequence -= ApplyBindingStates;
+            On.BossDoorChallengeUI.HideSequence -= RecordBindingStates;
 
             Log("Unloaded");
 #endif
@@ -114,6 +118,18 @@ namespace GodhomeWinLossTracker
         }
 
 #if DEBUG
+        private IEnumerator ApplyBindingStates(On.BossDoorChallengeUI.orig_ShowSequence orig, BossDoorChallengeUI self)
+        {
+            yield return orig(self);
+            Log("DEBUG ApplyBindingStates");
+        }
+
+        private IEnumerator RecordBindingStates(On.BossDoorChallengeUI.orig_HideSequence orig, BossDoorChallengeUI self, bool sendEvent)
+        {
+            Log("DEBUG RecordBindingStates");
+            yield return orig(self, sendEvent);
+        }
+
         private void OnHeroUpdate()
         {
             if (Input.GetKeyDown(KeyCode.O))
