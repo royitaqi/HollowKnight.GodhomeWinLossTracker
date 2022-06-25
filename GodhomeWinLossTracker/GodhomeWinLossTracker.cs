@@ -5,19 +5,20 @@ using System.Text;
 using Modding;
 using UnityEngine;
 using GodhomeWinLossTracker.MessageBus;
+using GodhomeWinLossTracker.MessageBus.Handlers;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using Newtonsoft.Json;
 using Vasi;
 
 namespace GodhomeWinLossTracker
 {
-    public class GodhomeWinLossTracker : Mod, IGlobalSettings<GlobalData>, ILocalSettings<LocalData>, ICustomMenuMod, ITogglableMod
+    public class GodhomeWinLossTracker : Mod, IGodhomeWinLossTracker
     {
         internal static GodhomeWinLossTracker instance;
         internal TheMessageBus messageBus;
-        public GlobalData globalData = new GlobalData();
-        internal LocalData localData = new LocalData();
-        internal FolderData folderData = new FolderData();
+        public GlobalData globalData { get; set; } = new GlobalData();
+        public LocalData localData { get; set; } = new LocalData();
+        public FolderData folderData { get; set; } = new FolderData();
 
         ///
         /// Mod
@@ -32,7 +33,19 @@ namespace GodhomeWinLossTracker
 #endif
             instance = this;
 
-            messageBus = new(this);
+            IHandler[] handlers = new IHandler[] {
+#if DEBUG
+                new MessageBus.Handlers.Logger(),
+#endif
+                new BossChangeDetector(),
+                new DisplayUpdater(),
+                new SaveLoad(this),
+                new SequenceChangeDetector(),
+                new TKDeathDetector(),
+                new WinLossGenerator(),
+                new WinLossTracker(this)
+            };
+            messageBus = new(this, handlers);
 
             // Production hooks
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
@@ -51,12 +64,14 @@ namespace GodhomeWinLossTracker
         /// ICustomMenuMod
         ///
 
-        public bool ToggleButtonInsideMenu => true;
         public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
 
         ///
         /// ITogglableMod
         ///
+
+        public bool ToggleButtonInsideMenu => true;
+
         public void Unload()
         {
 #if DEBUG

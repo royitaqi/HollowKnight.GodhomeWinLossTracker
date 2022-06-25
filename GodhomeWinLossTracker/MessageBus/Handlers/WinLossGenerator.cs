@@ -29,7 +29,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         //   2.3 Otherwise, register a loss (i.e. player leave fight without winning nor dying).
         //   2.4 Always: reset and/or prepare according to next boss.
         // 3. Boss kills and TK dream deaths outside boss fights will be ignored.
-        public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage message)
+        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
             if (message is SequenceChange)
             {

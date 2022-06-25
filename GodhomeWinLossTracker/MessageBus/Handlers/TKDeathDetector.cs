@@ -6,12 +6,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class TKDeathDetector: IHandler
     {
-        public TKDeathDetector(GodhomeWinLossTracker mod)
+        public TKDeathDetector()
         {
-            _mod = mod;
         }
 
-        public void OnMessage(TheMessageBus bus, Modding.Loggable logger, IMessage msg)
+        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
             // Clear flag when loading a new game save.
             // Need to hook for every loads because game objects are newly created at load and they don't carry the previously hooked methods.
@@ -27,8 +26,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 if (!fsmHooked)
                 {
 #if DEBUG
-                    _mod.Log("Hooking FSM event: TK dream death");
+                    logger.Log("Hooking FSM event: TK dream death");
 #endif
+                    _bus = bus;
+                    _logger = logger;
                     // This FSM event detects TK dream death.
                     // For TK real death, use "Map Zone" instead of "Anim Start".
                     GameObject
@@ -38,7 +39,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                         .GetState("Anim Start")
                         .AddMethod(OnHeroDeathAnimStartInDream);
 #if DEBUG
-                    _mod.Log("Hooked FSM event: TK dream death");
+                    logger.Log("Hooked FSM event: TK dream death");
 #endif
                     fsmHooked = true;
                 }
@@ -48,12 +49,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void OnHeroDeathAnimStartInDream()
         {
 #if DEBUG
-            _mod.Log("OnHeroDeathAnimStartInDream");
+            _logger.Log("OnHeroDeathAnimStartInDream");
 #endif
-            _mod.messageBus.Put(new TKDreamDeath());
+            _bus.Put(new TKDreamDeath());
         }
 
         private bool fsmHooked = false;
-        private readonly GodhomeWinLossTracker _mod;
+        private TheMessageBus _bus;
+        private Modding.ILogger _logger;
     }
 }
