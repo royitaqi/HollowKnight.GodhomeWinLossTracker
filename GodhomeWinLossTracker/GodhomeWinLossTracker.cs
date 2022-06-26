@@ -53,103 +53,16 @@ namespace GodhomeWinLossTracker
             // Production hooks
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
             On.BossSceneController.EndBossScene += OnEndBossScene;
+            On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
+            On.BossChallengeUI.Setup += BossChallengeUI_Setup;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
-            On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
-            On.BossDoorChallengeUI.ShowSequence += ApplyBindingStates;
-            On.BossDoorChallengeUI.HideSequence += RecordBindingStates;
-            On.BossChallengeUI.Setup += BossChallengeUI_Setup;
-            On.BossChallengeUI.Start += BossChallengeUI_Start;
-            On.BossChallengeUI.Hide += BossChallengeUI_Hide;
 #endif
             ModDisplay.Initialize();
 #if DEBUG
             Log("Initialized");
 #endif
-        }
-
-        private void BossDoorChallengeUI_Setup(On.BossDoorChallengeUI.orig_Setup orig, BossDoorChallengeUI self, BossSequenceDoor door)
-        {
-            orig(self, door);
-
-            if (globalData.ShowStatsInChallengeMenu)
-            {
-                messageBus.Put(new PantheonStatsQuery(self.titleTextMain.text, (runs, pb, churns) =>
-                {
-                    if (runs != null)
-                    {
-                        self.titleTextSuper.text = runs;
-                    }
-                    if (pb != null)
-                    {
-                        self.titleTextMain.text = pb;
-                    }
-                    if (churns != null)
-                    {
-                        self.descriptionText.text = churns;
-                    }
-                }));
-            }
-        }
-
-        private void BossChallengeUI_Hide(On.BossChallengeUI.orig_Hide orig, BossChallengeUI self)
-        {
-            Log("DEBUG BossChallengeUI_Hide");
-            orig(self);
-        }
-
-        private void BossChallengeUI_Start(On.BossChallengeUI.orig_Start orig, BossChallengeUI self)
-        {
-            Log("DEBUG BossChallengeUI_Start");
-            orig(self);
-        }
-
-        private void BossChallengeUI_Setup(On.BossChallengeUI.orig_Setup orig, BossChallengeUI self, BossStatue bossStatue, string bossNameSheet, string bossNameKey, string descriptionSheet, string descriptionKey)
-        {
-            Log($"DEBUG BossChallengeUI_Setup");
-            Log($"DEBUG bossStatue.bossScene.Tier1Scene = {bossStatue.bossScene.Tier1Scene}");
-            Log($"DEBUG bossStatue.bossScene.Tier2Scene = {bossStatue.bossScene.Tier2Scene}");
-            Log($"DEBUG bossStatue.bossScene.Tier3Scene = {bossStatue.bossScene.Tier3Scene}");
-            Log($"DEBUG bossNameSheet = {bossNameSheet}");
-            Log($"DEBUG bossNameKey = {bossNameKey}");
-            Log($"DEBUG descriptionSheet = {descriptionSheet}");
-            Log($"DEBUG descriptionKey = {descriptionKey}");
-            Log($"DEBUG self.tier1Button.button.name = {self.tier1Button.button.name}");
-            Log($"DEBUG self.tier2Button.button.name = {self.tier2Button.button.name}");
-            Log($"DEBUG self.tier3Button.button.name = {self.tier3Button.button.name}");
-            Log($"DEBUG self.bossNameText.text = {self.bossNameText.text}");
-            Log($"DEBUG self.descriptionText.text = {self.descriptionText.text}");
-
-            self.bossNameText.text = "DEBUG 1";
-            self.descriptionText.text = "DEBUG 2";
-
-            orig(self, bossStatue, bossNameSheet, bossNameKey, descriptionSheet, descriptionKey);
-
-            Log($"DEBUG2 BossChallengeUI_Setup");
-            Log($"DEBUG2 bossStatue.bossScene.Tier1Scene = {bossStatue.bossScene.Tier1Scene}");
-            Log($"DEBUG2 bossStatue.bossScene.Tier2Scene = {bossStatue.bossScene.Tier2Scene}");
-            Log($"DEBUG2 bossStatue.bossScene.Tier3Scene = {bossStatue.bossScene.Tier3Scene}");
-            Log($"DEBUG2 bossNameSheet = {bossNameSheet}");
-            Log($"DEBUG2 bossNameKey = {bossNameKey}");
-            Log($"DEBUG2 descriptionSheet = {descriptionSheet}");
-            Log($"DEBUG2 descriptionKey = {descriptionKey}");
-            Log($"DEBUG2 self.tier1Button.button.name = {self.tier1Button.button.name}");
-            Log($"DEBUG2 self.tier2Button.button.name = {self.tier2Button.button.name}");
-            Log($"DEBUG2 self.tier3Button.button.name = {self.tier3Button.button.name}");
-            Log($"DEBUG2 self.bossNameText.text = {self.bossNameText.text}");
-            Log($"DEBUG2 self.descriptionText.text = {self.descriptionText.text}");
-
-            if (globalData.ShowStatsInChallengeMenu)
-            {
-                messageBus.Put(new HoGStatsQuery(self.bossNameText.text, statsText =>
-                {
-                    if (statsText != null)
-                    {
-                        self.descriptionText.text = statsText;
-                    }
-                }));
-            }
         }
 
         ///
@@ -172,11 +85,11 @@ namespace GodhomeWinLossTracker
             // Production hooks
             ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
             On.BossSceneController.EndBossScene -= OnEndBossScene;
+            On.BossDoorChallengeUI.Setup -= BossDoorChallengeUI_Setup;
+            On.BossChallengeUI.Setup -= BossChallengeUI_Setup;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
-            On.BossDoorChallengeUI.ShowSequence -= ApplyBindingStates;
-            On.BossDoorChallengeUI.HideSequence -= RecordBindingStates;
 
             Log("Unloaded");
 #endif
@@ -207,19 +120,47 @@ namespace GodhomeWinLossTracker
             orig(self);
         }
 
+        private void BossDoorChallengeUI_Setup(On.BossDoorChallengeUI.orig_Setup orig, BossDoorChallengeUI self, BossSequenceDoor door)
+        {
+            orig(self, door);
+
+            if (globalData.ShowStatsInChallengeMenu)
+            {
+                messageBus.Put(new PantheonStatsQuery(self.titleTextMain.text, (runs, pb, churns) =>
+                {
+                    if (runs != null)
+                    {
+                        self.titleTextSuper.text = runs;
+                    }
+                    if (pb != null)
+                    {
+                        self.titleTextMain.text = pb;
+                    }
+                    if (churns != null)
+                    {
+                        self.descriptionText.text = churns;
+                    }
+                }));
+            }
+        }
+
+        private void BossChallengeUI_Setup(On.BossChallengeUI.orig_Setup orig, BossChallengeUI self, BossStatue bossStatue, string bossNameSheet, string bossNameKey, string descriptionSheet, string descriptionKey)
+        {
+            orig(self, bossStatue, bossNameSheet, bossNameKey, descriptionSheet, descriptionKey);
+
+            if (globalData.ShowStatsInChallengeMenu)
+            {
+                messageBus.Put(new HoGStatsQuery(self.bossNameText.text, statsText =>
+                {
+                    if (statsText != null)
+                    {
+                        self.descriptionText.text = statsText;
+                    }
+                }));
+            }
+        }
+
 #if DEBUG
-        private IEnumerator ApplyBindingStates(On.BossDoorChallengeUI.orig_ShowSequence orig, BossDoorChallengeUI self)
-        {
-            yield return orig(self);
-            Log("DEBUG ApplyBindingStates");
-        }
-
-        private IEnumerator RecordBindingStates(On.BossDoorChallengeUI.orig_HideSequence orig, BossDoorChallengeUI self, bool sendEvent)
-        {
-            Log("DEBUG RecordBindingStates");
-            yield return orig(self, sendEvent);
-        }
-
         private void OnHeroUpdate()
         {
             if (Input.GetKeyDown(KeyCode.O))
@@ -326,12 +267,14 @@ namespace GodhomeWinLossTracker
         ///
         /// IGlobalSettings<GlobalData>
         ///
+
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
 
         /// 
         /// ILocalSettings<LocalData>
         ///
+
         public void OnLoadLocal(LocalData data)
         {
             localData = data;
