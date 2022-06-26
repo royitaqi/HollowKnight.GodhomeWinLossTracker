@@ -30,7 +30,7 @@ You can turn this notification on/off in the mod's menu. See more details below.
 
 You can find the mod's menu by pausing the game -> "Options" -> "Mods" -> "GodhomeWinLossTracker".
 
-![Hollow Knight 6_26_2022 9_28_33 AM_clean](https://user-images.githubusercontent.com/14790745/175826597-c7bb1a31-f85d-46ec-8144-cd09d4947e2b.png)
+![Hollow Knight 6_26_2022 9_28_33 AM](https://user-images.githubusercontent.com/14790745/175827615-de51d8c0-44f0-4b66-83ab-aa3168c466d0.png)
 
 * **Show stats in challenge menus**: Display stats (mentioned above) in "Challenge" menus in Hall of Gods and pantheons. "On" by default. Turn this off will return to the normal "Challenge" menus.
 
@@ -45,11 +45,11 @@ You can find the mod's menu by pausing the game -> "Options" -> "Mods" -> "Godho
 
 ## Export your stats for data analysis
 
-**Where to find**: All stats can be found in the `GodhomeWinLossTracker` subfolder in your game's save folder. **To find the subfolder on a PC:** Press `Windows + R`, put in `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker"`, press `ENTER`).
+**Where to find**: All stats can be found in the `GodhomeWinLossTracker` subfolder in your game's save folder. On a PC, you can press `Windows + R`, put in `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker"`, and then press `ENTER`.
 
-**Export as TSV**: While playing (i.e. a game save is loaded), select **Export stats now** in the menu above. This will write stats into `Export.SaveX.txt` in TSV format (X being the current game slot ID, from 1 to 4). The exported file can then be imported into spreadsheet apps for data analysis ([an example](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing) data analysis spreadsheet).
+**Export as TSV**: While playing (i.e. a game save is loaded), select **Export stats now** in the mod's menu. This will write stats into `Export.SaveX.txt` in TSV format (X being the current game slot ID, from 1 to 4). The exported file can then be imported into spreadsheet apps for data analysis ([an example](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing) data analysis spreadsheet).
 
-**Automatic export when saving games**: You can turn on **Auto export stats** in the menu above. This makes the mod export every time the game is being saved. This helps if you plan to constantly pull stats into another app.
+**Automatic export when saving games**: You can turn on **Auto export stats** in the mod's menu. This makes the mod export every time the game is being saved. This helps if you plan to constantly pull stats into another app.
 
 
 ## Known bugs / limitations
