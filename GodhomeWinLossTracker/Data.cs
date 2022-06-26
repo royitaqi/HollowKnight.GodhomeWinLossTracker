@@ -18,6 +18,7 @@ namespace GodhomeWinLossTracker
         public bool AutoExport = false;
         public bool NotifyForExport = false;
         public bool NotifyForRecord = true;
+        public bool ShowStatsInChallengeMenu = true;
     }
 
     [Serializable]

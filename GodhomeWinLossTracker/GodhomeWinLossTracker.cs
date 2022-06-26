@@ -35,10 +35,12 @@ namespace GodhomeWinLossTracker
 
             IHandler[] handlers = new IHandler[] {
 #if DEBUG
+                // Put logger first, so that it prints messages on the bus before other handlers can handle it.
                 new MessageBus.Handlers.Logger(),
 #endif
                 new BossChangeDetector(),
                 new DisplayUpdater(this),
+                new HoGStatsQueryProcessor(this),
                 new SaveLoad(this),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
@@ -112,8 +114,13 @@ namespace GodhomeWinLossTracker
             Log($"DEBUG2 self.bossNameText.text = {self.bossNameText.text}");
             Log($"DEBUG2 self.descriptionText.text = {self.descriptionText.text}");
 
-            self.bossNameText.text = "DEBUG 3";
-            self.descriptionText.text = "DEBUG 4";
+            if (globalData.ShowStatsInChallengeMenu)
+            {
+                messageBus.Put(new HoGStatsQuery(self.bossNameText.text, statsText =>
+                {
+                    self.descriptionText.text = statsText;
+                }));
+            }
         }
 
         ///

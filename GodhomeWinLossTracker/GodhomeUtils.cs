@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace GodhomeWinLossTracker
 {
     internal static class GodhomeUtils
     {
+        internal static bool IsBossName(string bossName)
+        {
+            return BossSceneToName.Any(kvp => kvp.Value == bossName);
+        }
+
         internal static bool IsBossScene(string sceneName)
         {
             return BossSceneToName.ContainsKey(sceneName);
@@ -88,6 +94,11 @@ namespace GodhomeWinLossTracker
             {
                 return 1;
             }
+        }
+
+        internal static IEnumerable<string> GetBossScenesByName(string bossName)
+        {
+            return BossSceneToName.Where(kvp => kvp.Value == bossName).Select(kvp => kvp.Key);
         }
 
         private static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new Dictionary<string, int>
