@@ -2,48 +2,56 @@
 
 GodhomeWinLossTracker is a mod for the game Hollow Knight. Its goal is to improve boss fight training experience in Godhome by tracking per-boss win/loss counts for Hall of Gods and pantheons.
 
-The mod is fully automatic. It recognizes boss fights, understands which boss is involved, detects win/loss events and tracks running stats.
+
+## Stats tracking
+
+The mod automatically tracks your boss fight results, be it in Hall of Gods or pantheons.
+
+In Hall of Gods, different boss variants (dream version or different forms) are tracked separately. For the same boss variant/form, if it has different arenas for Attuned and Ascended/Radiant, they are tracked separately, too. Stats are displayed in the "Challenge" menu.
+
+![hog_challenge_menu](https://user-images.githubusercontent.com/14790745/175825189-741d29d0-9a2b-48e5-91ba-1a80fa2b375e.png)
 
 
-## Win/Loss events
+In pantheons, the number of runs, your PB (personal best, i.e. how far you go in a pantheon) and the bosses that gave you the most difficulty are tracked and displayed in the "Challenge" menu.
 
-Whenever the mod detects a win/loss, it shows a small notification at the bottom left corner of the game to indicate that the event has been recorded.
+![pantheon_challenge_menu](https://user-images.githubusercontent.com/14790745/175825389-19b4e310-934a-44e0-8187-ba5b3e549426.png)
+
+
+## In-game notifications
+
+Whenever the mod detects that a boss fight has ended, it shows a small notification at the bottom left corner of the game to indicate that the result has been recorded.
 
 ![Hollow Knight 2022-06-21 17-48-03 a](https://user-images.githubusercontent.com/14790745/174921467-d980e3f8-1230-45ba-a8b9-acfed7b93d56.png)
 
-
-## Find (and update) your stats
-
-When "Save & Quit", the mod automatically saves stats into files `Data.SaveX.json` (X=1..4) in the game's save folder.
-
-**To find on a PC:** Press `Windows + R`, put in `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker"`, press `ENTER`).
-
-**To update the stats:** First "Save & Quit", then modify the `Data.SaveX.json` files and save the files. The updated stats will be automatically loaded the next time the same game save is loaded.
+You can turn this notification on/off in the mod's menu. See more details below.
 
 
-## Automatic (local) backup of your stats
+## Menu
 
-Whenever a game save is loaded, its corresponding `Data.SaveX.json` file is backed up into the `backup` subfolder.
+You can find the mod's menu by pausing the game -> "Options" -> "Mods" -> "GodhomeWinLossTracker".
+
+![Hollow Knight 6_26_2022 9_28_33 AM_clean](https://user-images.githubusercontent.com/14790745/175826597-c7bb1a31-f85d-46ec-8144-cd09d4947e2b.png)
+
+* **Show stats in challenge menus**: Display stats (mentioned above) in "Challenge" menus in Hall of Gods and pantheons. "On" by default. Turn this off will return to the normal "Challenge" menus.
+
+* **Notify win/loss**: Display an in-game notification whenever the mod detects the result of boss fights. "On" by default. This helps you to confirm that the detections are working properly. Turn this off to prevent the notifications from showing up.
+
+* **Notify exports**: Display an in-game notification whenever stats have been exported. "Off" by default. Turn this on will you to confirm the filename and the successfulness of expoerts.
+
+* **Auto export stats**: See more details below.
+
+* **Export stats now**: See more details below.
 
 
-## Export your stats in TSV format
+## Export your stats for data analysis
 
-The mod supports exporting your stats into tab-separated values (TSV) format for further data analysis.
+**Where to find**: All stats can be found in the `GodhomeWinLossTracker` subfolder in your game's save folder. **To find the subfolder on a PC:** Press `Windows + R`, put in `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker"`, press `ENTER`).
 
-**How to:** When a game save is loaded in the game, go into the "Mods" menu, select "GodhomeWinLossTracker", then "Export stats as TSV". A notification will show up when the export is success.
+**Export as TSV**: While playing (i.e. a game save is loaded), select **Export stats now** in the menu above. This will write stats into `Export.SaveX.txt` in TSV format (X being the current game slot ID, from 1 to 4). The exported file can then be imported into spreadsheet apps for data analysis ([an example](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing) data analysis spreadsheet).
 
-![Hollow Knight 2022-06-21 17-48-32 a](https://user-images.githubusercontent.com/14790745/174921490-2089c19b-f5cb-420e-b2df-724bf16e68ed.png)
-
-This will generate `GodhomeWinLossTracker/Export.SaveX.txt` (in TSV format). This file can then be viewed directly in any text editing app or be imported into spreadsheet apps for data analysis ([an example](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing) data analysis spreadsheet).
-
-
-## Turn mod on/off
-
-The mod can be turned on/off from the "Mods" menu.
+**Automatic export when saving games**: You can turn on **Auto export stats** in the menu above. This makes the mod export every time the game is being saved. This helps if you plan to constantly pull stats into another app.
 
 
 ## Known bugs / limitations
 
-* Bug: In some situations, win/loss detection can be wrong.
-  * Dying in a fight after killing the boss might be detected as a win. E.g. source of damanage: hazards, minions, projectiles.
 * Limitation: Boss names are displayed in English. No localization yet.
