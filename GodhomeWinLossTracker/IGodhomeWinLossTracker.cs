@@ -11,7 +11,7 @@ using Vasi;
 
 namespace GodhomeWinLossTracker
 {
-    internal interface IGodhomeWinLossTracker : Modding.ILogger, IDataHolder, IGlobalSettings<GlobalData>, ILocalSettings<LocalData>, ICustomMenuMod, ITogglableMod
+    internal interface IGodhomeWinLossTracker : Modding.ILogger, IDataHolder, IGlobalSettings<GlobalData>, ILocalSettings<LocalData>, ICustomMenuMod
     {
     }
 }

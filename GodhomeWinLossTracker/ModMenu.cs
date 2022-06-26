@@ -10,14 +10,13 @@ namespace GodhomeWinLossTracker
     {
         private static Menu _menuRef;
 
-        private static Menu PrepareMenu(ModToggleDelegates toggle)
+        private static Menu PrepareMenu()
         {
             return new Menu("Godhome Win Loss Tracker", new Element[]
             {
-                toggle.CreateToggle("Mod toggle", "Allows disabling the mod"),
                 new HorizontalOption(
                     "Show stats in challenge menus",
-                    "HoG and pantheons",
+                    "Both HoG and pantheons",
                     new []{ "Off", "On" },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.ShowStatsInChallengeMenu = selectedIndex == 1;
@@ -44,7 +43,7 @@ namespace GodhomeWinLossTracker
                 ),
                 new HorizontalOption(
                     "Auto export stats",
-                    "when saving games",
+                    "When saving games",
                     new []{ "Off", "On" },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.AutoExport = selectedIndex == 1;
@@ -61,9 +60,9 @@ namespace GodhomeWinLossTracker
 
         public static MenuScreen GetMenu(MenuScreen lastMenu, ModToggleDelegates? toggle)
         {
-            if (toggle == null) return null;
+            DevUtils.Assert(toggle == null, "This mod is non-toggleable");
             if (_menuRef == null) {
-                _menuRef = PrepareMenu((ModToggleDelegates)toggle);
+                _menuRef = PrepareMenu();
             }
             return _menuRef.GetMenuScreen(lastMenu);
         }

@@ -25,7 +25,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.2.0.1";
+        public override string GetVersion() => "0.2.1.0";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
@@ -71,29 +71,7 @@ namespace GodhomeWinLossTracker
 
         public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
 
-        ///
-        /// ITogglableMod
-        ///
-
-        public bool ToggleButtonInsideMenu => true;
-
-        public void Unload()
-        {
-#if DEBUG
-            Log("Unloading");
-#endif
-            // Production hooks
-            ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
-            On.BossSceneController.EndBossScene -= OnEndBossScene;
-            On.BossDoorChallengeUI.Setup -= BossDoorChallengeUI_Setup;
-            On.BossChallengeUI.Setup -= BossChallengeUI_Setup;
-#if DEBUG
-            // Debug hooks
-            ModHooks.HeroUpdateHook -= OnHeroUpdate;
-
-            Log("Unloaded");
-#endif
-        }
+        public bool ToggleButtonInsideMenu => false;
 
         /// 
         /// Events
