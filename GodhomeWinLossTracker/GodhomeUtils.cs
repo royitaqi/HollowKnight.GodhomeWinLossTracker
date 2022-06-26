@@ -114,7 +114,7 @@ namespace GodhomeWinLossTracker
             return PantheonBossSceneNames[index];
         }
 
-        private static readonly List<string> PantheonNames = new List<string>
+        internal static readonly List<string> PantheonNames = new List<string>
         {
             "Master",
             "Artist",
@@ -123,7 +123,7 @@ namespace GodhomeWinLossTracker
             "Hallownest",
         };
 
-        private static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new Dictionary<string, int>
+        internal static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new Dictionary<string, int>
         {
             //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Vengefly_V
             //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Vengefly_V
@@ -225,7 +225,7 @@ namespace GodhomeWinLossTracker
             { "GG_Radiance", 1 },
         };
 
-        private static readonly string[][] PantheonBossSceneNames = new string[][] {
+        internal static readonly string[][] PantheonBossSceneNames = new string[][] {
             // p1
             new string[] {
                 "GG_Vengefly",
@@ -328,7 +328,7 @@ namespace GodhomeWinLossTracker
             },
         };
 
-        private static readonly Dictionary<string, string> BossSceneToName = new()
+        internal static readonly Dictionary<string, string> BossSceneToName = new()
         {
             { "GG_Broken_Vessel", "Broken Vessel" },
             { "GG_Brooding_Mawlek", "Brooding Mawlek" },

@@ -1,27 +1,37 @@
-using System.Text;
-
 namespace UnitTests
 {
     internal static class TestUtils
     {
-        public static string ConvertMessagesToString(IEnumerable<IMessage> messages)
-        {
-            StringBuilder sb = new();
-            sb.AppendLine();
-            foreach (var msg in messages)
-            {
-                sb.AppendLine($"    {msg.GetType().Name}: {msg}");
-            }
-            return sb.ToString();
-        }
-
         public class MessageBusTestCase
         {
             public string Name { get; set; }
+            public G.GlobalData GlobalData { get; set; }
+            public G.LocalData LocalData { get; set; }
+            public G.FolderData FolderData { get; set; }
             public IEnumerable<IHandler> Handlers { get; set; }
             public IEnumerable<IMessage> InputMessages { get; set; }
             public IEnumerable<IMessage> ExpectedMessages { get; set; }
             public G.AssertionFailedException ExpectedException { get; set; }
+
+            public override string ToString()
+            {
+                StringBuilder sb = new();
+                sb.AppendLine();
+                sb.AppendLine($"Test Case = {Name}");
+                if (GlobalData != null)
+                {
+                    sb.AppendLine($"GlobalData = {JsonConvert.SerializeObject(GlobalData, Formatting.Indented)}");
+                }
+                if (LocalData != null)
+                {
+                    sb.AppendLine($"LocalData = {JsonConvert.SerializeObject(LocalData, Formatting.Indented)}");
+                }
+                if (FolderData != null)
+                {
+                    sb.AppendLine($"FolderData = {JsonConvert.SerializeObject(FolderData, Formatting.Indented)}");
+                }
+                return sb.ToString();
+            }
         }
 
         public static void TestMessageBus(IEnumerable<MessageBusTestCase> testCases)
@@ -39,47 +49,62 @@ namespace UnitTests
 
             if (testCase.ExpectedMessages != null)
             {
-                TestMessageBus(testCase.Name, testCase.Handlers, testCase.InputMessages, testCase.ExpectedMessages);
+                IEnumerable<IMessage> outputMessages = RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.Handlers, testCase.InputMessages);
+
+                // Verify output messages
+                Assert.AreEqual(
+                    TestUtils.ConvertMessagesToString(new[] { new BusEvent { Event = "initialized" } }.Concat(testCase.ExpectedMessages)),
+                    TestUtils.ConvertMessagesToString(outputMessages),
+                    testCase.ToString()
+                );
             }
             else
             {
-                TestMessageBus(testCase.Name, testCase.Handlers, testCase.InputMessages, testCase.ExpectedException);
+                try
+                {
+                    RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.Handlers, testCase.InputMessages);
+                    throw new AssertFailedException($"Should throw AssertionFailedException(\"{testCase.ExpectedException.Message}\"). {testCase}");
+                }
+                catch (G.AssertionFailedException ex)
+                {
+                    Assert.AreEqual(testCase.ExpectedException.Message, ex.Message, $"AssertionFailedException thrown with unexpected message. {testCase}");
+                }
+                catch (Exception ex)
+                {
+                    throw new AssertFailedException(testCase.ToString(), ex);
+                }
             }
         }
 
-        public static void TestMessageBus(string testName, IEnumerable<IHandler> handlers, IEnumerable<IMessage> inputMessages, IEnumerable<IMessage> expectedMessages)
+        private static IEnumerable<IMessage> RunMessageBus(
+            string testName,
+            G.GlobalData globalData,
+            G.LocalData localData,
+            G.FolderData folderData,
+            IEnumerable<IHandler> handlers,
+            IEnumerable<IMessage> inputMessages
+        )
         {
-            IEnumerable<IMessage> outputMessages = RunMessageBus(testName, handlers, inputMessages);
+            Trace.Write(testName);
+            Trace.Write(globalData);
+            Trace.Write(localData);
+            Trace.Write(folderData);
 
-            // Verify output messages
-            Assert.AreEqual(
-                TestUtils.ConvertMessagesToString(new[] { new BusEvent { Event = "initialized" } }.Concat(expectedMessages)),
-                TestUtils.ConvertMessagesToString(outputMessages),
-                testName
-            );
-        }
-
-        public static void TestMessageBus(string testName, IEnumerable<IHandler> handlers, IEnumerable<IMessage> inputMessages, G.AssertionFailedException expectedException)
-        {
-            try
-            {
-                RunMessageBus(testName, handlers, inputMessages);
-                throw new AssertFailedException($"Should throw AssertionFailedException(\"{expectedException.Message}\")");
-            }
-            catch (G.AssertionFailedException ex)
-            {
-                Assert.AreEqual(expectedException.Message, ex.Message, "AssertionFailedException thrown with unexpected message");
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        private static IEnumerable<IMessage> RunMessageBus(string testName, IEnumerable<IHandler> handlers, IEnumerable<IMessage> inputMessages)
-        {
             // Create objects
             Mock<G.IGodhomeWinLossTracker> mod = new();
+            if (globalData != null)
+            {
+                mod.SetupGet(m => m.globalData).Returns(globalData);
+            }
+            if (localData != null)
+            {
+                mod.SetupGet(m => m.localData).Returns(localData);
+            }
+            if (folderData != null)
+            {
+                mod.SetupGet(m => m.folderData).Returns(folderData);
+            }
+
             MessageRecorder recorder = new();
             TheMessageBus bus = new(mod.Object, handlers.Concat(new[] { recorder }));
 
@@ -90,6 +115,17 @@ namespace UnitTests
             }
 
             return recorder.Messages;
+        }
+
+        private static string ConvertMessagesToString(IEnumerable<IMessage> messages)
+        {
+            StringBuilder sb = new();
+            sb.AppendLine();
+            foreach (var msg in messages)
+            {
+                sb.AppendLine($"    {msg.GetType().Name}: {msg}");
+            }
+            return sb.ToString();
         }
     }
 }

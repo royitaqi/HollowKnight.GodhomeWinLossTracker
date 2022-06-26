@@ -8,7 +8,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
 {
     internal class PantheonStatsQuery : IMessage
     {
-        public PantheonStatsQuery(string pantheonName, Action<string, string, string> callback)
+        public PantheonStatsQuery(string pantheonName, Action<string /* runs */, string /* pb */, string /* churns */> callback)
         {
             PantheonName = pantheonName;
             Callback = callback;

@@ -98,6 +98,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     pb,
                     churnsText
                 );
+#if DEBUG
+                bus.Put(new BusEvent { ForTest = true, Event = $"{runsText} | {pb} | {churnsText}" });
+#endif
             }
         }
 
