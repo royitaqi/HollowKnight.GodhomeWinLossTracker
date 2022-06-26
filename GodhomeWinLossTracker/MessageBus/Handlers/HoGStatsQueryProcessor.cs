@@ -21,6 +21,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 HoGStatsQuery msg = message as HoGStatsQuery;
 
+                // Get all scenes of the boss, ordered.
+                // Also get matching prefixes.
                 List<string> scenes = new(GodhomeUtils.GetBossScenesByName(msg.BossName));
                 if (scenes.Count == 2 && scenes[0].EndsWith("_V"))
                 {
@@ -28,6 +30,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }
                 string[] prefixes = scenes.Count == 1 ? new[] { "" } : new[] { "Attuned: ", "Ascended+: " };
 
+                // Print stats into a string.
                 StringBuilder sb = new();
                 for (int i = 0; i < scenes.Count; i++)
                 {
@@ -44,7 +47,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     }
                 }
 
-                msg.Callback(sb.ToString());
+                // Overwrite text on challenge menu
+                msg.Callback(sb.Length != 0 ? sb.ToString() : null);
             }
         }
 

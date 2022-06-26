@@ -41,6 +41,7 @@ namespace GodhomeWinLossTracker
                 new BossChangeDetector(),
                 new DisplayUpdater(this),
                 new HoGStatsQueryProcessor(this),
+                new PantheonStatsQueryProcessor(this),
                 new SaveLoad(this),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
@@ -55,6 +56,7 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
+            On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossDoorChallengeUI.ShowSequence += ApplyBindingStates;
             On.BossDoorChallengeUI.HideSequence += RecordBindingStates;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
@@ -65,6 +67,30 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log("Initialized");
 #endif
+        }
+
+        private void BossDoorChallengeUI_Setup(On.BossDoorChallengeUI.orig_Setup orig, BossDoorChallengeUI self, BossSequenceDoor door)
+        {
+            orig(self, door);
+
+            if (globalData.ShowStatsInChallengeMenu)
+            {
+                messageBus.Put(new PantheonStatsQuery(self.titleTextMain.text, (runs, pb, churns) =>
+                {
+                    if (runs != null)
+                    {
+                        self.titleTextSuper.text = runs;
+                    }
+                    if (pb != null)
+                    {
+                        self.titleTextMain.text = pb;
+                    }
+                    if (churns != null)
+                    {
+                        self.descriptionText.text = churns;
+                    }
+                }));
+            }
         }
 
         private void BossChallengeUI_Hide(On.BossChallengeUI.orig_Hide orig, BossChallengeUI self)
@@ -118,7 +144,10 @@ namespace GodhomeWinLossTracker
             {
                 messageBus.Put(new HoGStatsQuery(self.bossNameText.text, statsText =>
                 {
-                    self.descriptionText.text = statsText;
+                    if (statsText != null)
+                    {
+                        self.descriptionText.text = statsText;
+                    }
                 }));
             }
         }
