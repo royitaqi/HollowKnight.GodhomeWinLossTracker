@@ -108,7 +108,7 @@ namespace GodhomeWinLossTracker
 
             if (globalData.ShowStatsInChallengeMenu)
             {
-                messageBus.Put(new PantheonStatsQuery(self.titleTextMain.text, (runs, pb, churns) =>
+                messageBus.Put(new PantheonStatsQuery(door.descriptionKey, (runs, pb, churns) =>
                 {
                     if (runs != null)
                     {

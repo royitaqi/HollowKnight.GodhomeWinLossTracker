@@ -101,10 +101,9 @@ namespace GodhomeWinLossTracker
             return BossSceneToName.Where(kvp => kvp.Value == bossName).Select(kvp => kvp.Key);
         }
 
-        internal static int? GetPantheonIndex(string pantheonName)
+        internal static int? GetPantheonIndexFromDescriptionKey(string descriptionKey)
         {
-            string pascalCased = Char.ToUpperInvariant(pantheonName[0]) + pantheonName.ToLowerInvariant().Substring(1);
-            int ret = PantheonNames.IndexOf(pascalCased);
+            int ret = PantheonDescriptionKeys.IndexOf(descriptionKey);
             return ret >= 0 ? ret : null;
         }
 
@@ -114,13 +113,13 @@ namespace GodhomeWinLossTracker
             return PantheonBossSceneNames[index];
         }
 
-        internal static readonly List<string> PantheonNames = new List<string>
+        internal static readonly List<string> PantheonDescriptionKeys = new()
         {
-            "Master",
-            "Artist",
-            "Sage",
-            "Knight",
-            "Hallownest",
+            "UI_CHALLENGE_DESC_1",
+            "UI_CHALLENGE_DESC_2",
+            "UI_CHALLENGE_DESC_3",
+            "UI_CHALLENGE_DESC_4",
+            "UI_CHALLENGE_DESC_5",
         };
 
         internal static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new Dictionary<string, int>

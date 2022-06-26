@@ -21,7 +21,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 PantheonStatsQuery msg = message as PantheonStatsQuery;
 
-                int? indexq = GodhomeUtils.GetPantheonIndex(msg.PantheonName);
+                int? indexq = GodhomeUtils.GetPantheonIndexFromDescriptionKey(msg.DescriptionKey);
                 if (indexq == null)
                 {
                     // Unknown pantheon. Return without calling callback.
