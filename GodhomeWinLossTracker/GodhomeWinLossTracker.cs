@@ -130,6 +130,13 @@ namespace GodhomeWinLossTracker
         {
             orig(self, bossStatue, bossNameSheet, bossNameKey, descriptionSheet, descriptionKey);
 
+            Log($"DEBUG bossNameSheet = {bossNameSheet}");
+            Log($"DEBUG bossNameKey = {bossNameKey}");
+            Log($"DEBUG self.bossNameText.text = {self.bossNameText.text}");
+            Log($"DEBUG descriptionSheet = {descriptionSheet}");
+            Log($"DEBUG descriptionKey = {descriptionKey}");
+            Log($"DEBUG self.descriptionText.text = {self.descriptionText.text}");
+
             if (globalData.ShowStatsInChallengeMenu)
             {
                 messageBus.Put(new HoGStatsQuery(self.bossNameText.text, statsText =>
