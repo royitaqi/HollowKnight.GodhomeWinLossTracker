@@ -12,12 +12,12 @@ namespace UnitTests
             var inputMessages = new[] { new BusEvent { Event = "test" } };
             var expectedMessages = new[] { new BusEvent { Event = "test" } };
 
-            TestUtils.TestMessageBus(
-                "An non-effect message should pass through message bus",
-                handlers,
-                inputMessages,
-                expectedMessages
-            );
+            TestUtils.TestMessageBus(new TestUtils.MessageBusTestCase {
+                Name = "An non-effect message should pass through message bus",
+                HandlersCreator = _ => handlers,
+                InputMessages = inputMessages,
+                ExpectedMessages = expectedMessages,
+            });
         }
 
 
@@ -87,12 +87,12 @@ namespace UnitTests
                 // 111, 112, 121, 122 processed by echo 1 and 2
             };
 
-            TestUtils.TestMessageBus(
-                "Messages should be processed FIFO, each time by all handlers",
-                handlers,
-                inputMessages,
-                expectedMessages
-            );
+            TestUtils.TestMessageBus(new TestUtils.MessageBusTestCase {
+                Name = "Messages should be processed FIFO, each time by all handlers",
+                HandlersCreator = _ => handlers,
+                InputMessages = inputMessages,
+                ExpectedMessages = expectedMessages,
+            });
         }
     }
 }

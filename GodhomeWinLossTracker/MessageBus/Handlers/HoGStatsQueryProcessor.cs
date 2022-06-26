@@ -48,7 +48,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }
 
                 // Overwrite text on challenge menu
-                msg.Callback(sb.Length != 0 ? sb.ToString() : null);
+                string text = sb.Length != 0 ? sb.ToString() : null;
+                msg.Callback(text);
+
+#if DEBUG
+                text ??= "null";
+                bus.Put(new BusEvent { ForTest = true, Event = text });
+#endif
             }
         }
 

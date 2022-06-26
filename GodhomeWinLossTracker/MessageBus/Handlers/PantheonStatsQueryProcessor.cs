@@ -98,6 +98,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     pb,
                     churnsText
                 );
+
+#if DEBUG
+                runsText ??= "null";
+                pb ??= "null";
+                churnsText ??= "null";
+                bus.Put(new BusEvent { ForTest = true, Event = $"{runsText} | {pb} | {churnsText}" });
+#endif
             }
         }
 
