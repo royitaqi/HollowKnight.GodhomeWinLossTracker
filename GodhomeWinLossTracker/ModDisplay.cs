@@ -16,7 +16,7 @@ namespace GodhomeWinLossTracker
         public Vector2 TextPosition = new(0.12f, 0.04f);
 
         public string Text = "Godhome Win Loss Tracker";
-        public TimeSpan NotificationDuration = TimeSpan.FromSeconds(8);
+        public TimeSpan NotificationDuration = TimeSpan.FromSeconds(6);
         private DateTime _fadeOutTime;
 
         public static void Initialize()

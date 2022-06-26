@@ -1,11 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace GodhomeWinLossTracker
 {
     internal static class GodhomeUtils
     {
+        internal static bool IsBossName(string bossName)
+        {
+            return BossSceneToName.Any(kvp => kvp.Value == bossName);
+        }
+
         internal static bool IsBossScene(string sceneName)
         {
             return BossSceneToName.ContainsKey(sceneName);
@@ -89,6 +95,33 @@ namespace GodhomeWinLossTracker
                 return 1;
             }
         }
+
+        internal static IEnumerable<string> GetBossScenesByName(string bossName)
+        {
+            return BossSceneToName.Where(kvp => kvp.Value == bossName).Select(kvp => kvp.Key);
+        }
+
+        internal static int? GetPantheonIndex(string pantheonName)
+        {
+            string pascalCased = Char.ToUpperInvariant(pantheonName[0]) + pantheonName.ToLowerInvariant().Substring(1);
+            int ret = PantheonNames.IndexOf(pascalCased);
+            return ret >= 0 ? ret : null;
+        }
+
+        internal static IEnumerable<string> GetPantheonScenes(int index)
+        {
+            DevUtils.Assert(index < 5, "Pantheon index can be from 0 to 4");
+            return PantheonBossSceneNames[index];
+        }
+
+        private static readonly List<string> PantheonNames = new List<string>
+        {
+            "Master",
+            "Artist",
+            "Sage",
+            "Knight",
+            "Hallownest",
+        };
 
         private static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new Dictionary<string, int>
         {

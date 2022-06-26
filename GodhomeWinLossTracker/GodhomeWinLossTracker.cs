@@ -25,7 +25,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.1.4.0";
+        public override string GetVersion() => "0.2.0.0";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
@@ -35,10 +35,13 @@ namespace GodhomeWinLossTracker
 
             IHandler[] handlers = new IHandler[] {
 #if DEBUG
+                // Put logger first, so that it prints messages on the bus before other handlers can handle it.
                 new MessageBus.Handlers.Logger(),
 #endif
                 new BossChangeDetector(),
                 new DisplayUpdater(this),
+                new HoGStatsQueryProcessor(this),
+                new PantheonStatsQueryProcessor(this),
                 new SaveLoad(this),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
@@ -50,6 +53,8 @@ namespace GodhomeWinLossTracker
             // Production hooks
             ModHooks.BeforeSceneLoadHook += OnSceneLoad;
             On.BossSceneController.EndBossScene += OnEndBossScene;
+            On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
+            On.BossChallengeUI.Setup += BossChallengeUI_Setup;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
@@ -80,6 +85,8 @@ namespace GodhomeWinLossTracker
             // Production hooks
             ModHooks.BeforeSceneLoadHook -= OnSceneLoad;
             On.BossSceneController.EndBossScene -= OnEndBossScene;
+            On.BossDoorChallengeUI.Setup -= BossDoorChallengeUI_Setup;
+            On.BossChallengeUI.Setup -= BossChallengeUI_Setup;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
@@ -111,6 +118,46 @@ namespace GodhomeWinLossTracker
             messageBus.Put(new BossDeath());
 
             orig(self);
+        }
+
+        private void BossDoorChallengeUI_Setup(On.BossDoorChallengeUI.orig_Setup orig, BossDoorChallengeUI self, BossSequenceDoor door)
+        {
+            orig(self, door);
+
+            if (globalData.ShowStatsInChallengeMenu)
+            {
+                messageBus.Put(new PantheonStatsQuery(self.titleTextMain.text, (runs, pb, churns) =>
+                {
+                    if (runs != null)
+                    {
+                        self.titleTextSuper.text = runs;
+                    }
+                    if (pb != null)
+                    {
+                        self.titleTextMain.text = pb;
+                    }
+                    if (churns != null)
+                    {
+                        self.descriptionText.text = churns;
+                    }
+                }));
+            }
+        }
+
+        private void BossChallengeUI_Setup(On.BossChallengeUI.orig_Setup orig, BossChallengeUI self, BossStatue bossStatue, string bossNameSheet, string bossNameKey, string descriptionSheet, string descriptionKey)
+        {
+            orig(self, bossStatue, bossNameSheet, bossNameKey, descriptionSheet, descriptionKey);
+
+            if (globalData.ShowStatsInChallengeMenu)
+            {
+                messageBus.Put(new HoGStatsQuery(self.bossNameText.text, statsText =>
+                {
+                    if (statsText != null)
+                    {
+                        self.descriptionText.text = statsText;
+                    }
+                }));
+            }
         }
 
 #if DEBUG
@@ -220,12 +267,14 @@ namespace GodhomeWinLossTracker
         ///
         /// IGlobalSettings<GlobalData>
         ///
+
         public void OnLoadGlobal(GlobalData data) => globalData = data;
         public GlobalData OnSaveGlobal() => globalData;
 
         /// 
         /// ILocalSettings<LocalData>
         ///
+
         public void OnLoadLocal(LocalData data)
         {
             localData = data;

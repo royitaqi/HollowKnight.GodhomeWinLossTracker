@@ -16,7 +16,16 @@ namespace GodhomeWinLossTracker
             {
                 toggle.CreateToggle("Mod toggle", "Allows disabling the mod"),
                 new HorizontalOption(
-                    "Notify detected win/loss",
+                    "Show stats in challenge menus",
+                    "HoG and pantheons",
+                    new []{ "Off", "On" },
+                    selectedIndex => {
+                        GodhomeWinLossTracker.instance.globalData.ShowStatsInChallengeMenu = selectedIndex == 1;
+                    },
+                    () => GodhomeWinLossTracker.instance.globalData.ShowStatsInChallengeMenu ? 1 : 0
+                ),
+                new HorizontalOption(
+                    "Notify win/loss",
                     "",
                     new []{ "Off", "On" },
                     selectedIndex => {
@@ -25,7 +34,7 @@ namespace GodhomeWinLossTracker
                     () => GodhomeWinLossTracker.instance.globalData.NotifyForRecord ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Notify successful exports",
+                    "Notify exports",
                     "",
                     new []{ "Off", "On" },
                     selectedIndex => {
