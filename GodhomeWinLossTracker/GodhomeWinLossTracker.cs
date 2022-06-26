@@ -102,6 +102,10 @@ namespace GodhomeWinLossTracker
         {
             orig(self, door);
 
+            Log($"DEBUG door.descriptionKey = {door.titleSuperKey}");
+            Log($"DEBUG door.descriptionKey = {door.titleMainKey}");
+            Log($"DEBUG door.descriptionKey = {door.descriptionKey}");
+
             if (globalData.ShowStatsInChallengeMenu)
             {
                 messageBus.Put(new PantheonStatsQuery(self.titleTextMain.text, (runs, pb, churns) =>
