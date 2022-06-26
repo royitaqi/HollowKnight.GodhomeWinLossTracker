@@ -14,7 +14,7 @@ namespace UnitTests
 
             TestUtils.TestMessageBus(new TestUtils.MessageBusTestCase {
                 Name = "An non-effect message should pass through message bus",
-                Handlers = handlers,
+                HandlersCreator = _ => handlers,
                 InputMessages = inputMessages,
                 ExpectedMessages = expectedMessages,
             });
@@ -89,7 +89,7 @@ namespace UnitTests
 
             TestUtils.TestMessageBus(new TestUtils.MessageBusTestCase {
                 Name = "Messages should be processed FIFO, each time by all handlers",
-                Handlers = handlers,
+                HandlersCreator = _ => handlers,
                 InputMessages = inputMessages,
                 ExpectedMessages = expectedMessages,
             });

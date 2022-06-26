@@ -16,7 +16,7 @@ namespace UnitTests
             .Zip(Enumerable.Range(0, PantheonScenes.Length))
             .Select(tuple => new RawWinLoss("", SequenceName, "", tuple.First, PantheonScenes.Length - tuple.Second, 0, 0, RawWinLoss.Sources.Manual))
             .ToArray();
-        private static readonly string ExpectedWon = "Runs: 10 | PB: Won | null";
+        private static readonly string ExpectedWon = "Runs: 10 | PB: Win | null";
 
         private static readonly RawWinLoss[] RecordsHalfwayThrough = PantheonScenes
             .Zip(Enumerable.Range(0, PantheonScenes.Length))
@@ -39,13 +39,13 @@ namespace UnitTests
                 }
             })
             .ToArray();
-        private static readonly string ExpectedHalfwayThrough = "Runs: 10 | PB: Gorb | Top churns: Gorb 0%, Hornet (Protector) 14%, Mass Moss Charger 12%";
+        private static readonly string ExpectedHalfwayThrough = "Runs: 11 | PB: Hornet (Protector) | Top churns: Gorb 0%, Hornet (Protector) 86%, Massive Moss Charger 88%";
 
         private static readonly RawWinLoss[] RecordsFailedFromStart = PantheonScenes
             .Take(1)
             .Select(scene => new RawWinLoss("", SequenceName, "", scene, 0, 4, 0, RawWinLoss.Sources.Manual))
             .ToArray();
-        private static readonly string ExpectedFailedFromStart = "Runs: 4 | null | Top chrns: Venefly King 0%";
+        private static readonly string ExpectedFailedFromStart = "Runs: 4 | null | Top churns: Vengefly King 0%";
 
         private static readonly RawWinLoss[] RecordsNeverAttempted = new RawWinLoss[0];
 
@@ -101,7 +101,7 @@ namespace UnitTests
         {
             foreach (var testCase in GetTestCases())
             {
-                testCase.Handlers = new[] { new WinLossGenerator() };
+                testCase.HandlersCreator = mod => new[] { new PantheonStatsQueryProcessor(mod) };
                 testCase.InputMessages = testCase.InputMessages;
                 testCase.ExpectedMessages = testCase.ExpectedMessages;
                 TestUtils.TestMessageBus(testCase);

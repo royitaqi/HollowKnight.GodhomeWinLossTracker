@@ -8,7 +8,7 @@ namespace UnitTests
             public G.GlobalData GlobalData { get; set; }
             public G.LocalData LocalData { get; set; }
             public G.FolderData FolderData { get; set; }
-            public IEnumerable<IHandler> Handlers { get; set; }
+            public Func<G.IGodhomeWinLossTracker, IEnumerable<IHandler>> HandlersCreator { get; set; }
             public IEnumerable<IMessage> InputMessages { get; set; }
             public IEnumerable<IMessage> ExpectedMessages { get; set; }
             public G.AssertionFailedException ExpectedException { get; set; }
@@ -49,7 +49,7 @@ namespace UnitTests
 
             if (testCase.ExpectedMessages != null)
             {
-                IEnumerable<IMessage> outputMessages = RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.Handlers, testCase.InputMessages);
+                IEnumerable<IMessage> outputMessages = RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.HandlersCreator, testCase.InputMessages);
 
                 // Verify output messages
                 Assert.AreEqual(
@@ -62,7 +62,7 @@ namespace UnitTests
             {
                 try
                 {
-                    RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.Handlers, testCase.InputMessages);
+                    RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.HandlersCreator, testCase.InputMessages);
                     throw new AssertFailedException($"Should throw AssertionFailedException(\"{testCase.ExpectedException.Message}\"). {testCase}");
                 }
                 catch (G.AssertionFailedException ex)
@@ -81,15 +81,10 @@ namespace UnitTests
             G.GlobalData globalData,
             G.LocalData localData,
             G.FolderData folderData,
-            IEnumerable<IHandler> handlers,
+            Func<G.IGodhomeWinLossTracker, IEnumerable<IHandler>> handlersCreator,
             IEnumerable<IMessage> inputMessages
         )
         {
-            Trace.Write(testName);
-            Trace.Write(globalData);
-            Trace.Write(localData);
-            Trace.Write(folderData);
-
             // Create objects
             Mock<G.IGodhomeWinLossTracker> mod = new();
             if (globalData != null)
@@ -106,7 +101,8 @@ namespace UnitTests
             }
 
             MessageRecorder recorder = new();
-            TheMessageBus bus = new(mod.Object, handlers.Concat(new[] { recorder }));
+            var handlers = handlersCreator(mod.Object).Concat(new[] { recorder });
+            TheMessageBus bus = new(mod.Object, handlers);
 
             // Feed input messages
             foreach (var inputMessage in inputMessages)
