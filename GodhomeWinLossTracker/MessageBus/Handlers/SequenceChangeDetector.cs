@@ -12,25 +12,23 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
     {
         public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
+            // Detect HoG sequence by scene GG_Workshop
             if (msg is SceneChange)
             {
                 string currentSceneName = (msg as SceneChange).Name;
                 DevUtils.Assert(currentSceneName != null, "currentSceneName shouldn't be null");
 
-                if (GodhomeUtils.IsBossScene(currentSceneName))
+                if (currentSceneName == "GG_Workshop")
                 {
-                    string sequenceName = GodhomeUtils.GetSequenceName(_previousSceneName, currentSceneName);
-                    if (sequenceName != null)
-                    {
-                        bus.Put(new SequenceChange { Name = sequenceName });
-                    }
+                    bus.Put(new SequenceChange { Name = "HoG" });
                 }
-
-                // Record the current scene name, so that it can be used in the next round as the previous scene name.
-                _previousSceneName = currentSceneName;
+            }
+            // Detect pantheon sequences by stats queries
+            else if (msg is PantheonStatsQuery)
+            {
+                int pantheonIndex = (msg as PantheonStatsQuery).PantheonIndex;
+                bus.Put(new SequenceChange { Name = $"P{pantheonIndex + 1}" });
             }
         }
-
-        private string _previousSceneName;
     }
 }

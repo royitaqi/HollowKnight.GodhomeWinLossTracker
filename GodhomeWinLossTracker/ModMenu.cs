@@ -69,11 +69,7 @@ namespace GodhomeWinLossTracker
 
         public static void ExportStatsAsTsv()
         {
-            GodhomeWinLossTracker.instance.Log("Exporting stats as TSV");
-
             GodhomeWinLossTracker.instance.messageBus.Put(new ExportFolderData());
-
-            GodhomeWinLossTracker.instance.Log("Exported stats as TSV");
         }
     }
 }

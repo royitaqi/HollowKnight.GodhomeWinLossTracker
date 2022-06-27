@@ -20,14 +20,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (message is PantheonStatsQuery)
             {
                 PantheonStatsQuery msg = message as PantheonStatsQuery;
-
-                int? indexq = GodhomeUtils.GetPantheonIndexFromDescriptionKey(msg.DescriptionKey);
-                if (indexq == null)
-                {
-                    // Unknown pantheon. Return without calling callback.
-                    return;
-                }
-                int index = (int)indexq;
+                int index = msg.PantheonIndex;
 
                 string sequenceName = $"P{index + 1}";
                 var records = _mod.folderData.RawRecords

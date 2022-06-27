@@ -104,7 +104,15 @@ namespace GodhomeWinLossTracker
 
             if (globalData.ShowStatsInChallengeMenu)
             {
-                messageBus.Put(new PantheonStatsQuery(door.descriptionKey, (runs, pb, churns) =>
+                int? indexq = GodhomeUtils.GetPantheonIndexFromDescriptionKey(door.descriptionKey);
+                if (indexq == null)
+                {
+                    // Unknown pantheon. No change to challenge menu.
+                    return;
+                }
+                int index = (int)indexq;
+
+                messageBus.Put(new PantheonStatsQuery(index, (runs, pb, churns) =>
                 {
                     if (runs != null)
                     {
