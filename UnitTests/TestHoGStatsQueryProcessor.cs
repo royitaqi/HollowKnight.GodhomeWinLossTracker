@@ -11,13 +11,15 @@ namespace UnitTests
 
 
         private const string BossA = "Soul Warrior";
+        private const string BossANameKey = "NAME_MAGE_KNIGHT";
         private const string BossAAttunedScene = "GG_Mage_Knight";
         private const string BossAAscendedScene = "GG_Mage_Knight_V";
 
         private const string BossB = "Lost Kin";
+        private const string BossBNameKey = "NAME_LOST_KIN";
         private const string BossBScene = "GG_Lost_Kin";
 
-        private static readonly HoGStatsQuery QueryTwoSceneBothStats = new(BossA, DoNothing);
+        private static readonly HoGStatsQuery QueryTwoSceneBothStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneBothStats = new[]
         {
             new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, RawWinLoss.Sources.Manual),
@@ -36,7 +38,7 @@ namespace UnitTests
         };
         private static readonly string ExpectedTwoSceneBothStats = "Attuned: 20 fights, 14 wins (70%)\r\nAscended+: 80 fights, 30 wins (38%)\r\n";
 
-        private static readonly HoGStatsQuery QueryTwoSceneOnlyAttunedStats = new(BossA, DoNothing);
+        private static readonly HoGStatsQuery QueryTwoSceneOnlyAttunedStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneOnlyAttunedStats = new[]
         {
             new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 10, 5, 0, RawWinLoss.Sources.Manual),
@@ -47,7 +49,7 @@ namespace UnitTests
         };
         private static readonly string ExpectedTwoSceneOnlyAttunedStats = "Attuned: 20 fights, 14 wins (70%)\r\n";
 
-        private static readonly HoGStatsQuery QueryTwoSceneOnlyAscendedStats = new(BossA, DoNothing);
+        private static readonly HoGStatsQuery QueryTwoSceneOnlyAscendedStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneOnlyAscendedStats = new[]
         {
             new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, RawWinLoss.Sources.Manual),
@@ -58,7 +60,7 @@ namespace UnitTests
         };
         private static readonly string ExpectedTwoSceneOnlyAscendedStats = "Ascended+: 80 fights, 30 wins (38%)\r\n";
 
-        private static readonly HoGStatsQuery QueryTwoSceneNoStats = new(BossA, DoNothing);
+        private static readonly HoGStatsQuery QueryTwoSceneNoStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneNoStats = new[]
         {
             // Irrelevant boss
@@ -66,7 +68,7 @@ namespace UnitTests
         };
         private static readonly string ExpectedTwoSceneNoStats = "null";
 
-        private static readonly HoGStatsQuery QueryOneSceneSomeStats = new(BossB, DoNothing);
+        private static readonly HoGStatsQuery QueryOneSceneSomeStats = new(BossBNameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsOneSceneSomeStats = new[]
         {
             new RawWinLoss("", SequenceName, BossB, BossBScene, 10, 5, 0, RawWinLoss.Sources.Manual),
@@ -77,7 +79,7 @@ namespace UnitTests
         };
         private static readonly string ExpectedOneSceneSomeStats = "80 fights, 30 wins (38%)\r\n";
 
-        private static readonly HoGStatsQuery QueryOneSceneNoStats = new(BossB, DoNothing);
+        private static readonly HoGStatsQuery QueryOneSceneNoStats = new(BossBNameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsOneSceneNoStats = new[]
         {
             // Irrelevant boss

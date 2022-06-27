@@ -9,20 +9,20 @@ namespace GodhomeWinLossTracker
     {
         internal static bool IsBossName(string bossName)
         {
-            return BossSceneToName.Any(kvp => kvp.Value == bossName);
+            return BossSceneToCanonicalName.Any(kvp => kvp.Value == bossName);
         }
 
         internal static bool IsBossScene(string sceneName)
         {
-            return BossSceneToName.ContainsKey(sceneName);
+            return BossSceneToCanonicalName.ContainsKey(sceneName);
         }
 
         internal static bool IsNonBossScene(string sceneName)
         {
-            return !BossSceneToName.ContainsKey(sceneName);
+            return !BossSceneToCanonicalName.ContainsKey(sceneName);
         }
 
-        internal static string GetNullableBossName(string sceneName)
+        internal static string GetNullableBossNameBySceneName(string sceneName)
         {
             // Return null for non-boss scene
             if (IsNonBossScene(sceneName))
@@ -30,8 +30,13 @@ namespace GodhomeWinLossTracker
                 return null;
             }
 
-            DevUtils.Assert(BossSceneToName.ContainsKey(sceneName), $"Boss scene name {sceneName} should exist in BossSceneToName");
-            return BossSceneToName[sceneName];
+            DevUtils.Assert(BossSceneToCanonicalName.ContainsKey(sceneName), $"Boss scene name {sceneName} should exist in BossSceneToName");
+            return BossSceneToCanonicalName[sceneName];
+        }
+
+        internal static string GetNullableBossNameByHoGNameKey(string hogNameKey)
+        {
+            return BossInfos.FirstOrDefault(info => info.HoGNameKey == hogNameKey)?.CanonicalName;
         }
 
         private static int? GetPantheonIndex(string previousSceneName, string bossSceneName)
@@ -98,13 +103,12 @@ namespace GodhomeWinLossTracker
 
         internal static IEnumerable<string> GetBossScenesByName(string bossName)
         {
-            return BossSceneToName.Where(kvp => kvp.Value == bossName).Select(kvp => kvp.Key);
+            return BossSceneToCanonicalName.Where(kvp => kvp.Value == bossName).Select(kvp => kvp.Key);
         }
 
-        internal static int? GetPantheonIndex(string pantheonName)
+        internal static int? GetPantheonIndexFromDescriptionKey(string descriptionKey)
         {
-            string pascalCased = Char.ToUpperInvariant(pantheonName[0]) + pantheonName.ToLowerInvariant().Substring(1);
-            int ret = PantheonNames.IndexOf(pascalCased);
+            int ret = PantheonDescriptionKeys.IndexOf(descriptionKey);
             return ret >= 0 ? ret : null;
         }
 
@@ -114,13 +118,13 @@ namespace GodhomeWinLossTracker
             return PantheonBossSceneNames[index];
         }
 
-        internal static readonly List<string> PantheonNames = new List<string>
+        internal static readonly List<string> PantheonDescriptionKeys = new()
         {
-            "Master",
-            "Artist",
-            "Sage",
-            "Knight",
-            "Hallownest",
+            "UI_CHALLENGE_DESC_1",
+            "UI_CHALLENGE_DESC_2",
+            "UI_CHALLENGE_DESC_3",
+            "UI_CHALLENGE_DESC_4",
+            "UI_CHALLENGE_DESC_5",
         };
 
         internal static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new Dictionary<string, int>
@@ -328,7 +332,7 @@ namespace GodhomeWinLossTracker
             },
         };
 
-        internal static readonly Dictionary<string, string> BossSceneToName = new()
+        internal static readonly Dictionary<string, string> BossSceneToCanonicalName = new()
         {
             { "GG_Broken_Vessel", "Broken Vessel" },
             { "GG_Brooding_Mawlek", "Brooding Mawlek" },
@@ -385,6 +389,326 @@ namespace GodhomeWinLossTracker
             { "GG_Vengefly_V", "Vengefly King" },
             { "GG_Watcher_Knights", "Watcher Knight" },
             { "GG_White_Defender", "White Defender" },
+        };
+
+        internal class BossInfo
+        {
+            public string HoGNameKey { get; set; }
+            public string HoGEnglishName { get; set; }
+            public string HoGDescriptionKey { get; set; }
+            public string HoGEnglishDescription { get; set; }
+            public string CanonicalName { get; set; }
+        }
+
+        internal static readonly BossInfo[] BossInfos = new[] {
+            new BossInfo {
+                CanonicalName = "Gruz Mother",
+                HoGNameKey = "NAME_BIGFLY",
+                HoGEnglishName = "Gruz Mother",
+                HoGDescriptionKey ="GG_S_GRUZ",
+                HoGEnglishDescription = "Slumbering god of fertility",
+            },
+            new BossInfo {
+                CanonicalName = "Vengefly King",
+                HoGNameKey = "NAME_BIGBUZZER",
+                HoGEnglishName = "Vengefly King",
+                HoGDescriptionKey ="GG_S_BIGBUZZ",
+                HoGEnglishDescription = "Vicious god of territories",
+            },
+            new BossInfo {
+                CanonicalName = "Brooding Mawlek",
+                HoGNameKey = "NAME_MAWLEK",
+                HoGEnglishName = "Brooding Mawlek",
+                HoGDescriptionKey ="GG_S_MAWLEK",
+                HoGEnglishDescription = "Lonely god of the nest",
+            },
+            new BossInfo {
+                CanonicalName = "False Knight",
+                HoGNameKey = "NAME_FALSEKNIGHT",
+                HoGEnglishName = "False Knight",
+                HoGDescriptionKey ="GG_S_FKNIGHT",
+                HoGEnglishDescription = "Angry god of the downtrodden",
+            },
+            new BossInfo {
+                CanonicalName = "Failed Champion",
+                HoGNameKey = "NAME_FAILED_CHAMPION",
+                HoGEnglishName = "Failed Champion",
+                HoGDescriptionKey ="GG_S_FAILED_CHAMPION",
+                HoGEnglishDescription = "Baleful god of regrets",
+            },
+            new BossInfo {
+                CanonicalName = "Hornet (Sentinel)",
+                HoGNameKey = "NAME_HORNET_2",
+                HoGEnglishName = "Hornet Sentinel",
+                HoGDescriptionKey ="GG_S_HORNET",
+                HoGEnglishDescription = "God protector of a fading land",
+            },
+            new BossInfo {
+                CanonicalName = "Hornet (Protector)",
+                HoGNameKey = "NAME_HORNET_1",
+                HoGEnglishName = "Hornet Protector",
+                HoGDescriptionKey ="GG_S_HORNET",
+                HoGEnglishDescription = "God protector of a fading land",
+            },
+            new BossInfo {
+                CanonicalName = "Massive Moss Charger",
+                HoGNameKey = "NAME_MEGA_MOSS_CHARGER",
+                HoGEnglishName = "Massive Moss Charger",
+                HoGDescriptionKey ="GG_S_MEGAMOSS",
+                HoGEnglishDescription = "Restless god of those who band together",
+            },
+            new BossInfo {
+                CanonicalName = "Flukemarm",
+                HoGNameKey = "NAME_FLUKE_MOTHER",
+                HoGEnglishName = "Flukemarm",
+                HoGDescriptionKey ="GG_S_FLUKEMUM",
+                HoGEnglishDescription = "Alluring God of motherhood",
+            },
+            new BossInfo {
+                CanonicalName = "Mantis Lords",
+                HoGNameKey = "NAME_MANTIS_LORD",
+                HoGEnglishName = "Mantis Lords",
+                HoGDescriptionKey ="GG_S_MANTISLORDS",
+                HoGEnglishDescription = "Noble sister gods of combat",
+            },
+            new BossInfo {
+                CanonicalName = "Sisters of Battle",
+                HoGNameKey = "NAME_MANTIS_LORD_V",
+                HoGEnglishName = "Sisters of Battle",
+                HoGDescriptionKey ="GG_S_MANTIS_LORD_V",
+                HoGEnglishDescription = "Revered gods of a proud tribe",
+            },
+            new BossInfo {
+                CanonicalName = "Oblobbles",
+                HoGNameKey = "NAME_OBLOBBLE",
+                HoGEnglishName = "Oblobble",
+                HoGDescriptionKey ="GG_S_BIGBEES",
+                HoGEnglishDescription = "Lover gods of faith and devotion",
+            },
+            new BossInfo {
+                CanonicalName = "Hive Knight",
+                HoGNameKey = "NAME_HIVE_KNIGHT",
+                HoGEnglishName = "Hive Knight",
+                HoGDescriptionKey ="GG_S_HIVEKNIGHT",
+                HoGEnglishDescription = "Watchful god of duty",
+            },
+            new BossInfo {
+                CanonicalName = "Lost Kin",
+                HoGNameKey = "NAME_LOST_KIN",
+                HoGEnglishName = "Lost Kin",
+                HoGDescriptionKey ="GG_S_LOST_KIN",
+                HoGEnglishDescription = "Lost god of the Abyss",
+            },
+            new BossInfo {
+                CanonicalName = "Broken Vessel",
+                HoGNameKey = "NAME_INFECTED_KNIGHT",
+                HoGEnglishName = "Broken Vessel",
+                HoGDescriptionKey ="GG_S_BROKENVESSEL",
+                HoGEnglishDescription = "Broken shell of an empty god",
+            },
+            new BossInfo {
+                CanonicalName = "Winged Nosk",
+                HoGNameKey = "NAME_NOSK_HORNET",
+                HoGEnglishName = "Winged Nosk",
+                HoGDescriptionKey ="GG_S_NOSK_HORNET",
+                HoGEnglishDescription = "Deceptive god assuming a protector's form",
+            },
+            new BossInfo {
+                CanonicalName = "Nosk",
+                HoGNameKey = "NAME_MIMIC_SPIDER",
+                HoGEnglishName = "Nosk",
+                HoGDescriptionKey ="GG_S_NOSK",
+                HoGEnglishDescription = "Everchanging god of the faceless",
+            },
+            new BossInfo {
+                CanonicalName = "The Collector",
+                HoGNameKey = "NAME_JAR_COLLECTOR",
+                HoGEnglishName = "The Collector",
+                HoGDescriptionKey ="GG_S_COLLECTOR",
+                HoGEnglishDescription = "Joyful god of protection",
+            },
+            new BossInfo {
+                CanonicalName = "God Tamer",
+                HoGNameKey = "NAME_LOBSTER_LANCER",
+                HoGEnglishName = "God Tamer",
+                HoGDescriptionKey ="GG_S_LOBSTERLANCER",
+                HoGEnglishDescription = "Gallant god of the arena",
+            },
+            new BossInfo {
+                CanonicalName = "Enraged Guardian",
+                HoGNameKey = "NAME_MEGA_BEAM_MINER_2",
+                HoGEnglishName = "Enraged Guardian",
+                HoGDescriptionKey ="GG_S_MEGABEAMMINER",
+                HoGEnglishDescription = "Shining god of greed",
+            },
+            new BossInfo {
+                CanonicalName = "Crystal Guardian",
+                HoGNameKey = "NAME_MEGA_BEAM_MINER_1",
+                HoGEnglishName = "Crystal Guardian",
+                HoGDescriptionKey ="GG_S_MEGABEAMMINER",
+                HoGEnglishDescription = "Shining god of greed",
+            },
+            new BossInfo {
+                CanonicalName = "Uumuu",
+                HoGNameKey = "NAME_MEGA_JELLYFISH",
+                HoGEnglishName = "Uumuu",
+                HoGDescriptionKey ="GG_S_UMMU",
+                HoGEnglishDescription = "Uncanny god of knowledge",
+            },
+            new BossInfo {
+                CanonicalName = "Traitor Lord",
+                HoGNameKey = "NAME_TRAITOR_LORD",
+                HoGEnglishName = "Traitor Lord",
+                HoGDescriptionKey ="GG_S_TRAITORLORD",
+                HoGEnglishDescription = "Treacherous god of anger",
+            },
+            new BossInfo {
+                CanonicalName = "Grey Prince Zote",
+                HoGNameKey = "NAME_GREY_PRINCE",
+                HoGEnglishName = "Grey Prince Zote",
+                HoGDescriptionKey ="GG_S_MIGHTYZOTE",
+                HoGEnglishDescription = "False god conjured by the lonely",
+            },
+            new BossInfo {
+                CanonicalName = "Absolute Radiance",
+                HoGNameKey = "NAME_FINAL_BOSS",
+                HoGEnglishName = "Radiance",
+                HoGDescriptionKey ="GG_S_RADIANCE",
+                HoGEnglishDescription = "Forgotten god of light",
+            },
+            new BossInfo {
+                CanonicalName = "Troupe Master Grimm",
+                HoGNameKey = "NAME_GRIMM",
+                HoGEnglishName = "Grimm",
+                HoGDescriptionKey ="GG_S_GRIM",
+                HoGEnglishDescription = "Travelling god of the troupe",
+            },
+            new BossInfo {
+                CanonicalName = "Nightmare King Grimm",
+                HoGNameKey = "NAME_NIGHTMARE_GRIMM",
+                HoGEnglishName = "Nightmare King",
+                HoGDescriptionKey ="GG_S_NIGHTMARE_KING",
+                HoGEnglishDescription = "God of nightmares",
+            },
+            new BossInfo {
+                CanonicalName = "Pure Vessel",
+                HoGNameKey = "NAME_HK_PRIME",
+                HoGEnglishName = "Pure Vessel",
+                HoGDescriptionKey ="GG_S_HK",
+                HoGEnglishDescription = "Mighty god of nothingness",
+            },
+            new BossInfo {
+                CanonicalName = "Great Nailsage Sly",
+                HoGNameKey = "NAME_SLY",
+                HoGEnglishName = "Nailsage Sly",
+                HoGDescriptionKey ="GG_S_SLY",
+                HoGEnglishDescription = "Cunning god of opportunity",
+            },
+            new BossInfo {
+                CanonicalName = "Paintmaster Sheo",
+                HoGNameKey = "NAME_PAINTMASTER",
+                HoGEnglishName = "Paintmaster Sheo",
+                HoGDescriptionKey ="GG_S_PAINTMASTER",
+                HoGEnglishDescription = "Talented god of artists and creators",
+            },
+            new BossInfo {
+                CanonicalName = "Brothers Oro & Mato",
+                HoGNameKey = "NAME_NAILMASTERS",
+                HoGEnglishName = "Oro & Mato",
+                HoGDescriptionKey ="GG_S_NAILMASTER",
+                HoGEnglishDescription = "Loyal brother gods of the nail",
+            },
+            new BossInfo {
+                CanonicalName = "Elder Hu",
+                HoGNameKey = "NAME_GHOST_HU",
+                HoGEnglishName = "Elder Hu",
+                HoGDescriptionKey ="GG_S_GHOST_HU",
+                HoGEnglishDescription = "Dreamborn god of travellers and sages",
+            },
+            new BossInfo {
+                CanonicalName = "Gorb",
+                HoGNameKey = "NAME_GHOST_ALADAR",
+                HoGEnglishName = "Gorb",
+                HoGDescriptionKey ="GG_S_GHOST_GORB",
+                HoGEnglishDescription = "Dreamborn god of the beyond",
+            },
+            new BossInfo {
+                CanonicalName = "Galien",
+                HoGNameKey = "NAME_GHOST_GALIEN",
+                HoGEnglishName = "Galien",
+                HoGDescriptionKey ="GG_S_GHOST_GALIEN",
+                HoGEnglishDescription = "Dreamborn god of heroic hearts",
+            },
+            new BossInfo {
+                CanonicalName = "Markoth",
+                HoGNameKey = "NAME_GHOST_MARKOTH",
+                HoGEnglishName = "Markoth",
+                HoGDescriptionKey ="GG_S_GHOST_MARKOTH",
+                HoGEnglishDescription = "Dreamborn god of meditation and isolation",
+            },
+            new BossInfo {
+                CanonicalName = "Xero",
+                HoGNameKey = "NAME_GHOST_XERO",
+                HoGEnglishName = "Xero",
+                HoGDescriptionKey ="GG_S_GHOST_XERO",
+                HoGEnglishDescription = "Dreamborn god of faith and betrayal",
+            },
+            new BossInfo {
+                CanonicalName = "Marmu",
+                HoGNameKey = "NAME_GHOST_MARMU",
+                HoGEnglishName = "Marmu",
+                HoGDescriptionKey ="GG_S_GHOST_MARMU",
+                HoGEnglishDescription = "Dreamborn god of gardens",
+            },
+            new BossInfo {
+                CanonicalName = "No Eyes",
+                HoGNameKey = "NAME_GHOST_NOEYES",
+                HoGEnglishName = "No Eyes",
+                HoGDescriptionKey ="GG_S_GHOST_NOEYES",
+                HoGEnglishDescription = "Dreamborn god of fear and relief",
+            },
+            new BossInfo {
+                CanonicalName = "Watcher Knight",
+                HoGNameKey = "NAME_BLACK_KNIGHT",
+                HoGEnglishName = "Watcher Knight",
+                HoGDescriptionKey ="GG_S_WATCHERKNIGHTS",
+                HoGEnglishDescription = "Sentinel gods of the spire",
+            },
+            new BossInfo {
+                CanonicalName = "Dung Defender",
+                HoGNameKey = "NAME_DUNG_DEFENDER",
+                HoGEnglishName = "Dung Defender",
+                HoGDescriptionKey ="GG_S_DUNGDEF",
+                HoGEnglishDescription = "Kindly god of bravery and honour",
+            },
+            new BossInfo {
+                CanonicalName = "White Defender",
+                HoGNameKey = "NAME_WHITE_DEFENDER",
+                HoGEnglishName = "White Defender",
+                HoGDescriptionKey ="GG_S_DUNGDEF",
+                HoGEnglishDescription = "Kindly god of bravery and honour",
+            },
+            new BossInfo {
+                CanonicalName = "Soul Master",
+                HoGNameKey = "NAME_MAGE_LORD",
+                HoGEnglishName = "Soul Master",
+                HoGDescriptionKey ="GG_S_SOULMASTER",
+                HoGEnglishDescription = "Covetous god of soul",
+            },
+            new BossInfo {
+                CanonicalName = "Soul Tyrant",
+                HoGNameKey = "NAME_SOUL_TYRANT",
+                HoGEnglishName = "Soul Tyrant",
+                HoGDescriptionKey ="GG_S_SOUL_TYRANT",
+                HoGEnglishDescription = "Frenzied god of mortality",
+            },
+            new BossInfo {
+                CanonicalName = "Soul Warrior",
+                HoGNameKey = "NAME_MAGE_KNIGHT",
+                HoGEnglishName = "Soul Warrior",
+                HoGDescriptionKey ="GG_S_MAGEKNIGHT",
+                HoGEnglishDescription = "Haunted god of the sanctum",
+            },
         };
     }
 }

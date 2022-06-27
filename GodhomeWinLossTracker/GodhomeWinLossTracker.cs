@@ -25,7 +25,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.2.1.0";
+        public override string GetVersion() => "0.2.2.0";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
@@ -104,7 +104,7 @@ namespace GodhomeWinLossTracker
 
             if (globalData.ShowStatsInChallengeMenu)
             {
-                messageBus.Put(new PantheonStatsQuery(self.titleTextMain.text, (runs, pb, churns) =>
+                messageBus.Put(new PantheonStatsQuery(door.descriptionKey, (runs, pb, churns) =>
                 {
                     if (runs != null)
                     {
@@ -128,7 +128,7 @@ namespace GodhomeWinLossTracker
 
             if (globalData.ShowStatsInChallengeMenu)
             {
-                messageBus.Put(new HoGStatsQuery(self.bossNameText.text, statsText =>
+                messageBus.Put(new HoGStatsQuery(bossNameKey, statsText =>
                 {
                     if (statsText != null)
                     {

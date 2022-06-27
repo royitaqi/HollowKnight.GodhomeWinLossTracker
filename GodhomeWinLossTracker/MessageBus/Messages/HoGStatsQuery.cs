@@ -8,11 +8,10 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
 {
     internal class HoGStatsQuery : IMessage
     {
-        public HoGStatsQuery(string bossName, Action<string> callback)
+        public HoGStatsQuery(string hogNameKey, Action<string> callback)
         {
-            DevUtils.Assert(GodhomeUtils.IsBossName(bossName), "bossName should be a valid boss name");
-
-            BossName = bossName;
+            BossName = GodhomeUtils.GetNullableBossNameByHoGNameKey(hogNameKey);
+            DevUtils.Assert(BossName != null, "hogNameKey should be a valid HoG name key");
             Callback = callback;
         }
 
