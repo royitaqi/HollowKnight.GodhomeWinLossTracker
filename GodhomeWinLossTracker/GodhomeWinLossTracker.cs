@@ -102,10 +102,6 @@ namespace GodhomeWinLossTracker
         {
             orig(self, door);
 
-            Log($"DEBUG door.descriptionKey = {door.titleSuperKey}");
-            Log($"DEBUG door.descriptionKey = {door.titleMainKey}");
-            Log($"DEBUG door.descriptionKey = {door.descriptionKey}");
-
             if (globalData.ShowStatsInChallengeMenu)
             {
                 messageBus.Put(new PantheonStatsQuery(door.descriptionKey, (runs, pb, churns) =>
@@ -129,13 +125,6 @@ namespace GodhomeWinLossTracker
         private void BossChallengeUI_Setup(On.BossChallengeUI.orig_Setup orig, BossChallengeUI self, BossStatue bossStatue, string bossNameSheet, string bossNameKey, string descriptionSheet, string descriptionKey)
         {
             orig(self, bossStatue, bossNameSheet, bossNameKey, descriptionSheet, descriptionKey);
-
-            Log($"DEBUG bossNameSheet = {bossNameSheet}");
-            Log($"DEBUG bossNameKey = {bossNameKey}");
-            Log($"DEBUG self.bossNameText.text = {self.bossNameText.text}");
-            Log($"DEBUG descriptionSheet = {descriptionSheet}");
-            Log($"DEBUG descriptionKey = {descriptionKey}");
-            Log($"DEBUG self.descriptionText.text = {self.descriptionText.text}");
 
             if (globalData.ShowStatsInChallengeMenu)
             {
