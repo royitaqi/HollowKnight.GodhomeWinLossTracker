@@ -72,7 +72,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 // Generate PB for the furthest boss won
                 else
                 {
-                    pb = $"PB: {GodhomeUtils.GetNullableBossName(furthestWonScene)}";
+                    pb = $"PB: {GodhomeUtils.GetNullableBossNameBySceneName(furthestWonScene)}";
                 }
 
                 // Generate "Biggest churns"
@@ -87,7 +87,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                         {
                             sb.Append(", ");
                         }
-                        sb.Append($"{GodhomeUtils.GetNullableBossName(churns[i].SceneName)} {churns[i].WinRate * 100,0:F0}%");
+                        sb.Append($"{GodhomeUtils.GetNullableBossNameBySceneName(churns[i].SceneName)} {churns[i].WinRate * 100,0:F0}%");
                     }
                     churnsText = sb.ToString();
                 }

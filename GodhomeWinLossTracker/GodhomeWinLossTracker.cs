@@ -139,7 +139,7 @@ namespace GodhomeWinLossTracker
 
             if (globalData.ShowStatsInChallengeMenu)
             {
-                messageBus.Put(new HoGStatsQuery(self.bossNameText.text, statsText =>
+                messageBus.Put(new HoGStatsQuery(bossNameKey, statsText =>
                 {
                     if (statsText != null)
                     {
