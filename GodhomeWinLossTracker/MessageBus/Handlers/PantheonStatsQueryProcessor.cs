@@ -43,15 +43,20 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                         }
                     )
                     .ToList();
+                if (records.Count == 0)
+                {
+                    // There is no records at all. Don't call callback.
+                    return;
+                }
 
                 List<string> scenes = new(GodhomeUtils.GetPantheonScenes(index));
                 DevUtils.Assert(scenes.Count > 0, "Pantheons should have at least one boss scene");
 
                 // Generate "Runs" based on the first boss' fights.
-                int runs = records.Where(r => r.SceneName == scenes[0]).Sum(r => r.Total);
+                int runs = records.Max(r => r.Total);
                 if (runs == 0)
                 {
-                    // No runs yet, don't ruin the default text.
+                    // There is no run at all. Don't call callback.
                     return;
                 }
                 string runsText = $"Runs: {runs}";
