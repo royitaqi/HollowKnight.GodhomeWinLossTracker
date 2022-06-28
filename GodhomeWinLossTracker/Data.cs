@@ -15,10 +15,11 @@ namespace GodhomeWinLossTracker
     [Serializable]
     public class GlobalData
     {
-        public bool AutoExport = false;
-        public bool NotifyForExport = false;
-        public bool NotifyForRecord = true;
         public bool ShowStatsInChallengeMenu = true;
+        public bool NotifyForRecord = true;
+        public bool NotifyPBTime = true;
+        public bool NotifyForExport = false;
+        public bool AutoExport = false;
     }
 
     [Serializable]

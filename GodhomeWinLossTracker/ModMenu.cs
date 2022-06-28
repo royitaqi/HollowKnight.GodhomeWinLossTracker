@@ -33,6 +33,15 @@ namespace GodhomeWinLossTracker
                     () => GodhomeWinLossTracker.instance.globalData.NotifyForRecord ? 1 : 0
                 ),
                 new HorizontalOption(
+                    "Notify personal best time",
+                    "In wins",
+                    new []{ "Off", "On" },
+                    selectedIndex => {
+                        GodhomeWinLossTracker.instance.globalData.NotifyPBTime = selectedIndex == 1;
+                    },
+                    () => GodhomeWinLossTracker.instance.globalData.NotifyPBTime ? 1 : 0
+                ),
+                new HorizontalOption(
                     "Notify exports",
                     "",
                     new []{ "Off", "On" },

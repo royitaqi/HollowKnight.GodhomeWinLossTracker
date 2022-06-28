@@ -23,7 +23,21 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 if (_mod.globalData.NotifyForRecord)
                 {
-                    ModDisplay.instance.Notify((message as RegisteredRawWinLoss).InnerMessage.ToString());
+                    RawWinLoss record = (message as RegisteredRawWinLoss).InnerMessage;
+
+                    string pb = "";
+                    if (_mod.globalData.NotifyPBTime && record.Wins > 0 && record.Losses == 0)
+                    {
+                        var records = _mod.folderData.RawRecords.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
+                        if (records.Count >= 10 && records.Min(r => r.FightLengthMs) == record.FightLengthMs)
+                        {
+                            long minutes = record.FightLengthMs / 1000 / 60;
+                            long seconds = record.FightLengthMs / 1000 % 60;
+                            pb = $" (PB {minutes}:{seconds:D2})";
+                        }
+                    }
+
+                    ModDisplay.instance.Notify(record.ToString() + pb);
                 }
             }
             // For any other types of message, simply display the message itself.
