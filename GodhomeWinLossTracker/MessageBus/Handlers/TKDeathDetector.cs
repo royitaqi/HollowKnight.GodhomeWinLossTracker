@@ -33,8 +33,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     _logger = logger;
                     // This FSM event detects TK dream death.
                     // For TK real death, use "Map Zone" instead of "Anim Start".
-                    var fsm = GameObject
-                        .Find("Knight").transform
+                    GameObject hero = HeroController.instance.gameObject;
+                    // GameObject hero = GameObject.Find("Knight"); // Another way of getting the hero
+
+                    PlayMakerFSM fsm = hero.transform
                         .Find("Hero Death").gameObject
                         .LocateMyFSM("Hero Death Anim");
                     fsm.MakeLog(true);
