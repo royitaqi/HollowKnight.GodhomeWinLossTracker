@@ -40,6 +40,7 @@ namespace GodhomeWinLossTracker
 #endif
                 new BossChangeDetector(),
                 new DisplayUpdater(this),
+                new GameLoadDetector(),
                 new HoGStatsQueryProcessor(this),
                 new PantheonStatsQueryProcessor(this),
                 new SaveLoad(this),
