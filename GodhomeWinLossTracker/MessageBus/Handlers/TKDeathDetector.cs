@@ -1,6 +1,7 @@
 ﻿using GodhomeWinLossTracker.MessageBus.Messages;
 using UnityEngine;
-using Vasi;
+//using Vasi;
+using SFCore.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -32,11 +33,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     _logger = logger;
                     // This FSM event detects TK dream death.
                     // For TK real death, use "Map Zone" instead of "Anim Start".
-                    GameObject
+                    var fsm = GameObject
                         .Find("Knight").transform
                         .Find("Hero Death").gameObject
-                        .LocateMyFSM("Hero Death Anim")
-                        .GetState("Anim Start")
+                        .LocateMyFSM("Hero Death Anim");
+                    fsm.MakeLog(true);
+                    fsm.GetState("Anim Start")
                         .AddMethod(OnHeroDeathAnimStartInDream);
 #if DEBUG
                     logger.Log("Hooked FSM event: TK dream death");
