@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using GodhomeWinLossTracker.MessageBus.Messages;
-using UnityEngine;
-using System.IO;
+﻿using GodhomeWinLossTracker.MessageBus.Messages;
+using Vasi;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -26,6 +18,25 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 {
                     _freshlyLoaded = false;
                     bus.Put(new GameLoaded());
+
+#if DEBUG
+                    var hero = HeroController.instance.gameObject;
+                    var trans = hero.transform.Find("Knight Damage Effect");
+                    if (trans == null)
+                    {
+                        logger.Log("trans null");
+                    }
+                    var trans2 = trans.gameObject;
+                    if (trans2 == null)
+                    {
+                        logger.Log("trans2 null");
+                    }
+                    var fsm = trans2.LocateMyFSM("Knight Damage");
+                    fsm.GetState("Gen").AddMethod(() =>
+                    {
+                        logger.Log($"TK took hit. Health = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
+                    });
+#endif
                 }
             }
         }
