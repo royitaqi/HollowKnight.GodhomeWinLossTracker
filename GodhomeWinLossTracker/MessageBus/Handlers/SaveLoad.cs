@@ -13,8 +13,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class SaveLoad : IHandler
     {
-        //private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
-        private static readonly string ModSaveDirectory = "C:/Users/Roy/AppData/LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker";
+        private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
         private static readonly string ModBackupDirectory = ModSaveDirectory + "/backup";
 
         public SaveLoad(IGodhomeWinLossTracker mod)
