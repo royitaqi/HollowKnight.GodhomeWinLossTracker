@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {

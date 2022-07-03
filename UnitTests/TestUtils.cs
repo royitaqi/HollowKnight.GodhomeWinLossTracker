@@ -1,3 +1,5 @@
+using GodhomeWinLossTracker.Utils;
+
 namespace UnitTests
 {
     internal static class TestUtils
@@ -11,7 +13,7 @@ namespace UnitTests
             public Func<G.IGodhomeWinLossTracker, IEnumerable<IHandler>> HandlersCreator { get; set; }
             public IEnumerable<IMessage> InputMessages { get; set; }
             public IEnumerable<IMessage> ExpectedMessages { get; set; }
-            public G.AssertionFailedException ExpectedException { get; set; }
+            public AssertionFailedException ExpectedException { get; set; }
 
             public override string ToString()
             {
@@ -65,7 +67,7 @@ namespace UnitTests
                     RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.HandlersCreator, testCase.InputMessages);
                     throw new AssertFailedException($"Should throw AssertionFailedException(\"{testCase.ExpectedException.Message}\"). {testCase}");
                 }
-                catch (G.AssertionFailedException ex)
+                catch (AssertionFailedException ex)
                 {
                     Assert.AreEqual(testCase.ExpectedException.Message, ex.Message, $"AssertionFailedException thrown with unexpected message. {testCase}");
                 }

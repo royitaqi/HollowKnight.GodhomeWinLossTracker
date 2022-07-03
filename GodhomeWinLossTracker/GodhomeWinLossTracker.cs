@@ -9,6 +9,7 @@ using GodhomeWinLossTracker.MessageBus.Handlers;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using Newtonsoft.Json;
 using Vasi;
+using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker
 {
@@ -60,14 +61,9 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
-            On.PlayMakerFSM.Start += PlayMakerFSM_Start;
-            On.PlayMakerFSM.SetState += PlayMakerFSM_SetState;
-            On.PlayMakerFSM.Update += PlayMakerFSM_Update;
-            On.PlayMakerFSM.SendEvent += PlayMakerFSM_SendEvent;
-            On.PlayMakerFSM.SendRemoteFsmEvent += PlayMakerFSM_SendRemoteFsmEvent;
-            On.PlayMakerFSM.ChangeState_FsmEvent += PlayMakerFSM_ChangeState_FsmEvent;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
+            //FsmUtils.Initialize(); // Uncomment this line to get FSM related events
 #endif
             ModDisplay.Initialize();
 #if DEBUG
@@ -86,120 +82,6 @@ namespace GodhomeWinLossTracker
             DevUtils.Log($"DEBUG HeroController_Start");
             orig(self);
         }
-
-        private void PlayMakerFSM_Start(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
-        {
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.Before,
-                FsmAwareness.Types.Start,
-                self,
-                null, // stateName
-                null // eventName
-            ));
-            orig(self);
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.After,
-                FsmAwareness.Types.Start,
-                self,
-                null, // stateName
-                null // eventName
-            ));
-        }
-        private void PlayMakerFSM_SetState(On.PlayMakerFSM.orig_SetState orig, PlayMakerFSM self, string stateName)
-        {
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.Before,
-                FsmAwareness.Types.SetState,
-                self,
-                stateName,
-                null // eventName
-            ));
-            orig(self, stateName);
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.After,
-                FsmAwareness.Types.SetState,
-                self,
-                stateName,
-                null // eventName
-            ));
-        }
-
-        private void PlayMakerFSM_Update(On.PlayMakerFSM.orig_Update orig, PlayMakerFSM self)
-        {
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.Before,
-                FsmAwareness.Types.Update,
-                self,
-                null, // stateName
-                null // eventName
-            ));
-            orig(self);
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.After,
-                FsmAwareness.Types.Update,
-                self,
-                null, // stateName
-                null // eventName
-            ));
-        }
-
-        private void PlayMakerFSM_SendEvent(On.PlayMakerFSM.orig_SendEvent orig, PlayMakerFSM self, string eventName)
-        {
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.Before,
-                FsmAwareness.Types.SendEvent,
-                self,
-                null, // stateName
-                eventName
-            ));
-            orig(self, eventName);
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.After,
-                FsmAwareness.Types.SendEvent,
-                self,
-                null, // stateName
-                eventName
-            ));
-        }
-
-        private void PlayMakerFSM_SendRemoteFsmEvent(On.PlayMakerFSM.orig_SendRemoteFsmEvent orig, PlayMakerFSM self, string eventName)
-        {
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.Before,
-                FsmAwareness.Types.SendRemoteFsmEvent,
-                self,
-                null, // stateName
-                eventName
-            ));
-            orig(self, eventName);
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.After,
-                FsmAwareness.Types.SendRemoteFsmEvent,
-                self,
-                null, // stateName
-                eventName
-            ));
-        }
-
-        private void PlayMakerFSM_ChangeState_FsmEvent(On.PlayMakerFSM.orig_ChangeState_FsmEvent orig, PlayMakerFSM self, HutongGames.PlayMaker.FsmEvent fsmEvent)
-        {
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.Before,
-                FsmAwareness.Types.ChangeState,
-                self,
-                null, // stateName
-                null // eventName
-            ));
-            orig(self, fsmEvent);
-            messageBus.Put(FsmAwareness.Create(
-                FsmAwareness.Orders.After,
-                FsmAwareness.Types.ChangeState,
-                self,
-                null, // stateName
-                null // eventName
-            ));
-        }
-
 
         ///
         /// ICustomMenuMod

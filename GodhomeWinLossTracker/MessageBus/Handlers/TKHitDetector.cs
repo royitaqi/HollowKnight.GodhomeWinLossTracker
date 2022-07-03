@@ -6,24 +6,31 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class TKHitDetector: IHandler
     {
-        public static bool Filter(FsmAwareness.Orders order, FsmAwareness.Types type, PlayMakerFSM fsm, string stateName, string eventName)
+        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
-            return order == FsmAwareness.Orders.After
-                && type == FsmAwareness.Types.SendEvent
-                && fsm.gameObject.name == "Knight"
-                && fsm.FsmName == "ProxyFSM"
-                && eventName == "HeroCtrl-HeroDamaged";
-        }
-
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
-        {
-            if (message is FsmAwareness)
+            if (msg is GameLoaded)
             {
-                var msg = message as FsmAwareness;
-                if (Filter(msg.Order, msg.Type, msg.Fsm, msg.StateName, msg.EventName))
-                {
-                    logger.Log($"DEBUG: TK got hit: {PlayerData.instance.health + PlayerData.instance.healthBlue}");
-                }
+#if DEBUG
+                logger.Log("Hooking FSM event: TK hit");
+#endif
+
+                GameObject hero = HeroController.instance.gameObject;
+                // GameObject hero = GameObject.Find("Knight"); // Another way of getting the hero
+
+                PlayMakerFSM fsm = hero
+                    .LocateMyFSM("ProxyFSM");
+
+                fsm.GetState("Flower?")
+                    .InsertMethod(0, () =>
+                    {
+#if DEBUG
+                        logger.Log($"TK took a hit: {PlayerData.instance.health + PlayerData.instance.healthBlue}");
+#endif
+                    });
+
+#if DEBUG
+                logger.Log("Hooked FSM event: TK hit");
+#endif
             }
         }
     }

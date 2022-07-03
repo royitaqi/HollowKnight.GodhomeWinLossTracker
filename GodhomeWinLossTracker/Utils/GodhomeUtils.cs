@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace GodhomeWinLossTracker
+namespace GodhomeWinLossTracker.Utils
 {
     internal static class GodhomeUtils
     {
