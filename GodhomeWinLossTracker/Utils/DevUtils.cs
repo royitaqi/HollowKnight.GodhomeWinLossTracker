@@ -27,7 +27,7 @@ namespace GodhomeWinLossTracker.Utils
             return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
 
-        public static void Log(string log)
+        public static void CountedLog(string log)
         {
             if (_countedLog.ContainsKey(log))
             {
@@ -39,7 +39,7 @@ namespace GodhomeWinLossTracker.Utils
             }
         }
 
-        public static string DumpLog()
+        public static string DumpLogCount()
         {
             StringBuilder sb = new();
             foreach (var kvp in _countedLog.OrderByDescending(kvp => kvp.Value))

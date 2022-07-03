@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GodhomeWinLossTracker.Utils;
-using Newtonsoft.Json;
-
-namespace GodhomeWinLossTracker.MessageBus.Handlers
+﻿namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class Logger : IHandler
     {

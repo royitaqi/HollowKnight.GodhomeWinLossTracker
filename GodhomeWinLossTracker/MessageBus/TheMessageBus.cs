@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GodhomeWinLossTracker.MessageBus.Handlers;
 using GodhomeWinLossTracker.MessageBus.Messages;
+using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus
 {
@@ -22,11 +23,7 @@ namespace GodhomeWinLossTracker.MessageBus
 
         public void Put(IMessage message)
         {
-            // Ignore null messages
-            if (message == null)
-            {
-                return;
-            }
+            DevUtils.Assert(message != null, "Message should never be null");
 
             // Enqueue message
             _messages.Enqueue(message);

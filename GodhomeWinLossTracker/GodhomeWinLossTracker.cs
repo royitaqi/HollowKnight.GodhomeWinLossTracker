@@ -65,7 +65,9 @@ namespace GodhomeWinLossTracker
             On.GameManager.Start += GameManager_Start;
             FsmUtils.Initialize(); // Uncomment this line to get FSM related events
 #endif
+
             ModDisplay.Initialize();
+
 #if DEBUG
             Log("Initialized");
 #endif
@@ -86,13 +88,13 @@ namespace GodhomeWinLossTracker
 
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
         {
-            DevUtils.Log($"DEBUG GameManager_Start");
+            Log($"DEBUG GameManager_Start");
             orig(self);
         }
 
         private void HeroController_Start(On.HeroController.orig_Start orig, HeroController self)
         {
-            DevUtils.Log($"DEBUG HeroController_Start");
+            Log($"DEBUG HeroController_Start");
             orig(self);
         }
 
@@ -170,7 +172,7 @@ namespace GodhomeWinLossTracker
         {
             if (Input.GetKeyDown(KeyCode.O))
             {
-                Log(DevUtils.DumpLog());
+                Log(DevUtils.DumpLogCount());
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
