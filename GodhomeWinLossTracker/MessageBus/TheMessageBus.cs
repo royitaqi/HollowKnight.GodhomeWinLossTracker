@@ -22,8 +22,16 @@ namespace GodhomeWinLossTracker.MessageBus
 
         public void Put(IMessage message)
         {
+            // Ignore null messages
+            if (message == null)
+            {
+                return;
+            }
+
+            // Enqueue message
             _messages.Enqueue(message);
 
+            // Process all messages until the queue is empty
             if (!_processing)
             {
                 _processing = true;
