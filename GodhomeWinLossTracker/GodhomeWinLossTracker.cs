@@ -138,12 +138,9 @@ namespace GodhomeWinLossTracker
 
         private void PlayMakerFSM_ChangeState_FsmEvent(On.PlayMakerFSM.orig_ChangeState_FsmEvent orig, PlayMakerFSM self, HutongGames.PlayMaker.FsmEvent fsmEvent)
         {
-            orig(self, fsmEvent);
+            Log($"DEBUG PlayMakerFSM_ChangeState_FsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={fsmEvent.Name}");
 
-            if (self.FsmName == "Knight Damage" || self.FsmName == "Hero Death Anim")
-            {
-                Log($"DEBUG PlayMakerFSM_ChangeState_FsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={fsmEvent.Name}");
-            }
+            orig(self, fsmEvent);
         }
 
 
