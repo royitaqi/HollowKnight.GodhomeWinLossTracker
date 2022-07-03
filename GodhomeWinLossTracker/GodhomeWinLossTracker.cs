@@ -61,11 +61,18 @@ namespace GodhomeWinLossTracker
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.PlayMakerFSM.Start += PlayMakerFSM_Start;
             On.HeroController.Start += HeroController_Start;
+            On.GameManager.Start += GameManager_Start;
 #endif
             ModDisplay.Initialize();
 #if DEBUG
             Log("Initialized");
 #endif
+        }
+
+        private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
+        {
+            Log($"DEBUG GameManager_Start");
+            orig(self);
         }
 
         private void HeroController_Start(On.HeroController.orig_Start orig, HeroController self)
@@ -76,7 +83,7 @@ namespace GodhomeWinLossTracker
 
         private void PlayMakerFSM_Start(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
         {
-            Log($"DEBUG PlayMakerFSM_Start: FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
+            //Log($"DEBUG PlayMakerFSM_Start: FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
             orig(self);
         }
 
