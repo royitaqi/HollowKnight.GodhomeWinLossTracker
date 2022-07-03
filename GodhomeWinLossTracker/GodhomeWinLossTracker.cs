@@ -61,6 +61,8 @@ namespace GodhomeWinLossTracker
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.PlayMakerFSM.Start += PlayMakerFSM_Start;
             On.PlayMakerFSM.SetState += PlayMakerFSM_SetState;
+            On.PlayMakerFSM.Update += PlayMakerFSM_Update;
+            On.PlayMakerFSM.SendEvent += PlayMakerFSM_SendEvent;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
 #endif
@@ -98,6 +100,26 @@ namespace GodhomeWinLossTracker
             }
 
             orig(self, stateName);
+        }
+
+        private void PlayMakerFSM_Update(On.PlayMakerFSM.orig_Update orig, PlayMakerFSM self)
+        {
+            orig(self);
+
+            if (self.FsmName == "Hero Death Anim")
+            {
+                Log($"DEBUG PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
+            }
+        }
+
+        private void PlayMakerFSM_SendEvent(On.PlayMakerFSM.orig_SendEvent orig, PlayMakerFSM self, string eventName)
+        {
+            if (self.FsmName == "Knight Damage" || self.FsmName == "Hero Death Anim")
+            {
+                Log($"DEBUG PlayMakerFSM_SendEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
+            }
+
+            orig(self, eventName);
         }
 
         ///
