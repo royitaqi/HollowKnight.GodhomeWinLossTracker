@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using GodhomeWinLossTracker.MessageBus.Messages;
-using UnityEngine;
-using System.IO;
+﻿using GodhomeWinLossTracker.MessageBus.Messages;
+using Vasi;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -26,6 +18,17 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 {
                     _freshlyLoaded = false;
                     bus.Put(new GameLoaded());
+
+#if DEBUG
+                    HeroController.instance.transform.Find("Effects/Damage Effect").gameObject.LocateMyFSM("Knight Damage").GetState("Muffle?").AddMethod(() =>
+                    {
+                        logger.Log($"TK took enemy dmg. HP = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
+                    });
+                    HeroController.instance.transform.Find("Effects/Damage Effect").gameObject.LocateMyFSM("Knight Damage").GetState("Set Hazard").AddMethod(() =>
+                    {
+                        logger.Log($"TK took hazard dmg. HP = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
+                    });
+#endif
                 }
             }
         }
