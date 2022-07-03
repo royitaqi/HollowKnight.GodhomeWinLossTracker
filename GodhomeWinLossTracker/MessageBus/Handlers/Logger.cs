@@ -12,8 +12,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
     {
         public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
-            //logger.Log($"Message on bus: {msg}");
-            DevUtils.Log($"Message on bus: {msg}");
+            logger.Log($"Message on bus: {msg}");
         }
     }
 }

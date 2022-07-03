@@ -47,7 +47,6 @@ namespace GodhomeWinLossTracker
                 new SaveLoad(this),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
-                new TKHitDetector(),
                 new WinLossGenerator(),
                 new WinLossTracker(this)
             };
@@ -58,17 +57,31 @@ namespace GodhomeWinLossTracker
             On.BossSceneController.EndBossScene += OnEndBossScene;
             On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
+            On.HeroController.TakeDamage += HeroController_TakeDamage;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
-            //FsmUtils.Initialize(); // Uncomment this line to get FSM related events
+            FsmUtils.Initialize(); // Uncomment this line to get FSM related events
 #endif
             ModDisplay.Initialize();
 #if DEBUG
             Log("Initialized");
 #endif
+        }
+
+        private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
+        {
+            int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
+            orig(self, go, damageSide, damageAmount, hazardType);
+            int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
+            int damage = healthBefore - healthAfter;
+
+            if (damage != 0)
+            {
+                messageBus.Put(new TKHit { Damage = damage, HealthAfter = healthAfter , Type = (TKHit.Types)hazardType });
+            }
         }
 
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
@@ -82,18 +95,6 @@ namespace GodhomeWinLossTracker
             DevUtils.Log($"DEBUG HeroController_Start");
             orig(self);
         }
-
-        ///
-        /// ICustomMenuMod
-        ///
-
-        public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
-
-        public bool ToggleButtonInsideMenu => false;
-
-        /// 
-        /// Events
-        /// 
 
         private string OnSceneLoad(string sceneName)
         {
@@ -266,6 +267,14 @@ namespace GodhomeWinLossTracker
             }
         }
 #endif
+
+        ///
+        /// ICustomMenuMod
+        ///
+
+        public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? toggle) => ModMenu.GetMenu(modListMenu, toggle);
+
+        public bool ToggleButtonInsideMenu => false;
 
         ///
         /// IGlobalSettings<GlobalData>
