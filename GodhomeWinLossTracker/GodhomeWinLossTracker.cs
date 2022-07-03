@@ -60,6 +60,7 @@ namespace GodhomeWinLossTracker
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.PlayMakerFSM.Start += PlayMakerFSM_Start;
+            On.PlayMakerFSM.SetState += PlayMakerFSM_SetState;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
 #endif
@@ -83,8 +84,25 @@ namespace GodhomeWinLossTracker
 
         private void PlayMakerFSM_Start(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
         {
-            //Log($"DEBUG PlayMakerFSM_Start: FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
+            if (self.FsmName == "Knight Damage")
+            {
+                Log($"DEBUG PlayMakerFSM_Start: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
+
+                self.GetState("Gen").AddMethod(() =>
+                {
+                    Log($"TK took hit. Health = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
+                });
+            }
             orig(self);
+        }
+        private void PlayMakerFSM_SetState(On.PlayMakerFSM.orig_SetState orig, PlayMakerFSM self, string stateName)
+        {
+            if (self.FsmName == "Knight Damage")
+            {
+                Log($"DEBUG PlayMakerFSM_SetState: GO={self.gameObject.name} FsmName={self.FsmName} stateName={stateName}");
+            }
+
+            orig(self, stateName);
         }
 
         ///
