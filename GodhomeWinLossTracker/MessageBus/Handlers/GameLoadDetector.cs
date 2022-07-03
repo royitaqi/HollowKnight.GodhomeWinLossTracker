@@ -20,9 +20,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     bus.Put(new GameLoaded());
 
 #if DEBUG
-                    HeroController.instance.transform.Find("Effects/Damage Effect").gameObject.LocateMyFSM("Knight Damage").GetState("Gen").InsertMethod(0, () =>
+                    HeroController.instance.transform.Find("Effects/Damage Effect").gameObject.LocateMyFSM("Knight Damage").GetState("Muffle?").AddMethod(() =>
                     {
-                        logger.Log($"TK took dmg. HP = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
+                        logger.Log($"TK took enemy dmg. HP = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
+                    });
+                    HeroController.instance.transform.Find("Effects/Damage Effect").gameObject.LocateMyFSM("Knight Damage").GetState("Set Hazard").AddMethod(() =>
+                    {
+                        logger.Log($"TK took hazard dmg. HP = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
                     });
 #endif
                 }
