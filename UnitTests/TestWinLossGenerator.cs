@@ -284,7 +284,7 @@ namespace UnitTests
                         TKDeath,
                         NonBoss,
                     },
-                    ExpectedException = new G.AssertionFailedException("TK can only die zero or one time during a boss fight"),
+                    ExpectedException = new G.Utils.AssertionFailedException("TK can only die zero or one time during a boss fight"),
                 },
                 new TestUtils.MessageBusTestCase
                 {
@@ -296,7 +296,7 @@ namespace UnitTests
                         BossKill,
                         NonBoss,
                     },
-                    ExpectedException = new G.AssertionFailedException("Actually boss kill counts should never exceed required counts"),
+                    ExpectedException = new G.Utils.AssertionFailedException("Actually boss kill counts should never exceed required counts"),
                 },
             };
         }

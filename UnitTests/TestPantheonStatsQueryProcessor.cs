@@ -1,3 +1,4 @@
+using GodhomeWinLossTracker.Utils;
 using Modding;
 
 namespace UnitTests
@@ -7,7 +8,7 @@ namespace UnitTests
     {
         private const string SequenceName = "P1";
         private const int PantheonIndex = 0;
-        private static readonly string[] PantheonScenes = G.GodhomeUtils.PantheonBossSceneNames[PantheonIndex];
+        private static readonly string[] PantheonScenes = GodhomeUtils.PantheonBossSceneNames[PantheonIndex];
         private static readonly Action<string, string, string> DoNothing = (_, _, _) => { };
         private static readonly PantheonStatsQuery Query = new(PantheonIndex, DoNothing);
 

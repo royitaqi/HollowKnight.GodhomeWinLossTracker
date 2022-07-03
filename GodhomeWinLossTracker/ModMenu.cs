@@ -3,6 +3,7 @@ using System.Linq;
 using Modding;
 using Satchel.BetterMenus;
 using GodhomeWinLossTracker.MessageBus.Messages;
+using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker
 {
