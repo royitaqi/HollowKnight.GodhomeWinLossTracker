@@ -63,6 +63,7 @@ namespace GodhomeWinLossTracker
             On.PlayMakerFSM.SetState += PlayMakerFSM_SetState;
             On.PlayMakerFSM.Update += PlayMakerFSM_Update;
             On.PlayMakerFSM.SendEvent += PlayMakerFSM_SendEvent;
+            On.PlayMakerFSM.ChangeState_FsmEvent += PlayMakerFSM_ChangeState_FsmEvent;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
 #endif
@@ -106,9 +107,9 @@ namespace GodhomeWinLossTracker
         {
             orig(self);
 
-            if (self.FsmName == "Hero Death Anim")
+            if (self.FsmName == "Knight Damage" && self.ActiveStateName != "Idle")
             {
-                //Log($"DEBUG PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
+                Log($"DEBUG PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
             }
         }
 
@@ -126,6 +127,17 @@ namespace GodhomeWinLossTracker
 
             orig(self, eventName);
         }
+
+        private void PlayMakerFSM_ChangeState_FsmEvent(On.PlayMakerFSM.orig_ChangeState_FsmEvent orig, PlayMakerFSM self, HutongGames.PlayMaker.FsmEvent fsmEvent)
+        {
+            orig(self, fsmEvent);
+
+            if (self.FsmName == "Knight Damage" || self.FsmName == "Hero Death Anim")
+            {
+                Log($"DEBUG PlayMakerFSM_ChangeState_FsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={fsmEvent.Name}");
+            }
+        }
+
 
         ///
         /// ICustomMenuMod
