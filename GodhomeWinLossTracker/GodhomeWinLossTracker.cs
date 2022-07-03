@@ -63,6 +63,7 @@ namespace GodhomeWinLossTracker
             On.PlayMakerFSM.SetState += PlayMakerFSM_SetState;
             On.PlayMakerFSM.Update += PlayMakerFSM_Update;
             On.PlayMakerFSM.SendEvent += PlayMakerFSM_SendEvent;
+            On.PlayMakerFSM.SendRemoteFsmEvent += PlayMakerFSM_SendRemoteFsmEvent;
             On.PlayMakerFSM.ChangeState_FsmEvent += PlayMakerFSM_ChangeState_FsmEvent;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
@@ -115,15 +116,22 @@ namespace GodhomeWinLossTracker
 
         private void PlayMakerFSM_SendEvent(On.PlayMakerFSM.orig_SendEvent orig, PlayMakerFSM self, string eventName)
         {
-            if (self.FsmName == "Knight Damage" || self.FsmName == "Hero Death Anim")
+            if (!eventName.StartsWith("HeroCtrl-"))
             {
                 Log($"DEBUG PlayMakerFSM_SendEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
-
-                if (self.FsmName == "Knight Damage")
-                {
-                    Log($"TK health = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
-                }
             }
+
+            if (self.FsmName == "Knight Damage")
+            {
+                Log($"TK health = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
+            }
+
+            orig(self, eventName);
+        }
+
+        private void PlayMakerFSM_SendRemoteFsmEvent(On.PlayMakerFSM.orig_SendRemoteFsmEvent orig, PlayMakerFSM self, string eventName)
+        {
+            Log($"DEBUG PlayMakerFSM_SendRemoteFsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
 
             orig(self, eventName);
         }

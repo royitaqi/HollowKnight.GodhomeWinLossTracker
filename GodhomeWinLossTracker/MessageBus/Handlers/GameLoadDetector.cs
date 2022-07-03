@@ -18,6 +18,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 {
                     _freshlyLoaded = false;
                     bus.Put(new GameLoaded());
+
+#if DEBUG
+                    HeroController.instance.transform.Find("Effects/Damage Effect").gameObject.LocateMyFSM("Knight Damage").GetState("Gen").InsertMethod(0, () =>
+                    {
+                        logger.Log($"TK took dmg. HP = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
+                    });
+#endif
                 }
             }
         }
