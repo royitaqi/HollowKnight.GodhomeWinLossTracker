@@ -84,20 +84,15 @@ namespace GodhomeWinLossTracker
 
         private void PlayMakerFSM_Start(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
         {
-            if (self.FsmName == "Knight Damage")
+            if (self.FsmName == "Knight Damage" || self.FsmName == "Hero Death Anim")
             {
                 Log($"DEBUG PlayMakerFSM_Start: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
-
-                self.GetState("Gen").AddMethod(() =>
-                {
-                    Log($"TK took hit. Health = {PlayerData.instance.health + PlayerData.instance.healthBlue}");
-                });
             }
             orig(self);
         }
         private void PlayMakerFSM_SetState(On.PlayMakerFSM.orig_SetState orig, PlayMakerFSM self, string stateName)
         {
-            if (self.FsmName == "Knight Damage")
+            if (self.FsmName == "Knight Damage" || self.FsmName == "Hero Death Anim")
             {
                 Log($"DEBUG PlayMakerFSM_SetState: GO={self.gameObject.name} FsmName={self.FsmName} stateName={stateName}");
             }
