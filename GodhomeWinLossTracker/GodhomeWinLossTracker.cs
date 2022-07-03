@@ -76,50 +76,36 @@ namespace GodhomeWinLossTracker
 
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
         {
-            Log($"DEBUG GameManager_Start");
+            DevUtils.Log($"DEBUG GameManager_Start");
             orig(self);
         }
 
         private void HeroController_Start(On.HeroController.orig_Start orig, HeroController self)
         {
-            Log($"DEBUG HeroController_Start");
+            DevUtils.Log($"DEBUG HeroController_Start");
             orig(self);
         }
 
         private void PlayMakerFSM_Start(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
         {
-            if (self.FsmName == "Knight Damage" || self.FsmName == "Hero Death Anim")
-            {
-                Log($"DEBUG PlayMakerFSM_Start: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
-            }
+            DevUtils.Log($"DEBUG PlayMakerFSM_Start: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
             orig(self);
         }
         private void PlayMakerFSM_SetState(On.PlayMakerFSM.orig_SetState orig, PlayMakerFSM self, string stateName)
         {
-            if (self.FsmName == "Knight Damage" || self.FsmName == "Hero Death Anim")
-            {
-                Log($"DEBUG PlayMakerFSM_SetState: GO={self.gameObject.name} FsmName={self.FsmName} stateName={stateName}");
-            }
-
+            DevUtils.Log($"DEBUG PlayMakerFSM_SetState: GO={self.gameObject.name} FsmName={self.FsmName} stateName={stateName}");
             orig(self, stateName);
         }
 
         private void PlayMakerFSM_Update(On.PlayMakerFSM.orig_Update orig, PlayMakerFSM self)
         {
             orig(self);
-
-            if (self.FsmName == "Knight Damage" && self.ActiveStateName != "Idle")
-            {
-                Log($"DEBUG PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
-            }
+            DevUtils.Log($"DEBUG PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
         }
 
         private void PlayMakerFSM_SendEvent(On.PlayMakerFSM.orig_SendEvent orig, PlayMakerFSM self, string eventName)
         {
-            if (!eventName.StartsWith("HeroCtrl-"))
-            {
-                Log($"DEBUG PlayMakerFSM_SendEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
-            }
+            DevUtils.Log($"DEBUG PlayMakerFSM_SendEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
 
             if (self.FsmName == "Knight Damage")
             {
@@ -131,15 +117,13 @@ namespace GodhomeWinLossTracker
 
         private void PlayMakerFSM_SendRemoteFsmEvent(On.PlayMakerFSM.orig_SendRemoteFsmEvent orig, PlayMakerFSM self, string eventName)
         {
-            Log($"DEBUG PlayMakerFSM_SendRemoteFsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
-
+            DevUtils.Log($"DEBUG PlayMakerFSM_SendRemoteFsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
             orig(self, eventName);
         }
 
         private void PlayMakerFSM_ChangeState_FsmEvent(On.PlayMakerFSM.orig_ChangeState_FsmEvent orig, PlayMakerFSM self, HutongGames.PlayMaker.FsmEvent fsmEvent)
         {
-            Log($"DEBUG PlayMakerFSM_ChangeState_FsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={fsmEvent.Name}");
-
+            DevUtils.Log($"DEBUG PlayMakerFSM_ChangeState_FsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={fsmEvent.Name}");
             orig(self, fsmEvent);
         }
 
@@ -230,8 +214,7 @@ namespace GodhomeWinLossTracker
         {
             if (Input.GetKeyDown(KeyCode.O))
             {
-                string json = JsonConvert.SerializeObject(folderData);
-                Log("Current local data: " + json);
+                Log(DevUtils.DumpLog());
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
