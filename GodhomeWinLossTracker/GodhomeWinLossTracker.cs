@@ -58,6 +58,7 @@ namespace GodhomeWinLossTracker
             On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
             On.HeroController.TakeDamage += HeroController_TakeDamage;
+            On.HeroController.AddHealth += HeroController_AddHealth;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
@@ -71,6 +72,19 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log("Initialized");
 #endif
+        }
+
+        private void HeroController_AddHealth(On.HeroController.orig_AddHealth orig, HeroController self, int amount)
+        {
+            int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
+            orig(self, amount);
+            int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
+            int heal = healthAfter - healthBefore;
+            
+            if (heal != 0)
+            {
+                messageBus.Put(new TKHeal { Heal = heal, HealthAfter = healthAfter });
+            }
         }
 
         private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
