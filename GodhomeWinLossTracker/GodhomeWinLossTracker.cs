@@ -28,7 +28,21 @@ namespace GodhomeWinLossTracker
             instance = this;
 
             // Production hooks
-            On.HeroController.TakeDamage += HeroController_TakeDamage; // Turn this line on and off to see GodSeeker+'s Half Damage feature ineffective and effective, respectively
+            //On.HeroController.TakeDamage += HeroController_TakeDamage; // Turn this line on and off to see GodSeeker+'s Half Damage feature ineffective and effective, respectively
+            On.PlayerData.TakeHealth += PlayerData_TakeHealth;
+        }
+
+        private void PlayerData_TakeHealth(On.PlayerData.orig_TakeHealth orig, PlayerData self, int amount)
+        {
+            int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
+            orig(self, amount);
+            int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
+            int damage = healthBefore - healthAfter;
+
+            if (damage != 0)
+            {
+                Log($"DEBUG Z: damage={damage} healthAfter={healthAfter}");
+            }
         }
 
         private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
