@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using GodhomeWinLossTracker.MessageBus.Messages;
+using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -23,7 +24,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 RawWinLoss record = msg.InnerMessage;
 
-                string pb = "";
+                string recordString = string.Format(
+                    (record.Wins > 0 ? "Notification/Won {0} in {1}" : "Notification/Loss {0} in {1}").Localize(),
+                    $"Boss/{record.BossName}".Localize(),
+                    $"Sequence/{record.SequenceName}".Localize()
+                );
+
+                string pbString = "";
                 if (_mod.globalData.NotifyPBTime && record.Wins > 0 && record.Losses == 0)
                 {
                     var records = _mod.folderData.RawRecords.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
@@ -31,11 +38,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     {
                         long minutes = record.FightLengthMs / 1000 / 60;
                         long seconds = record.FightLengthMs / 1000 % 60;
-                        pb = $" (PB {minutes}:{seconds:D2})";
+                        pbString = " (" + "Notification/PB".Localize() + $" {minutes}:{seconds:D2})";
                     }
                 }
 
-                ModDisplay.instance.Notify(record.ToString() + pb);
+                ModDisplay.instance.Notify(recordString + pbString);
             }
         }
 
@@ -44,7 +51,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // For any other types of message, simply display the message itself.
             if (_mod.globalData.NotifyForExport)
             {
-                ModDisplay.instance.Notify(msg.ToString());
+                string text = string.Format(
+                    "Notification/Exported to {0}".Localize(),
+                    msg.Filename
+                );
+                ModDisplay.instance.Notify(text);
             }
         }
 

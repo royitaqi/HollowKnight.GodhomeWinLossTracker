@@ -1,83 +1,126 @@
-﻿using System;
-using System.Linq;
-using Modding;
+﻿using Modding;
 using Satchel.BetterMenus;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
+using UnityEngine;
+using Osmi.Utils;
+using MenuButton = Satchel.BetterMenus.MenuButton;
+using UnityEngine.UI;
 
 namespace GodhomeWinLossTracker
 {
     public static class ModMenu
     {
-        private static Menu _menuRef;
+        public static MenuScreen GetMenu(MenuScreen modListMenu, ModToggleDelegates? toggle)
+        {
+            DevUtils.Assert(toggle == null, "This mod is non-toggleable");
+
+            // Create the mod.
+            // Note that we don't cache this menu instance, because the localization setting may have been updated between two menu invocations.
+            var menu = PrepareMenu();
+            var menuScreen = menu.GetMenuScreen(modListMenu);
+
+            // Localize Mods menu.
+            // At this point, the mod's name should have been added to the Mods menu.
+            LocalizeModsMenu(modListMenu);
+
+            return menuScreen;
+        }
+
+        private static void LocalizeModsMenu(MenuScreen modListMenu)
+        {
+            GameObject children = UIManager
+                .instance
+                .UICanvas
+                .gameObject
+                .Child(
+                    "ModListMenu",
+                    "Content",
+                    "ScrollMask",
+                    "ScrollingPane"
+                );
+            foreach (var c in children.GetChildren())
+            {
+                GodhomeWinLossTracker.instance.Log($"DEBUG Z: child {c.name}");
+            }
+
+            GameObject btn = UIManager
+                .instance
+                .UICanvas
+                .gameObject
+                .Child(
+                    "ModListMenu",
+                    "Content",
+                    "ScrollMask",
+                    "ScrollingPane",
+                    $"{nameof(GodhomeWinLossTracker)}_Settings"
+                )!;
+            if (btn != null)
+            {
+                btn.Child("Label")!.GetComponent<Text>().text =
+                    "ModName".Localize() + ' ' + "Settings".Localize();
+            }
+        }
 
         private static Menu PrepareMenu()
         {
-            return new Menu("Godhome Win Loss Tracker", new Element[]
+            return new Menu("ModName".Localize(), new Element[]
             {
                 new HorizontalOption(
-                    "Show stats in challenge menus",
-                    "Both HoG and pantheons",
-                    new []{ "Off", "On" },
+                    "Menu/Show stats in challenge menus".Localize(),
+                    "Menu/Both HoG and pantheons".Localize(),
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.ShowStatsInChallengeMenu = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.ShowStatsInChallengeMenu ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Notify win/loss",
+                    "Menu/Notify win/loss".Localize(),
                     "",
-                    new []{ "Off", "On" },
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.NotifyForRecord = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.NotifyForRecord ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Notify personal best time",
-                    "In wins",
-                    new []{ "Off", "On" },
+                    "Menu/Notify personal best time".Localize(),
+                    "Menu/In win notifications".Localize(),
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.NotifyPBTime = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.NotifyPBTime ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Notify exports",
+                    "Menu/Notify exports".Localize(),
                     "",
-                    new []{ "Off", "On" },
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.NotifyForExport = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.NotifyForExport ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Auto export stats",
-                    "When saving games",
-                    new []{ "Off", "On" },
+                    "Menu/Auto export stats".Localize(),
+                    "Menu/When saving games".Localize(),
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.AutoExport = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.AutoExport ? 1 : 0
                 ),
                 new MenuButton(
-                    "Export stats now",
+                    "Menu/Export stats now".Localize(),
                     "",
                     _ => ExportStatsAsTsv()
                 ),
             });
         }
 
-        public static MenuScreen GetMenu(MenuScreen lastMenu, ModToggleDelegates? toggle)
-        {
-            DevUtils.Assert(toggle == null, "This mod is non-toggleable");
-            if (_menuRef == null) {
-                _menuRef = PrepareMenu();
-            }
-            return _menuRef.GetMenuScreen(lastMenu);
-        }
 
-        public static void ExportStatsAsTsv()
+        private static void ExportStatsAsTsv()
         {
             GodhomeWinLossTracker.instance.messageBus.Put(new ExportFolderData());
         }

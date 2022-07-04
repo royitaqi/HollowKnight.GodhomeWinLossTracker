@@ -25,7 +25,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 scenes.Reverse();
             }
-            string[] prefixes = scenes.Count == 1 ? new[] { "" } : new[] { "Attuned: ", "Ascended+: " };
+            string[] prefixes = scenes.Count == 1 ? new[] { "" } : new[] { "StatsDisplay/HoG/Attuned".Localize() + ": ", "StatsDisplay/HoG/Ascended+".Localize() + ": " };
 
             // Print stats into a string.
             StringBuilder sb = new();
@@ -40,7 +40,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
                 if (total != 0)
                 {
-                    sb.AppendLine($"{prefix}{total} fights, {wins} wins ({100.0 * wins / total,0:F0}%)");
+                    sb.AppendLine(String.Format(
+                        "StatsDisplay/HoG/{0}{1} fights, {2} wins ({3,0:F0}%)".Localize(),
+                        prefix,
+                        total,
+                        wins,
+                        100.0 * wins / total
+                    ));
                 }
             }
 
@@ -49,6 +55,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             msg.Callback(text);
 
 #if DEBUG
+            // For unittesting
             text ??= "null";
             bus.Put(new BusEvent { ForTest = true, Event = text });
 #endif
