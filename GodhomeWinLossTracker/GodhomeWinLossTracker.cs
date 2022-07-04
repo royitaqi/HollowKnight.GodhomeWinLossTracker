@@ -57,7 +57,7 @@ namespace GodhomeWinLossTracker
             On.BossSceneController.EndBossScene += OnEndBossScene;
             On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
-            //On.HeroController.TakeDamage += HeroController_TakeDamage; // Turn this line on and off to see GodSeeker+'s Half Damage feature ineffective and effective, respectively
+            On.HeroController.TakeDamage += HeroController_TakeDamage; // Turn this line on and off to see GodSeeker+'s Half Damage feature ineffective and effective, respectively
             On.HeroController.AddHealth += HeroController_AddHealth;
 #if DEBUG
             // Debug hooks
