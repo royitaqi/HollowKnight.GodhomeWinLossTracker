@@ -2,7 +2,6 @@
 using System.Linq;
 using Modding;
 using Satchel.BetterMenus;
-using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker
@@ -79,7 +78,6 @@ namespace GodhomeWinLossTracker
 
         public static void ExportStatsAsTsv()
         {
-            GodhomeWinLossTracker.instance.messageBus.Put(new ExportFolderData());
         }
     }
 }

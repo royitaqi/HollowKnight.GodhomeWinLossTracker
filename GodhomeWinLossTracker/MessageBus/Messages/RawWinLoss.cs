@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GodhomeWinLossTracker.Utils;
+﻿using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {
-    public class RawWinLoss : IMessage
+    public class RawWinLoss
     {
         public enum Sources : int
         {
@@ -18,7 +12,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
 
         public RawWinLoss(string timestamp, string sequenceName, string bossName, string sceneName, int wins, int losses, int heals, int healAmount, int hits, int hitAmount, long fightLengthMs, Sources source)
         {
-            DevUtils.Assert(timestamp!= null, "timestamp shouldn't be null");
+            DevUtils.Assert(timestamp != null, "timestamp shouldn't be null");
             DevUtils.Assert(sequenceName != null, "sequenceName shouldn't be null");
             DevUtils.Assert(bossName != null, "bossName shouldn't be null");
             DevUtils.Assert(sceneName != null, "sceneName shouldn't be null");
