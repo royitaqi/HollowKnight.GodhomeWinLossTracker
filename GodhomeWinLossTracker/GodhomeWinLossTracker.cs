@@ -26,7 +26,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.2.8.0";
+        public override string GetVersion() => "0.2.8.1";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
@@ -64,7 +64,8 @@ namespace GodhomeWinLossTracker
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
-            FsmUtils.Initialize(); // Uncomment this line to get FSM related events
+            //FsmUtils.Initialize(); // Turn this line on/off to get FSM related events
+            //ModDisplayUtils.Initialize(); // Turn this line on/off to get ModDisplay related backdoors
 #endif
 
             ModDisplay.Initialize();
@@ -190,96 +191,12 @@ namespace GodhomeWinLossTracker
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                Log("DEBUG hooking Anim Start");
-                GameObject.Find("Knight").transform.Find("Hero Death").gameObject.LocateMyFSM("Hero Death Anim").GetState("Anim Start").AddMethod(() =>
-                {
-                    Log("DEBUG Anim Start");
-                    PlayerData.instance.SetInt("health", 2);
-                    PlayerData.instance.SetInt("geo", 20);
-                });
-                Log("DEBUG hooked Anim Start");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                Log("DEBUG hooking Map Zone");
-                GameObject.Find("Knight").transform.Find("Hero Death").gameObject.LocateMyFSM("Hero Death Anim").GetState("Map Zone").AddMethod(() =>
-                {
-                    Log("DEBUG Map Zone");
-                    PlayerData.instance.SetInt("health", 3);
-                    PlayerData.instance.SetInt("geo", 30);
-                });
-                Log("DEBUG hooked Map Zone");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                Log("DEBUG hooking UpSlash");
-                GameObject.Find("Knight").transform.Find("UpSlash").gameObject.LocateMyFSM("damages_enemy").GetState("Send Event").AddMethod(() =>
-                {
-                    Log("DEBUG UpSlash");
-                    PlayerData.instance.SetInt("health", 4);
-                    PlayerData.instance.SetInt("geo", 40);
-                });
-                Log("DEBUG hooked UpSlash");
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha8))
-            {
-                ModDisplay.instance.Create();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha9))
-            {
-                ModDisplay.instance.Destroy();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha0))
-            {
-                ModDisplay.instance.Redraw();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha6))
-            {
-                ModDisplay.instance.Show();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha7))
-            {
-                ModDisplay.instance.Hide();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha5))
-            {
-                ModDisplay.instance.Notify("Godhome Win Loss Tracker");
-            }
-            else if (Input.GetKeyDown(KeyCode.F))
-            {
-                ModDisplay.instance.TextPosition = new Vector2(
-                    ModDisplay.instance.TextPosition.x - 0.01f,
-                    ModDisplay.instance.TextPosition.y
-                );
-                Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
-                ModDisplay.instance.Redraw();
-            }
-            else if (Input.GetKeyDown(KeyCode.H))
-            {
-                ModDisplay.instance.TextPosition = new Vector2(
-                    ModDisplay.instance.TextPosition.x + 0.01f,
-                    ModDisplay.instance.TextPosition.y
-                );
-                Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
-                ModDisplay.instance.Redraw();
-            }
-            else if (Input.GetKeyDown(KeyCode.T))
-            {
-                ModDisplay.instance.TextPosition = new Vector2(
-                    ModDisplay.instance.TextPosition.x,
-                    ModDisplay.instance.TextPosition.y + 0.01f
-                );
-                Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
-                ModDisplay.instance.Redraw();
-            }
-            else if (Input.GetKeyDown(KeyCode.G))
-            {
-                ModDisplay.instance.TextPosition = new Vector2(
-                    ModDisplay.instance.TextPosition.x,
-                    ModDisplay.instance.TextPosition.y - 0.01f
-                );
-                Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
-                ModDisplay.instance.Redraw();
             }
         }
 #endif
