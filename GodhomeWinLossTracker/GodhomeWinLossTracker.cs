@@ -25,10 +25,6 @@ namespace GodhomeWinLossTracker
         /// Mod
         ///
 
-        // This localizes the mod's name in the Mods menu.
-        public GodhomeWinLossTracker() : base("ModName".Localize()) { }
-        // As a comparison, what follows does't: //public new string GetName() => "ModName".Localize();
-
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
         public override string GetVersion() => "0.2.8.2";
         

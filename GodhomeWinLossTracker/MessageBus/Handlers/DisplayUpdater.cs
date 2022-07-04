@@ -30,7 +30,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     $"Sequence/{record.SequenceName}".Localize()
                 );
 
-                string pb = "";
+                string pbString = "";
                 if (_mod.globalData.NotifyPBTime && record.Wins > 0 && record.Losses == 0)
                 {
                     var records = _mod.folderData.RawRecords.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
@@ -38,11 +38,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     {
                         long minutes = record.FightLengthMs / 1000 / 60;
                         long seconds = record.FightLengthMs / 1000 % 60;
-                        pb = " (" + "Display/PB".Localize() + $" {minutes}:{seconds:D2})";
+                        pbString = " (" + "Display/PB".Localize() + $" {minutes}:{seconds:D2})";
                     }
                 }
 
-                ModDisplay.instance.Notify(record.ToString() + pb);
+                ModDisplay.instance.Notify(recordString + pbString);
             }
         }
 

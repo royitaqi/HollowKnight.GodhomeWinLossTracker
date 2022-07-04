@@ -1,15 +1,66 @@
-﻿using System;
-using System.Linq;
-using Modding;
+﻿using Modding;
 using Satchel.BetterMenus;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
+using UnityEngine;
+using Osmi.Utils;
+using MenuButton = Satchel.BetterMenus.MenuButton;
+using UnityEngine.UI;
 
 namespace GodhomeWinLossTracker
 {
     public static class ModMenu
     {
-        private static Menu _menuRef;
+        public static MenuScreen GetMenu(MenuScreen modListMenu, ModToggleDelegates? toggle)
+        {
+            DevUtils.Assert(toggle == null, "This mod is non-toggleable");
+
+            // Create the mod.
+            // Note that we don't cache this menu instance, because the localization setting may have been updated between two menu invocations.
+            var menu = PrepareMenu();
+            var menuScreen = menu.GetMenuScreen(modListMenu);
+
+            // Localize Mods menu.
+            // At this point, the mod's name should have been added to the Mods menu.
+            LocalizeModsMenu(modListMenu);
+
+            return menuScreen;
+        }
+
+        private static void LocalizeModsMenu(MenuScreen modListMenu)
+        {
+            GameObject children = UIManager
+                .instance
+                .UICanvas
+                .gameObject
+                .Child(
+                    "ModListMenu",
+                    "Content",
+                    "ScrollMask",
+                    "ScrollingPane"
+                );
+            foreach (var c in children.GetChildren())
+            {
+                GodhomeWinLossTracker.instance.Log($"DEBUG Z: child {c.name}");
+            }
+
+            GameObject btn = UIManager
+                .instance
+                .UICanvas
+                .gameObject
+                .Child(
+                    "ModListMenu",
+                    "Content",
+                    "ScrollMask",
+                    "ScrollingPane",
+                    $"{nameof(GodhomeWinLossTracker)}_Settings"
+                )!;
+            if (btn != null)
+            {
+                btn.Child("Label")!.GetComponent<Text>().text =
+                    "ModName".Localize() + ' ' + "Settings".Localize();
+            }
+        }
 
         private static Menu PrepareMenu()
         {
@@ -68,16 +119,8 @@ namespace GodhomeWinLossTracker
             });
         }
 
-        public static MenuScreen GetMenu(MenuScreen lastMenu, ModToggleDelegates? toggle)
-        {
-            DevUtils.Assert(toggle == null, "This mod is non-toggleable");
-            if (_menuRef == null) {
-                _menuRef = PrepareMenu();
-            }
-            return _menuRef.GetMenuScreen(lastMenu);
-        }
 
-        public static void ExportStatsAsTsv()
+        private static void ExportStatsAsTsv()
         {
             GodhomeWinLossTracker.instance.messageBus.Put(new ExportFolderData());
         }
