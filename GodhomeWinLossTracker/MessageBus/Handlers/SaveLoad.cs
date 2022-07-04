@@ -11,7 +11,7 @@ using System.IO;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class SaveLoad : IHandler
+    internal class SaveLoad : Handler
     {
         private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
         private static readonly string ModBackupDirectory = ModSaveDirectory + "/backup";
@@ -23,7 +23,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             Directory.CreateDirectory(ModBackupDirectory);
         }
 
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
+        public new void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
             if (message is SaveFolderData)
             {

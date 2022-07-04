@@ -34,7 +34,7 @@ namespace GodhomeWinLossTracker
 #endif
             instance = this;
 
-            IHandler[] handlers = new IHandler[] {
+            Handler[] handlers = new Handler[] {
 #if DEBUG
                 // Put logger first, so that it prints messages on the bus before other handlers can handle it.
                 new MessageBus.Handlers.Logger(),

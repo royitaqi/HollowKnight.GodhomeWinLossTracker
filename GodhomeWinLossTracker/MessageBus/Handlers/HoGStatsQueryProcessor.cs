@@ -9,14 +9,14 @@ using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class HoGStatsQueryProcessor : IHandler
+    internal class HoGStatsQueryProcessor : Handler
     {
         public HoGStatsQueryProcessor(IGodhomeWinLossTracker mod)
         {
             _mod = mod;
         }
 
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
+        public new void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
             if (message is HoGStatsQuery)
             {

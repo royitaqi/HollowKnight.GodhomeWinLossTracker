@@ -9,14 +9,14 @@ using GodhomeWinLossTracker.MessageBus.Messages;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class DisplayUpdater : IHandler
+    internal class DisplayUpdater : Handler
     {
         public DisplayUpdater(IGodhomeWinLossTracker mod)
         {
             _mod = mod;
         }
 
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
+        public new void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
             // For RegisteredRawWinLoss, we need to display the inner message.
             if (message is RegisteredRawWinLoss)

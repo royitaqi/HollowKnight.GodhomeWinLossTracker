@@ -9,14 +9,14 @@ using GodhomeWinLossTracker.MessageBus.Messages;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class WinLossTracker : IHandler
+    internal class WinLossTracker : Handler
     {
         public WinLossTracker(IGodhomeWinLossTracker mod)
         {
             _mod = mod;
         }
 
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
+        public new void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
             if (message is RawWinLoss)
             {

@@ -9,9 +9,9 @@ using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class SequenceChangeDetector: IHandler
+    internal class SequenceChangeDetector: Handler
     {
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
+        public new void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
             // Detect HoG sequence by scene GG_Workshop
             if (msg is SceneChange)

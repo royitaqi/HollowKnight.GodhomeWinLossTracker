@@ -9,9 +9,9 @@ using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class BossChangeDetector: IHandler
+    internal class BossChangeDetector: Handler
     {
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
+        public new void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
             if (msg is SceneChange)
             {

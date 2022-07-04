@@ -11,10 +11,10 @@ namespace GodhomeWinLossTracker.MessageBus
 {
     internal class TheMessageBus
     {
-        public TheMessageBus(IGodhomeWinLossTracker mod, IEnumerable<IHandler> handlers)
+        public TheMessageBus(IGodhomeWinLossTracker mod, IEnumerable<Handler> handlers)
         {
             _logger = mod;
-            _handlers = new List<IHandler>(handlers);
+            _handlers = new List<Handler>(handlers);
             _messages = new();
             _processing = false;
 
@@ -35,7 +35,7 @@ namespace GodhomeWinLossTracker.MessageBus
                 while (_messages.Count() != 0)
                 {
                     IMessage msg = _messages.Dequeue();
-                    foreach (IHandler handler in _handlers)
+                    foreach (Handler handler in _handlers)
                     {
                         handler.OnMessage(this, _logger, msg);
                     }
@@ -44,7 +44,7 @@ namespace GodhomeWinLossTracker.MessageBus
             }
         }
 
-        private List<IHandler> _handlers;
+        private List<Handler> _handlers;
         private Queue<IMessage> _messages;
         private Modding.ILogger _logger;
         private bool _processing;

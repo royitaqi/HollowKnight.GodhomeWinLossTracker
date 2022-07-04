@@ -3,9 +3,9 @@ using Vasi;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class GameLoadDetector : IHandler
+    internal class GameLoadDetector : Handler
     {
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
+        public new void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
         {
             if (message is LoadFolderData)
             {

@@ -4,9 +4,9 @@ using Vasi;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class TKDeathDetector: IHandler
+    internal class TKDeathDetector: Handler
     {
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
+        public new void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
             if (msg is GameLoaded)
             {
