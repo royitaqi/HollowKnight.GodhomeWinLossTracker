@@ -1,0 +1,14 @@
+{
+	"ModName": "神居胜负记录器",
+	"Menu/Show stats in challenge menus": "在 挑战菜单 中显示胜率",
+	"Menu/Both HoG and pantheons": "诸神堂 以及 万神殿",
+	"Menu/Notify win/loss": "显示胜负提醒",
+	"Menu/On": "开",
+	"Menu/Off": "关",
+	"Menu/Notify personal best time": "显示最快时间",
+	"Menu/In win notifications": "出现在胜负提醒中",
+	"Menu/Notify exports": "显示导出提醒",
+	"Menu/Auto export stats": "自动导出",
+	"Menu/When saving games": "游戏存档时触发",
+	"Menu/Export stats now": "现在导出胜负记录"
+}

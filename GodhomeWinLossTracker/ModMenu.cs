@@ -13,55 +13,56 @@ namespace GodhomeWinLossTracker
 
         private static Menu PrepareMenu()
         {
-            return new Menu("Godhome Win Loss Tracker", new Element[]
+            GodhomeWinLossTracker.instance.Log("DEBUG A");
+            return new Menu("ModName".Localize(), new Element[]
             {
                 new HorizontalOption(
-                    "Show stats in challenge menus",
-                    "Both HoG and pantheons",
-                    new []{ "Off", "On" },
+                    "Menu/Show stats in challenge menus".Localize(),
+                    "Menu/Both HoG and pantheons".Localize(),
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.ShowStatsInChallengeMenu = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.ShowStatsInChallengeMenu ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Notify win/loss",
+                    "Menu/Notify win/loss".Localize(),
                     "",
-                    new []{ "Off", "On" },
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.NotifyForRecord = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.NotifyForRecord ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Notify personal best time",
-                    "In wins",
-                    new []{ "Off", "On" },
+                    "Menu/Notify personal best time".Localize(),
+                    "Menu/In win notifications".Localize(),
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.NotifyPBTime = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.NotifyPBTime ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Notify exports",
+                    "Menu/Notify exports".Localize(),
                     "",
-                    new []{ "Off", "On" },
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.NotifyForExport = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.NotifyForExport ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Auto export stats",
-                    "When saving games",
-                    new []{ "Off", "On" },
+                    "Menu/Auto export stats".Localize(),
+                    "Menu/When saving games".Localize(),
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.AutoExport = selectedIndex == 1;
                     },
                     () => GodhomeWinLossTracker.instance.globalData.AutoExport ? 1 : 0
                 ),
                 new MenuButton(
-                    "Export stats now",
+                    "Menu/Export stats now".Localize(),
                     "",
                     _ => ExportStatsAsTsv()
                 ),

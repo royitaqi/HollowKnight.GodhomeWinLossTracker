@@ -1,0 +1,14 @@
+{
+	"ModName": "Godhome Win Loss Tracker",
+	"Menu/Show stats in challenge menus": "Show stats in challenge menus",
+	"Menu/Both HoG and pantheons": "Both HoG and pantheons",
+	"Menu/Notify win/loss": "Notify win/loss",
+	"Menu/On": "On",
+	"Menu/Off": "Off",
+	"Menu/Notify personal best time": "Notify personal best time",
+	"Menu/In win notifications": "In win notifications",
+	"Menu/Notify exports": "Notify exports",
+	"Menu/Auto export stats": "Auto export stats",
+	"Menu/When saving games": "When saving games",
+	"Menu/Export stats now": "Export stats now"
+}
