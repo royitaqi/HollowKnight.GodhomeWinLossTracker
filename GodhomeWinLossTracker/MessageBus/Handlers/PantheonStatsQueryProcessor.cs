@@ -50,7 +50,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 // There is no run at all. Don't call callback.
                 return;
             }
-            string runsText = $"Runs: {runs}";
+            string runsText = String.Format("StatsDisplay/Pantheons/Runs: {0}".Localize(), runs);
 
             // Generate "PB"
             string pb = null;
@@ -63,12 +63,15 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // Won last boss before.
             else if (furthestWonScene == scenes.Last())
             {
-                pb = "PB: Win";
+                pb = "StatsDisplay/Pantheons/PB: Win".Localize();
             }
             // Generate PB for the furthest boss won
             else
             {
-                pb = $"PB: {GodhomeUtils.GetNullableBossNameBySceneName(furthestWonScene)}";
+                pb = String.Format(
+                    "StatsDisplay/Pantheons/PB: {0}".Localize(),
+                    $"Boss/{GodhomeUtils.GetNullableBossNameBySceneName(furthestWonScene)}".Localize()
+                );
             }
 
             // Generate "Biggest churns"
@@ -76,14 +79,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             string churnsText = null;
             if (churns.Count != 0)
             {
-                StringBuilder sb = new($"Top churns: ");
+                StringBuilder sb = new("StatsDisplay/Pantheons/Top churns".Localize() + ": ");
                 for (int i = 0; i < churns.Count; i++)
                 {
                     if (i != 0)
                     {
                         sb.Append(", ");
                     }
-                    sb.Append($"{GodhomeUtils.GetNullableBossNameBySceneName(churns[i].SceneName)} {churns[i].WinRate * 100,0:F0}%");
+                    sb.AppendFormat(
+                        "{0} {1,0:F0}%",
+                        $"Boss/{GodhomeUtils.GetNullableBossNameBySceneName(churns[i].SceneName)}".Localize(),
+                        churns[i].WinRate * 100
+                    );
                 }
                 churnsText = sb.ToString();
             }

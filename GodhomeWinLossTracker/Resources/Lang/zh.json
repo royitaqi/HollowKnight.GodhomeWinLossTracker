@@ -65,7 +65,11 @@
 	"Sequence/P3": "贤者万神殿",
 	"Sequence/P4": "骑士万神殿",
 	"Sequence/P5": "圣巢万神殿",
-	"StatsDisplay/HoG/Attuned": "调谐",
+	"StatsDisplay/HoG/{0}{1} fights, {2} wins ({3,0:F0}%)": "{0}{1}战, {2}胜 ({3,0:F0}%)",
 	"StatsDisplay/HoG/Ascended+": "进升及以上",
-	"StatsDisplay/HoG/{0}{1} fights, {2} wins ({3,0:F0}%)": "{0}{1}战, {2}胜 ({3,0:F0}%)"
+	"StatsDisplay/HoG/Attuned": "调谐",
+	"StatsDisplay/Pantheons/PB: {0}": "个人最佳: 战胜 {0}",
+	"StatsDisplay/Pantheons/PB: Win": "个人最佳: 获得最终胜利",
+	"StatsDisplay/Pantheons/Runs: {0}": "已尝试{0}次",
+	"StatsDisplay/Pantheons/Top churns": "最困难boss"
 }
