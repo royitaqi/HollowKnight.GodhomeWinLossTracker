@@ -115,12 +115,33 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             string path = Path.Combine(ModSaveDirectory, filename);
 
+            var ps = typeof(RawWinLoss).GetProperties();
+
             using (var sw = new System.IO.StreamWriter(path))
             {
-                sw.WriteLine($"Date/Time\tSequence\tBoss\tScene\tWins\tLosses\tFight Length (ms)\tSource");
+                // Write header
+                bool first = true;
+                foreach (var p in ps)
+                {
+                    if (!first) sw.Write('\t');
+                    else first = false;
+
+                    sw.Write(p.Name);
+                }
+                sw.WriteLine();
+
+                // Write values
                 foreach (var r in _mod.folderData.RawRecords)
                 {
-                    sw.WriteLine($"{r.Timestamp}\t{r.SequenceName}\t{r.BossName}\t{r.SceneName}\t{r.Wins}\t{r.Losses}\t{r.FightLengthMs}\t{r.Source}");
+                    first = true;
+                    foreach (var p in ps)
+                    {
+                        if (!first) sw.Write('\t');
+                        else first = false;
+
+                        sw.Write(p.GetValue(r));
+                    }
+                    sw.WriteLine();
                 }
             }
 #if DEBUG

@@ -89,7 +89,23 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _tkDreamDeaths = 0;
                 _bossKills = 0;
                 _fightStartGameTime = DevUtils.GetTimestampEpochMs();
+                _healCount = 0;
+                _healAmount = 0;
+                _hitCount = 0;
+                _hitAmount = 0;
             }
+        }
+
+        public void OnTKHeal(TheMessageBus bus, Modding.ILogger logger, TKHeal msg)
+        {
+            _healCount++;
+            _healAmount += msg.Heal;
+        }
+
+        public void OnTKHit(TheMessageBus bus, Modding.ILogger logger, TKHit msg)
+        {
+            _hitCount++;
+            _hitAmount += msg.Damage;
         }
 
         private void EmitRecord(TheMessageBus bus, bool winLoss)
@@ -101,6 +117,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _currentBoss.SceneName,
                 winLoss ? 1 : 0,
                 winLoss ? 0 : 1,
+                _healCount,
+                _healAmount,
+                _hitCount,
+                _hitAmount,
                 DevUtils.GetTimestampEpochMs() - _fightStartGameTime, // fightLengthMs
                 RawWinLoss.Sources.Mod
             ));
@@ -112,6 +132,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _tkDreamDeaths = -1;
             _bossKills = -1;
             _fightStartGameTime = -1;
+            _healCount = -1;
+            _healAmount = -1;
+            _hitCount = -1;
+            _hitAmount = -1;
         }
 
         // Always have the latest sequence name, even when not in a boss fight.
@@ -122,5 +146,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private int _tkDreamDeaths = -1;
         private int _bossKills = -1;
         private long _fightStartGameTime = -1;
+        private int _healCount = -1;
+        private int _healAmount = -1;
+        private int _hitCount = -1;
+        private int _hitAmount = -1;
     }
 }

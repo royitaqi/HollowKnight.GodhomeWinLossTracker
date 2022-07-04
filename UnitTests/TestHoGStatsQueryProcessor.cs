@@ -22,41 +22,41 @@ namespace UnitTests
         private static readonly HoGStatsQuery QueryTwoSceneBothStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneBothStats = new[]
         {
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // Irellevant sequence
-            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAscendedScene, 10, 5, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAscendedScene, 10, 5, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // Reverted order of scenes
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 10, 5, 0, RawWinLoss.Sources.Manual),
-            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAttunedScene, 10, 5, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 10, 5, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAttunedScene, 10, 5, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // More stats
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 4, 1, 0, RawWinLoss.Sources.Manual),
-            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAttunedScene, 4, 1, 0, RawWinLoss.Sources.Manual),
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 20, 45, 0, RawWinLoss.Sources.Manual),
-            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAscendedScene, 20, 45, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 4, 1, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAttunedScene, 4, 1, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 20, 45, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAscendedScene, 20, 45, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
         };
         private static readonly string ExpectedTwoSceneBothStats = "Attuned: 20 fights, 14 wins (70%)\r\nAscended+: 80 fights, 30 wins (38%)\r\n";
 
         private static readonly HoGStatsQuery QueryTwoSceneOnlyAttunedStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneOnlyAttunedStats = new[]
         {
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 10, 5, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 10, 5, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // More stats
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 4, 1, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 4, 1, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
         };
         private static readonly string ExpectedTwoSceneOnlyAttunedStats = "Attuned: 20 fights, 14 wins (70%)\r\n";
 
         private static readonly HoGStatsQuery QueryTwoSceneOnlyAscendedStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneOnlyAscendedStats = new[]
         {
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // More stats
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 20, 45, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 20, 45, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
         };
         private static readonly string ExpectedTwoSceneOnlyAscendedStats = "Ascended+: 80 fights, 30 wins (38%)\r\n";
 
@@ -64,18 +64,18 @@ namespace UnitTests
         private static readonly RawWinLoss[] RecordsTwoSceneNoStats = new[]
         {
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
         };
         private static readonly string ExpectedTwoSceneNoStats = "null";
 
         private static readonly HoGStatsQuery QueryOneSceneSomeStats = new(BossBNameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsOneSceneSomeStats = new[]
         {
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 10, 5, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 10, 5, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 1000, 2000, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 1000, 2000, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // More stats
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 20, 45, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 20, 45, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
         };
         private static readonly string ExpectedOneSceneSomeStats = "80 fights, 30 wins (38%)\r\n";
 
@@ -83,9 +83,9 @@ namespace UnitTests
         private static readonly RawWinLoss[] RecordsOneSceneNoStats = new[]
         {
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 1000, 2000, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 1000, 2000, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
             // Irellevant sequence
-            new RawWinLoss("", IrrelevantSequenceName, BossB, BossBScene, 10, 5, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", IrrelevantSequenceName, BossB, BossBScene, 10, 5, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
         };
         private static readonly string ExpectedOneSceneNoStats = "null";
 

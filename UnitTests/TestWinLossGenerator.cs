@@ -13,8 +13,8 @@ namespace UnitTests
         private readonly BossChange NonBoss = new BossChange();
         private readonly BossChange Boss = new BossChange(BossName, BossSceneName);
         private readonly BossChange Boss2 = new BossChange(BossName2, BossSceneName2);
-        private readonly RawWinLoss Win = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, RawWinLoss.Sources.Mod);
-        private readonly RawWinLoss Loss = new RawWinLoss("", SequenceName, BossName, BossSceneName, 0, 1, 0, RawWinLoss.Sources.Mod);
+        private readonly RawWinLoss Win = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Mod);
+        private readonly RawWinLoss Loss = new RawWinLoss("", SequenceName, BossName, BossSceneName, 0, 1, 0, 0, 0, 0, 0, RawWinLoss.Sources.Mod);
         private readonly BossDeath BossKill = new BossDeath();
         private readonly TKDreamDeath TKDeath = new TKDreamDeath();
 
