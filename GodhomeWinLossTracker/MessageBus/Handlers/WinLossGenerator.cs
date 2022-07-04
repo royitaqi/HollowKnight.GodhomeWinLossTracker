@@ -88,7 +88,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _currentBoss = msg;
                 _tkDreamDeaths = 0;
                 _bossKills = 0;
-                _fightStartGameTime = DevUtils.GetTimestampEpochMs();
+                _fightStartGameTime = GameManagerUtils.PlayTimeMs;
                 _healCount = 0;
                 _healAmount = 0;
                 _hitCount = 0;
@@ -121,7 +121,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _healAmount,
                 _hitCount,
                 _hitAmount,
-                DevUtils.GetTimestampEpochMs() - _fightStartGameTime, // fightLengthMs
+                GameManagerUtils.PlayTimeMs - _fightStartGameTime, // fightLengthMs
                 RawWinLoss.Sources.Mod
             ));
         }

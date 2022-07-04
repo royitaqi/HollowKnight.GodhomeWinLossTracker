@@ -26,7 +26,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.2.8.1";
+        public override string GetVersion() => "0.2.8.2";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
@@ -191,6 +191,28 @@ namespace GodhomeWinLossTracker
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
+                Log($"DEBUG >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+                Log($"DEBUG PlayTime={GameManager.instance.PlayTime,0:F3}");
+
+                float sessionStartTime = ReflectionHelper.GetField<GameManager, float>(GameManager.instance, "sessionStartTime");
+                Log($"DEBUG sessionStartTime={sessionStartTime,0:F3}");
+
+                float sessionPlayTimer = ReflectionHelper.GetField<GameManager, float>(GameManager.instance, "sessionPlayTimer");
+                Log($"DEBUG sessionPlayTimer={sessionPlayTimer,0:F3}");
+
+                float sumFloat = sessionStartTime + sessionPlayTimer;
+                Log($"DEBUG float sum={sumFloat,0:F3}");
+
+                double sumDouble = (double)sessionStartTime + (double)sessionPlayTimer;
+                Log($"DEBUG double sum={sumDouble,0:F3}");
+
+                float sumDoubleFloat = (float)sumDouble;
+                Log($"DEBUG double-float sum={sumDoubleFloat,0:F3}");
+
+                Log($"DEBUG -----------------------------------------------");
+
+                Log($"DEBUG PlayTimeMs={GameManagerUtils.PlayTimeMs}");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
