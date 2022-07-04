@@ -65,4 +65,7 @@
 	"Sequence/P3": "P3",
 	"Sequence/P4": "P4",
 	"Sequence/P5": "P5",
+	"StatsDisplay/HoG/Attuned": "Attuned",
+	"StatsDisplay/HoG/Ascended+": "Ascended+",
+	"StatsDisplay/HoG/{0}{1} fights, {2} wins ({3,0:F0}%)": "{0}{1} fights, {2} wins ({3,0:F0}%)"
 }
