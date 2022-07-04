@@ -25,7 +25,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 RawWinLoss record = msg.InnerMessage;
 
                 string recordString = string.Format(
-                    (record.Wins > 0 ? "Display/Won {0} in {1}" : "Display/Loss {0} in {1}").Localize(),
+                    (record.Wins > 0 ? "Notification/Won {0} in {1}" : "Notification/Loss {0} in {1}").Localize(),
                     $"Boss/{record.BossName}".Localize(),
                     $"Sequence/{record.SequenceName}".Localize()
                 );
@@ -38,7 +38,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     {
                         long minutes = record.FightLengthMs / 1000 / 60;
                         long seconds = record.FightLengthMs / 1000 % 60;
-                        pbString = " (" + "Display/PB".Localize() + $" {minutes}:{seconds:D2})";
+                        pbString = " (" + "Notification/PB".Localize() + $" {minutes}:{seconds:D2})";
                     }
                 }
 
@@ -52,7 +52,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (_mod.globalData.NotifyForExport)
             {
                 string text = string.Format(
-                    "Display/Exported to {0}".Localize(),
+                    "Notification/Exported to {0}".Localize(),
                     msg.Filename
                 );
                 ModDisplay.instance.Notify(text);
