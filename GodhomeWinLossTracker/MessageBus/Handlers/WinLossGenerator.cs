@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class WinLossGenerator : IHandler
+    internal class WinLossGenerator : Handler
     {
         // Facts:
         // A. It's possible to see BossDeath event after TKDreamDeath event.
@@ -30,72 +25,70 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         //   2.3 Otherwise, register a loss (i.e. player leave fight without winning nor dying).
         //   2.4 Always: reset and/or prepare according to next boss.
         // 3. Boss kills and TK dream deaths outside boss fights will be ignored.
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
+
+        public void OnSequenceChange(TheMessageBus bus, Modding.ILogger logger, SequenceChange msg)
         {
-            if (message is SequenceChange)
+            DevUtils.Assert(msg.Name != null, "Sequence name shouldn't be null");
+            _currentSequence = msg.Name;
+        }
+
+        public void OnTKDreamDeath(TheMessageBus bus, Modding.ILogger logger, TKDreamDeath msg)
+        {
+            if (_currentBoss != null)
             {
-                SequenceChange msg = message as SequenceChange;
-                DevUtils.Assert(msg.Name != null, "Sequence name shouldn't be null");
-                _currentSequence = msg.Name;
+                // 1
+                _tkDreamDeaths++;
             }
-            else if (message is TKDreamDeath)
+            else
             {
-                if (_currentBoss != null)
+                // 3
+            }
+        }
+
+        public void OnBossDeath(TheMessageBus bus, Modding.ILogger logger, BossDeath msg)
+        {
+            if (_currentBoss != null)
+            {
+                // 1
+                _bossKills++;
+            }
+            else
+            {
+                // 3
+            }
+        }
+
+        public void OnBossChange(TheMessageBus bus, Modding.ILogger logger, BossChange msg)
+        {
+            // 2
+            // If a boss fight was on going (and hasn't been concluded yet), it's time to conclude the boss fight and register either a win or a loss.
+            if (_currentBoss != null)
+            {
+                DevUtils.Assert(_tkDreamDeaths == 0 || _tkDreamDeaths == 1, "TK can only die zero or one time during a boss fight");
+                if (_tkDreamDeaths > 0)
                 {
-                    // 1
-                    _tkDreamDeaths++;
+                    // 2.1
+                    EmitRecord(bus, false);
                 }
                 else
                 {
-                    // 3
-                }
-            }
-            else if (message is BossDeath)
-            {
-                if (_currentBoss != null)
-                {
-                    // 1
-                    _bossKills++;
-                }
-                else
-                {
-                    // 3
-                }
-                
-            }
-            else if (message is BossChange)
-            {
-                // 2
-                // If a boss fight was on going (and hasn't been concluded yet), it's time to conclude the boss fight and register either a win or a loss.
-                if (_currentBoss != null)
-                {
-                    DevUtils.Assert(_tkDreamDeaths == 0 || _tkDreamDeaths == 1, "TK can only die zero or one time during a boss fight");
-                    if (_tkDreamDeaths > 0)
-                    {
-                        // 2.1
-                        EmitRecord(bus, false);
-                    }
-                    else
-                    {
-                        int requiredBossKills = GodhomeUtils.GetKillsRequiredToWin(_currentBoss.SceneName);
-                        DevUtils.Assert(_bossKills <= requiredBossKills, "Actually boss kill counts should never exceed required counts");
+                    int requiredBossKills = GodhomeUtils.GetKillsRequiredToWin(_currentBoss.SceneName);
+                    DevUtils.Assert(_bossKills <= requiredBossKills, "Actually boss kill counts should never exceed required counts");
 
-                        // 2.2 and 2.3
-                        EmitRecord(bus, _bossKills == requiredBossKills);
-                    }
-                    // 2.4
-                    Reset();
+                    // 2.2 and 2.3
+                    EmitRecord(bus, _bossKills == requiredBossKills);
                 }
+                // 2.4
+                Reset();
+            }
 
-                // Initialize to new boss.
-                BossChange msg = message as BossChange;
-                if (!msg.IsNoBoss())
-                {
-                    _currentBoss = msg;
-                    _tkDreamDeaths = 0;
-                    _bossKills = 0;
-                    _fightStartGameTime = DevUtils.GetTimestampEpochMs();
-                }
+            // Initialize to new boss.
+            if (!msg.IsNoBoss())
+            {
+                _currentBoss = msg;
+                _tkDreamDeaths = 0;
+                _bossKills = 0;
+                _fightStartGameTime = DevUtils.GetTimestampEpochMs();
             }
         }
 

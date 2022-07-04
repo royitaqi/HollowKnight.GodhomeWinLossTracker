@@ -10,7 +10,7 @@ namespace UnitTests
             public G.GlobalData GlobalData { get; set; }
             public G.LocalData LocalData { get; set; }
             public G.FolderData FolderData { get; set; }
-            public Func<G.IGodhomeWinLossTracker, IEnumerable<IHandler>> HandlersCreator { get; set; }
+            public Func<G.IGodhomeWinLossTracker, IEnumerable<Handler>> HandlersCreator { get; set; }
             public IEnumerable<IMessage> InputMessages { get; set; }
             public IEnumerable<IMessage> ExpectedMessages { get; set; }
             public AssertionFailedException ExpectedException { get; set; }
@@ -73,7 +73,7 @@ namespace UnitTests
                 }
                 catch (Exception ex)
                 {
-                    throw new AssertFailedException(testCase.ToString(), ex);
+                    throw new AssertFailedException($"{ex.ToString()}. {testCase}", ex);
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace UnitTests
             G.GlobalData globalData,
             G.LocalData localData,
             G.FolderData folderData,
-            Func<G.IGodhomeWinLossTracker, IEnumerable<IHandler>> handlersCreator,
+            Func<G.IGodhomeWinLossTracker, IEnumerable<Handler>> handlersCreator,
             IEnumerable<IMessage> inputMessages
         )
         {

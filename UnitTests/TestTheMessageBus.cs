@@ -8,7 +8,7 @@ namespace UnitTests
         [TestMethod]
         public void TestSingleMessage()
         {
-            var handlers = new IHandler[] { };
+            var handlers = new Handler[] { };
             var inputMessages = new[] { new BusEvent { Event = "test" } };
             var expectedMessages = new[] { new BusEvent { Event = "test" } };
 
@@ -21,14 +21,14 @@ namespace UnitTests
         }
 
 
-        private class Echo : IHandler
+        private class Echo : Handler
         {
             public Echo(string id)
             {
                 _id = id;
             }
 
-            public void OnMessage(TheMessageBus bus, ILogger logger, IMessage msg)
+            public override void OnMessage(TheMessageBus bus, ILogger logger, IMessage msg)
             {
                 if (msg is BusEvent)
                 {
@@ -48,7 +48,7 @@ namespace UnitTests
         [TestMethod]
         public void TestQueueProcessingOrder()
         {
-            var handlers = new IHandler[] {
+            var handlers = new Handler[] {
                 new Echo("1"),
                 new Echo("2"),
             };

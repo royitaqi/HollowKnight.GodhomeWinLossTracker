@@ -9,44 +9,42 @@ using GodhomeWinLossTracker.MessageBus.Messages;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class DisplayUpdater : IHandler
+    internal class DisplayUpdater : Handler
     {
         public DisplayUpdater(IGodhomeWinLossTracker mod)
         {
             _mod = mod;
         }
 
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
+        public void OnRegisteredRawWinLoss(TheMessageBus bus, Modding.ILogger logger, RegisteredRawWinLoss msg)
         {
             // For RegisteredRawWinLoss, we need to display the inner message.
-            if (message is RegisteredRawWinLoss)
+            if (_mod.globalData.NotifyForRecord)
             {
-                if (_mod.globalData.NotifyForRecord)
-                {
-                    RawWinLoss record = (message as RegisteredRawWinLoss).InnerMessage;
+                RawWinLoss record = msg.InnerMessage;
 
-                    string pb = "";
-                    if (_mod.globalData.NotifyPBTime && record.Wins > 0 && record.Losses == 0)
+                string pb = "";
+                if (_mod.globalData.NotifyPBTime && record.Wins > 0 && record.Losses == 0)
+                {
+                    var records = _mod.folderData.RawRecords.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
+                    if (records.Count >= 10 && records.Min(r => r.FightLengthMs) == record.FightLengthMs)
                     {
-                        var records = _mod.folderData.RawRecords.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
-                        if (records.Count >= 10 && records.Min(r => r.FightLengthMs) == record.FightLengthMs)
-                        {
-                            long minutes = record.FightLengthMs / 1000 / 60;
-                            long seconds = record.FightLengthMs / 1000 % 60;
-                            pb = $" (PB {minutes}:{seconds:D2})";
-                        }
+                        long minutes = record.FightLengthMs / 1000 / 60;
+                        long seconds = record.FightLengthMs / 1000 % 60;
+                        pb = $" (PB {minutes}:{seconds:D2})";
                     }
+                }
 
-                    ModDisplay.instance.Notify(record.ToString() + pb);
-                }
+                ModDisplay.instance.Notify(record.ToString() + pb);
             }
+        }
+
+        public void OnExportedFolderData(TheMessageBus bus, Modding.ILogger logger, ExportedFolderData msg)
+        {
             // For any other types of message, simply display the message itself.
-            else if (message is ExportedFolderData)
+            if (_mod.globalData.NotifyForExport)
             {
-                if (_mod.globalData.NotifyForExport)
-                {
-                    ModDisplay.instance.Notify(message.ToString());
-                }
+                ModDisplay.instance.Notify(msg.ToString());
             }
         }
 

@@ -9,24 +9,21 @@ using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class BossChangeDetector: IHandler
+    internal class BossChangeDetector: Handler
     {
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
+        public void OnSceneChange(TheMessageBus bus, Modding.ILogger logger, SceneChange msg)
         {
-            if (msg is SceneChange)
-            {
-                string sceneName = (msg as SceneChange).Name;
-                DevUtils.Assert(sceneName != null, "sceneName shouldn't be null");
+            string sceneName = msg.Name;
+            DevUtils.Assert(sceneName != null, "sceneName shouldn't be null");
 
-                string bossName = GodhomeUtils.GetNullableBossNameBySceneName(sceneName);
-                if (bossName != null)
-                {
-                    bus.Put(new BossChange(bossName, sceneName));
-                }
-                else
-                {
-                    bus.Put(new BossChange());
-                }
+            string bossName = GodhomeUtils.GetNullableBossNameBySceneName(sceneName);
+            if (bossName != null)
+            {
+                bus.Put(new BossChange(bossName, sceneName));
+            }
+            else
+            {
+                bus.Put(new BossChange());
             }
         }
     }

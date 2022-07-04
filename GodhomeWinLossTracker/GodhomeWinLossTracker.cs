@@ -26,7 +26,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.2.5.0";
+        public override string GetVersion() => "0.2.6.0";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
@@ -34,7 +34,7 @@ namespace GodhomeWinLossTracker
 #endif
             instance = this;
 
-            IHandler[] handlers = new IHandler[] {
+            Handler[] handlers = new Handler[] {
 #if DEBUG
                 // Put logger first, so that it prints messages on the bus before other handlers can handle it.
                 new MessageBus.Handlers.Logger(),

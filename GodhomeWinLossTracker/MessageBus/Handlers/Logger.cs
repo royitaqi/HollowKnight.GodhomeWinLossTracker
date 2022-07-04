@@ -1,8 +1,8 @@
 ﻿namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class Logger : IHandler
+    internal class Logger : Handler
     {
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
+        public override void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
             logger.Log($"Message on bus: {msg}");
         }

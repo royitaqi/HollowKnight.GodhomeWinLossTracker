@@ -4,38 +4,35 @@ using Vasi;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class TKDeathDetector: IHandler
+    internal class TKDeathDetector: Handler
     {
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
+        public void OnGameLoaded(TheMessageBus bus, Modding.ILogger logger, GameLoaded msg)
         {
-            if (msg is GameLoaded)
-            {
 #if DEBUG
-                logger.Log("Hooking FSM event: TK dream death");
+            logger.Log("Hooking FSM event: TK dream death");
 #endif
 
-                // This FSM event detects TK dream death.
-                // For TK real death, use "Map Zone" instead of "Anim Start".
-                GameObject hero = HeroController.instance.gameObject;
-                // GameObject hero = GameObject.Find("Knight"); // Another way of getting the hero
+            // This FSM event detects TK dream death.
+            // For TK real death, use "Map Zone" instead of "Anim Start".
+            GameObject hero = HeroController.instance.gameObject;
+            // GameObject hero = GameObject.Find("Knight"); // Another way of getting the hero
 
-                PlayMakerFSM fsm = hero.transform
-                    .Find("Hero Death").gameObject
-                    .LocateMyFSM("Hero Death Anim");
+            PlayMakerFSM fsm = hero.transform
+                .Find("Hero Death").gameObject
+                .LocateMyFSM("Hero Death Anim");
 
-                fsm.GetState("Anim Start")
-                    .AddMethod(() =>
-                    {
+            fsm.GetState("Anim Start")
+                .AddMethod(() =>
+                {
 #if DEBUG
-                        logger.Log("OnHeroDeathAnimStartInDream");
+                    logger.Log("OnHeroDeathAnimStartInDream");
 #endif
-                        bus.Put(new TKDreamDeath());
-                    });
+                    bus.Put(new TKDreamDeath());
+                });
 
 #if DEBUG
-                logger.Log("Hooked FSM event: TK dream death");
+            logger.Log("Hooked FSM event: TK dream death");
 #endif
-            }
         }
     }
 }

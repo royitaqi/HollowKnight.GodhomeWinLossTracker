@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using GodhomeWinLossTracker.MessageBus.Messages;
-using UnityEngine;
 using System.IO;
+using GodhomeWinLossTracker.MessageBus.Messages;
+using Newtonsoft.Json;
+using UnityEngine;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class SaveLoad : IHandler
+    internal class SaveLoad : Handler
     {
         private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
         private static readonly string ModBackupDirectory = ModSaveDirectory + "/backup";
@@ -23,25 +18,24 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             Directory.CreateDirectory(ModBackupDirectory);
         }
 
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage message)
+        public void OnSaveFolderData(TheMessageBus bus, Modding.ILogger logger, SaveFolderData msg)
         {
-            if (message is SaveFolderData)
-            {
-                SaveFolderData(bus, logger);
-                if (_mod.globalData.AutoExport)
-                {
-                    ExportFolderData(bus, logger);
-                }
-            }
-            else if (message is LoadFolderData)
-            {
-                LoadFolderData(bus, logger);
-                BackupFolderData(bus, logger);
-            }
-            else if (message is ExportFolderData)
+            SaveFolderData(bus, logger);
+            if (_mod.globalData.AutoExport)
             {
                 ExportFolderData(bus, logger);
             }
+        }
+
+        public void OnLoadFolderData(TheMessageBus bus, Modding.ILogger logger, LoadFolderData msg)
+        {
+            LoadFolderData(bus, logger);
+            BackupFolderData(bus, logger);
+        }
+
+        public void OnExportFolderData(TheMessageBus bus, Modding.ILogger logger, ExportFolderData msg)
+        {
+            ExportFolderData(bus, logger);
         }
 
         private void SaveFolderData(TheMessageBus bus, Modding.ILogger logger)
