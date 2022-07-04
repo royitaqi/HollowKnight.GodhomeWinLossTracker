@@ -57,7 +57,7 @@ namespace GodhomeWinLossTracker
             On.BossSceneController.EndBossScene += OnEndBossScene;
             On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
-            On.HeroController.TakeDamage += HeroController_TakeDamage;
+            //On.HeroController.TakeDamage += HeroController_TakeDamage; // Turn this line on and off to see GodSeeker+'s Half Damage feature ineffective and effective, respectively
             On.HeroController.AddHealth += HeroController_AddHealth;
 #if DEBUG
             // Debug hooks
@@ -89,15 +89,7 @@ namespace GodhomeWinLossTracker
 
         private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
         {
-            int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
             orig(self, go, damageSide, damageAmount, hazardType);
-            int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            int damage = healthBefore - healthAfter;
-
-            if (damage != 0)
-            {
-                messageBus.Put(new TKHit { Damage = damage, HealthAfter = healthAfter , Type = (TKHit.Types)hazardType });
-            }
         }
 
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
