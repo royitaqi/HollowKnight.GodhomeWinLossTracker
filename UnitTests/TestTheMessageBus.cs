@@ -28,7 +28,7 @@ namespace UnitTests
                 _id = id;
             }
 
-            public void OnMessage(TheMessageBus bus, ILogger logger, IMessage msg)
+            public override void OnMessage(TheMessageBus bus, ILogger logger, IMessage msg)
             {
                 if (msg is BusEvent)
                 {

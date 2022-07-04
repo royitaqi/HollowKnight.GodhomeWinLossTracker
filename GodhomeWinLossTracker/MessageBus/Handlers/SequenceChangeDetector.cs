@@ -11,7 +11,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class SequenceChangeDetector: Handler
     {
-        public new void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
+        public void OnSceneChange(TheMessageBus bus, Modding.ILogger logger, SceneChange msg)
         {
             // Detect HoG sequence by scene GG_Workshop
             if (msg is SceneChange)
@@ -24,12 +24,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     bus.Put(new SequenceChange { Name = "HoG" });
                 }
             }
+        }
+
+        public void OnPantheonStatsQuery(TheMessageBus bus, Modding.ILogger logger, PantheonStatsQuery msg)
+        {
             // Detect pantheon sequences by stats queries
-            else if (msg is PantheonStatsQuery)
-            {
-                int pantheonIndex = (msg as PantheonStatsQuery).PantheonIndex;
-                bus.Put(new SequenceChange { Name = $"P{pantheonIndex + 1}" });
-            }
+            int pantheonIndex = msg.PantheonIndex;
+            bus.Put(new SequenceChange { Name = $"P{pantheonIndex + 1}" });
         }
     }
 }

@@ -7,7 +7,7 @@ namespace UnitTests
     {
         public List<IMessage> Messages { get; set; } = new();
 
-        public void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
+        public override void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
             Messages.Add(msg);
         }
