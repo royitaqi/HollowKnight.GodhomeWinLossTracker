@@ -26,7 +26,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.2.7.0";
+        public override string GetVersion() => "0.2.8.0";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
 #if DEBUG
@@ -57,8 +57,8 @@ namespace GodhomeWinLossTracker
             On.BossSceneController.EndBossScene += OnEndBossScene;
             On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
-            On.HeroController.TakeDamage += HeroController_TakeDamage;
-            On.HeroController.AddHealth += HeroController_AddHealth;
+            On.PlayerData.TakeHealth += PlayerData_TakeHealth;
+            On.PlayerData.AddHealth += PlayerData_AddHealth;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
@@ -74,29 +74,29 @@ namespace GodhomeWinLossTracker
 #endif
         }
 
-        private void HeroController_AddHealth(On.HeroController.orig_AddHealth orig, HeroController self, int amount)
+        private void PlayerData_AddHealth(On.PlayerData.orig_AddHealth orig, PlayerData self, int amount)
         {
             int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
             orig(self, amount);
             int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
             int heal = healthAfter - healthBefore;
-            
+
             if (heal != 0)
             {
                 messageBus.Put(new TKHeal { Heal = heal, HealthAfter = healthAfter });
             }
         }
 
-        private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
+        private void PlayerData_TakeHealth(On.PlayerData.orig_TakeHealth orig, PlayerData self, int amount)
         {
             int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            orig(self, go, damageSide, damageAmount, hazardType);
+            orig(self, amount);
             int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
             int damage = healthBefore - healthAfter;
 
             if (damage != 0)
             {
-                messageBus.Put(new TKHit { Damage = damage, HealthAfter = healthAfter , Type = (TKHit.Types)hazardType });
+                messageBus.Put(new TKHit { Damage = damage, HealthAfter = healthAfter });
             }
         }
 

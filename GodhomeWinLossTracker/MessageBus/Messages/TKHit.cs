@@ -10,6 +10,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
     {
         public enum Types
         {
+            Unknown = 0,
             Enemy = 1,
             Hazard = 2,
         }
