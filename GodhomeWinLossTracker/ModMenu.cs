@@ -13,7 +13,6 @@ namespace GodhomeWinLossTracker
 
         private static Menu PrepareMenu()
         {
-            GodhomeWinLossTracker.instance.Log("DEBUG A");
             return new Menu("ModName".Localize(), new Element[]
             {
                 new HorizontalOption(

@@ -51,6 +51,11 @@
     </GetFileHash>
     <WriteLinesToFile File="$(ExportDir)/$(TargetName)/SHA.txt" Lines="$(OutputFileString);@(FilesWithHashes->'%(FileHash)');$(OutputZipString);@(ZipFilesWithHashes->'%(FileHash)')" Overwrite="true" Encoding="UTF-8" />
   </Target>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources/**" />
+  </ItemGroup>
+
   <ItemGroup>
     <Reference Include="Osmi">
       <HintPath>$(HollowKnightRefs)/Mods/Osmi/Osmi.dll</HintPath>
@@ -332,9 +337,11 @@
       <HintPath>$(HollowKnightRefs)/UnityEngine.XRModule.dll</HintPath>
     </Reference>
   </ItemGroup>
+
   <ItemGroup>
     <None Include=".gitignore" />
   </ItemGroup>
+
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
       <_Parameter1>UnitTests</_Parameter1>
