@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using GodhomeWinLossTracker.MessageBus.Messages;
+using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -23,6 +24,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 RawWinLoss record = msg.InnerMessage;
 
+                string recordString = string.Format(
+                    (record.Wins > 0 ? "Display/Won {0} in {1}" : "Display/Loss {0} in {1}").Localize(),
+                    $"Boss/{record.BossName}".Localize(),
+                    $"Sequence/{record.SequenceName}".Localize()
+                );
+
                 string pb = "";
                 if (_mod.globalData.NotifyPBTime && record.Wins > 0 && record.Losses == 0)
                 {
@@ -31,7 +38,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     {
                         long minutes = record.FightLengthMs / 1000 / 60;
                         long seconds = record.FightLengthMs / 1000 % 60;
-                        pb = $" (PB {minutes}:{seconds:D2})";
+                        pb = " (" + "Display/PB".Localize() + $" {minutes}:{seconds:D2})";
                     }
                 }
 
@@ -44,7 +51,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // For any other types of message, simply display the message itself.
             if (_mod.globalData.NotifyForExport)
             {
-                ModDisplay.instance.Notify(msg.ToString());
+                string text = string.Format(
+                    "Display/Exported to {0}".Localize(),
+                    msg.Filename
+                );
+                ModDisplay.instance.Notify(text);
             }
         }
 

@@ -10,5 +10,9 @@
 	"Menu/Notify exports": "Notify exports",
 	"Menu/Auto export stats": "Auto export stats",
 	"Menu/When saving games": "When saving games",
-	"Menu/Export stats now": "Export stats now"
+	"Menu/Export stats now": "Export stats now",
+	"Display/Won {0} in {1}": "Won {0} in {1}",
+	"Display/Loss {0} in {1}": "Loss {0} in {1}",
+	"Display/PB": "Display/PB",
+	"Display/Exported to {0}": "Exported to {0}"
 }

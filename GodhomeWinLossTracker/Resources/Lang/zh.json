@@ -10,5 +10,9 @@
 	"Menu/Notify exports": "显示导出提醒",
 	"Menu/Auto export stats": "自动导出",
 	"Menu/When saving games": "游戏存档时触发",
-	"Menu/Export stats now": "现在导出胜负记录"
+	"Menu/Export stats now": "现在导出胜负记录",
+	"Display/Won {0} in {1}": "在 {1} 中战胜了 {0}",
+	"Display/Loss {0} in {1}": "在 {1} 中负于 {0}",
+	"Display/PB": "个人最快时间",
+	"Display/Exported to {0}": "成功导出 {0}"
 }
