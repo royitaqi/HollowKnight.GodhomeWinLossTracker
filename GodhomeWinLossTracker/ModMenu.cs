@@ -29,21 +29,6 @@ namespace GodhomeWinLossTracker
 
         private static void LocalizeModsMenu(MenuScreen modListMenu)
         {
-            GameObject children = UIManager
-                .instance
-                .UICanvas
-                .gameObject
-                .Child(
-                    "ModListMenu",
-                    "Content",
-                    "ScrollMask",
-                    "ScrollingPane"
-                );
-            foreach (var c in children.GetChildren())
-            {
-                GodhomeWinLossTracker.instance.Log($"DEBUG Z: child {c.name}");
-            }
-
             GameObject btn = UIManager
                 .instance
                 .UICanvas
