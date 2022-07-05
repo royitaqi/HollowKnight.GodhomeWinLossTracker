@@ -11,9 +11,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class PantheonStatsQueryProcessor : Handler
     {
-        public PantheonStatsQueryProcessor(IGodhomeWinLossTracker mod)
+        public PantheonStatsQueryProcessor(IGodhomeWinLossTracker mod, Func<string, string> localizer)
         {
             _mod = mod;
+            _localizer = localizer;
         }
 
         public void OnPantheonStatsQuery(TheMessageBus bus, Modding.ILogger logger, PantheonStatsQuery msg)
@@ -50,7 +51,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 // There is no run at all. Don't call callback.
                 return;
             }
-            string runsText = String.Format("StatsDisplay/Pantheons/Runs: {0}".Localize(), runs);
+            string runsText = String.Format(_localizer("StatsDisplay/Pantheons/Runs: {0}"), runs);
 
             // Generate "PB"
             string pb = null;
@@ -63,14 +64,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // Won last boss before.
             else if (furthestWonScene == scenes.Last())
             {
-                pb = "StatsDisplay/Pantheons/PB: Win".Localize();
+                pb = _localizer("StatsDisplay/Pantheons/PB: Win");
             }
             // Generate PB for the furthest boss won
             else
             {
                 pb = String.Format(
-                    "StatsDisplay/Pantheons/PB: {0}".Localize(),
-                    $"Boss/{GodhomeUtils.GetNullableBossNameBySceneName(furthestWonScene)}".Localize()
+                    _localizer("StatsDisplay/Pantheons/PB: {0}"),
+                    _localizer($"Boss/{GodhomeUtils.GetNullableBossNameBySceneName(furthestWonScene)}")
                 );
             }
 
@@ -79,7 +80,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             string churnsText = null;
             if (churns.Count != 0)
             {
-                StringBuilder sb = new("StatsDisplay/Pantheons/Top churns".Localize() + ": ");
+                StringBuilder sb = new(_localizer("StatsDisplay/Pantheons/Top churns") + ": ");
                 for (int i = 0; i < churns.Count; i++)
                 {
                     if (i != 0)
@@ -88,7 +89,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     }
                     sb.AppendFormat(
                         "{0} {1,0:F0}%",
-                        $"Boss/{GodhomeUtils.GetNullableBossNameBySceneName(churns[i].SceneName)}".Localize(),
+                        _localizer($"Boss/{GodhomeUtils.GetNullableBossNameBySceneName(churns[i].SceneName)}"),
                         churns[i].WinRate * 100
                     );
                 }
@@ -111,5 +112,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         }
 
         private readonly IGodhomeWinLossTracker _mod;
+        private readonly Func<string, string> _localizer;
     }
 }

@@ -161,7 +161,7 @@ namespace UnitTests
         {
             foreach (var testCase in GetTestCases())
             {
-                testCase.HandlersCreator = mod => new[] { new HoGStatsQueryProcessor(mod) };
+                testCase.HandlersCreator = mod => new[] { new HoGStatsQueryProcessor(mod, str => str.Substring(str.LastIndexOf('/') + 1)) };
                 testCase.InputMessages = testCase.InputMessages;
                 testCase.ExpectedMessages = testCase.ExpectedMessages;
                 TestUtils.TestMessageBus(testCase);

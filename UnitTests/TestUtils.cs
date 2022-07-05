@@ -67,12 +67,20 @@ namespace UnitTests
                     RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.HandlersCreator, testCase.InputMessages);
                     throw new AssertFailedException($"Should throw AssertionFailedException(\"{testCase.ExpectedException.Message}\"). {testCase}");
                 }
-                catch (AssertionFailedException ex)
-                {
-                    Assert.AreEqual(testCase.ExpectedException.Message, ex.Message, $"AssertionFailedException thrown with unexpected message. {testCase}");
-                }
                 catch (Exception ex)
                 {
+                    do
+                    {
+                        if (ex.GetType() == typeof(AssertionFailedException) && ex.Message == testCase.ExpectedException.Message)
+                        {
+                            // Found the expected exception. Good.
+                            return;
+                        }
+                        ex = ex.InnerException;
+                    }
+                    while (ex != null);
+
+                    // Didn't find expected exception. Bad.
                     throw new AssertFailedException($"{ex.ToString()}. {testCase}", ex);
                 }
             }

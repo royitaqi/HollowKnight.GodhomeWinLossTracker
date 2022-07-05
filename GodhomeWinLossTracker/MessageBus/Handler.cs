@@ -15,7 +15,8 @@ namespace GodhomeWinLossTracker.MessageBus
 
             // Getting message processing method by name.
             // This can be improved to get method by parameter types.
-            MethodInfo method = GetType().GetMethod($"On{msgType.Name}");
+            string methodName = $"On{msgType.Name}";
+            MethodInfo method = GetType().GetMethod(methodName);
 
             if (method != null)
             {
@@ -25,7 +26,7 @@ namespace GodhomeWinLossTracker.MessageBus
                 }
                 catch (TargetInvocationException ex)
                 {
-                    throw ex.InnerException;
+                    throw new ApplicationException($"Exception thrown while trying to invoke {GetType().Name}.{methodName}() to process {msgType.Name} \"{msg}\": {ex.Message}", ex.InnerException);
                 }
             }
         }

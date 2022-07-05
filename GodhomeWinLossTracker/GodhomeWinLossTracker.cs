@@ -26,7 +26,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.3.0.1";
+        public override string GetVersion() => "0.3.0.2";
         
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
@@ -43,12 +43,12 @@ namespace GodhomeWinLossTracker
                 new BossChangeDetector(),
                 new DisplayUpdater(this),
                 new GameLoadDetector(),
-                new HoGStatsQueryProcessor(this),
-                new PantheonStatsQueryProcessor(this),
+                new HoGStatsQueryProcessor(this, str => str.Localize()),
+                new PantheonStatsQueryProcessor(this, str => str.Localize()),
                 new SaveLoad(this),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
-                new WinLossGenerator(),
+                new WinLossGenerator(() => GameManagerUtils.PlayTimeMs),
                 new WinLossTracker(this)
             };
             messageBus = new(this, handlers);

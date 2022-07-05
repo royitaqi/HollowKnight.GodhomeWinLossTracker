@@ -6,6 +6,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class WinLossGenerator : Handler
     {
+        public WinLossGenerator(Func<long> getGameTime)
+        {
+            _getGameTime = getGameTime;
+        }
+
         // Facts:
         // A. It's possible to see BossDeath event after TKDreamDeath event.
         //   * This can happen when the boss has long death animation and has minions/hazards to kill TK while the death animation is playing. One example is The Collector.
@@ -88,7 +93,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _currentBoss = msg;
                 _tkDreamDeaths = 0;
                 _bossKills = 0;
-                _fightStartGameTime = GameManagerUtils.PlayTimeMs;
+                _fightStartGameTime = _getGameTime();
                 _healCount = 0;
                 _healAmount = 0;
                 _hitCount = 0;
@@ -121,7 +126,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _healAmount,
                 _hitCount,
                 _hitAmount,
-                GameManagerUtils.PlayTimeMs - _fightStartGameTime, // fightLengthMs
+                _getGameTime() - _fightStartGameTime,
                 RawWinLoss.Sources.Mod
             ));
         }
@@ -138,6 +143,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _hitAmount = -1;
         }
 
+        Func<long> _getGameTime;
         // Always have the latest sequence name, even when not in a boss fight.
         private string _currentSequence = null;
         // Null value means currently no boss.

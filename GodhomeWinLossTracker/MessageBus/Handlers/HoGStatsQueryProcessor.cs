@@ -11,9 +11,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class HoGStatsQueryProcessor : Handler
     {
-        public HoGStatsQueryProcessor(IGodhomeWinLossTracker mod)
+        public HoGStatsQueryProcessor(IGodhomeWinLossTracker mod, Func<string, string> localizer)
         {
             _mod = mod;
+            _localizer = localizer;
         }
 
         public void OnHoGStatsQuery(TheMessageBus bus, Modding.ILogger logger, HoGStatsQuery msg)
@@ -25,7 +26,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 scenes.Reverse();
             }
-            string[] prefixes = scenes.Count == 1 ? new[] { "" } : new[] { "StatsDisplay/HoG/Attuned".Localize() + ": ", "StatsDisplay/HoG/Ascended+".Localize() + ": " };
+            string[] prefixes = scenes.Count == 1 ? new[] { "" } : new[] { _localizer("StatsDisplay/HoG/Attuned") + ": ", _localizer("StatsDisplay/HoG/Ascended+") + ": " };
 
             // Print stats into a string.
             StringBuilder sb = new();
@@ -41,7 +42,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 if (total != 0)
                 {
                     sb.AppendLine(String.Format(
-                        "StatsDisplay/HoG/{0}{1} fights, {2} wins ({3,0:F0}%)".Localize(),
+                        _localizer("StatsDisplay/HoG/{0}{1} fights, {2} wins ({3,0:F0}%)"),
                         prefix,
                         total,
                         wins,
@@ -62,5 +63,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         }
 
         private readonly IGodhomeWinLossTracker _mod;
+        private readonly Func<string, string> _localizer;
     }
 }

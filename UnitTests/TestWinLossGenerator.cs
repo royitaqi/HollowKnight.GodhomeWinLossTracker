@@ -306,7 +306,7 @@ namespace UnitTests
         {
             foreach (var testCase in GetTestCases())
             {
-                testCase.HandlersCreator = _ => new[] { new WinLossGenerator() };
+                testCase.HandlersCreator = _ => new[] { new WinLossGenerator(() => 0) };
                 testCase.InputMessages = new[] { new SequenceChange { Name = "Test" } }.Concat(testCase.InputMessages);
                 if (testCase.ExpectedMessages != null)
                 {
