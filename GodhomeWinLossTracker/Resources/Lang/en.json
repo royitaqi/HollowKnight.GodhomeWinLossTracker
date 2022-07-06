@@ -57,7 +57,7 @@
 	"ModName": "Godhome Win Loss Tracker",
 	"Notification/Exported to {0}": "Exported to {0}",
 	"Notification/Loss {0} in {1}": "Lost to {0} in {1}",
-	"Notification/PB": "Display/PB",
+	"Notification/PB": "PB",
 	"Notification/Won {0} in {1}": "Won against {0} in {1}",
 	"Sequence/HoG": "HoG",
 	"Sequence/P1": "P1",
