@@ -9,12 +9,11 @@ The mod automatically tracks your boss fight results, be it in Hall of Gods or p
 
 In Hall of Gods, different boss variants (dream version or different forms) are tracked separately. For the same boss variant/form, if it has different arenas for Attuned and Ascended/Radiant, they are tracked separately, too. Stats are displayed in the "Challenge" menu.
 
-![hog_challenge_menu](https://user-images.githubusercontent.com/14790745/175825189-741d29d0-9a2b-48e5-91ba-1a80fa2b375e.png)
-
+![hog_stats](https://user-images.githubusercontent.com/14790745/177464675-5db99441-65d8-4602-b30c-f38993e9f92d.png)
 
 In pantheons, the number of runs, your PB (personal best, i.e. how far you go in a pantheon) and the bosses that gave you the most difficulty are tracked and displayed in the "Challenge" menu.
 
-![pantheon_challenge_menu](https://user-images.githubusercontent.com/14790745/175825389-19b4e310-934a-44e0-8187-ba5b3e549426.png)
+![p1_stats](https://user-images.githubusercontent.com/14790745/177464694-32a143dd-b9a7-4421-a2a5-6a932e42d906.png)
 
 
 ## In-game notifications
@@ -50,8 +49,3 @@ You can find the mod's menu by pausing the game -> "Options" -> "Mods" -> "Godho
 **Export as TSV**: While playing (i.e. a game save is loaded), select **Export stats now** in the mod's menu. This will write stats into `Export.SaveX.txt` in TSV format (X being the current game slot ID, from 1 to 4). The exported file can then be imported into spreadsheet apps for data analysis ([an example](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing) data analysis spreadsheet).
 
 **Automatic export when saving games**: You can turn on **Auto export stats** in the mod's menu. This makes the mod export every time the game is being saved. This helps if you plan to constantly pull stats into another app.
-
-
-## Known bugs / limitations
-
-* Limitation: Boss names are displayed in English. No localization yet.
