@@ -41,6 +41,7 @@ namespace GodhomeWinLossTracker
                 new MessageBus.Handlers.Logger(),
 #endif
                 new BossChangeDetector(),
+                new BossHPObserver(),
                 new DisplayUpdater(this),
                 new GameLoadDetector(),
                 new HoGStatsQueryProcessor(this, str => str.Localize()),
@@ -60,6 +61,8 @@ namespace GodhomeWinLossTracker
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
             On.PlayerData.TakeHealth += PlayerData_TakeHealth;
             On.PlayerData.AddHealth += PlayerData_AddHealth;
+            ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
+            On.HealthManager.TakeDamage += HealthManager_TakeDamage;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
@@ -74,6 +77,18 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log("Initialized");
 #endif
+        }
+
+        private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
+        {
+            orig(self, hitInstance);
+            messageBus.Put(new EnemyDamaged());
+        }
+
+        private bool ModHooks_OnEnableEnemyHook(GameObject enemy, bool isAlreadyDead)
+        {
+            messageBus.Put(new EnemyEnabled { Enemy = enemy });
+            return isAlreadyDead;
         }
 
         private void PlayerData_AddHealth(On.PlayerData.orig_AddHealth orig, PlayerData self, int amount)
@@ -190,30 +205,12 @@ namespace GodhomeWinLossTracker
             {
                 Log(DevUtils.DumpLogCount());
             }
+            else if (Input.GetKeyDown(KeyCode.T))
+            {
+                messageBus.Put(new BusEvent { ForTest = true });
+            }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                Log($"DEBUG >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-
-                Log($"DEBUG PlayTime={GameManager.instance.PlayTime,0:F3}");
-
-                float sessionStartTime = ReflectionHelper.GetField<GameManager, float>(GameManager.instance, "sessionStartTime");
-                Log($"DEBUG sessionStartTime={sessionStartTime,0:F3}");
-
-                float sessionPlayTimer = ReflectionHelper.GetField<GameManager, float>(GameManager.instance, "sessionPlayTimer");
-                Log($"DEBUG sessionPlayTimer={sessionPlayTimer,0:F3}");
-
-                float sumFloat = sessionStartTime + sessionPlayTimer;
-                Log($"DEBUG float sum={sumFloat,0:F3}");
-
-                double sumDouble = (double)sessionStartTime + (double)sessionPlayTimer;
-                Log($"DEBUG double sum={sumDouble,0:F3}");
-
-                float sumDoubleFloat = (float)sumDouble;
-                Log($"DEBUG double-float sum={sumDoubleFloat,0:F3}");
-
-                Log($"DEBUG -----------------------------------------------");
-
-                Log($"DEBUG PlayTimeMs={GameManagerUtils.PlayTimeMs}");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
