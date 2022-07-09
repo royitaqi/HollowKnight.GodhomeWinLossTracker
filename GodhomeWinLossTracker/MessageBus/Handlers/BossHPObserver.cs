@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using GodhomeWinLossTracker.MessageBus.Messages;
-using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -21,7 +20,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 HealthManager hm = msg.Enemy.GetComponent<HealthManager>();
                 // The magic number 200 is borrowed from EnemyHPBar::Instance_OnEnableEnemyHook.
-                if (!hm.isDead && hm.hp >= 200)
+                if (!hm.isDead && IsBoss(hm))
                 {
                     _healthManagers.Add(hm);
                     _maxHP += hm.hp;
@@ -33,8 +32,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             if (_isInFight)
             {
-                bus.Put(new BossHP { MaxHP = _maxHP, HP = _healthManagers.Select(hm => hm.isDead ? 0 : hm.hp).Sum() });
+                bus.Put(new BossHP { MaxHP = _maxHP, HP = _healthManagers.Select(hm => GetHP(hm)).Sum() });
             }
+        }
+
+        private int GetHP(HealthManager hm)
+        {
+            return hm.isDead ? 0 : Math.Max(hm.hp, 0);
+        }
+
+        private bool IsBoss(HealthManager hm)
+        {
+            return hm.hp >= 200;
         }
 
         private readonly List<HealthManager> _healthManagers = new();
