@@ -32,7 +32,7 @@ namespace GodhomeWinLossTracker.Utils
 
         private static void PlayMakerFSM_Update(On.PlayMakerFSM.orig_Update orig, PlayMakerFSM self)
         {
-            DevUtils.CountedLog($"PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName}");
+            DevUtils.CountedLog($"PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
             orig(self);
         }
 
