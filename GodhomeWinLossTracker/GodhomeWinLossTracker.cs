@@ -25,8 +25,8 @@ namespace GodhomeWinLossTracker
         /// Mod
         ///
 
-        // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.4.1.0";
+        // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
+        public override string GetVersion() => "0.4.2.0";
         
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
@@ -67,7 +67,7 @@ namespace GodhomeWinLossTracker
 
             // Turn this line on/off to get FSM related events
             //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.FsmName == "Mage Knight");
-            FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
+            //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
             //FsmUtils.Load(this);
 
             // Turn this line on/off to get ModDisplay related backdoors
