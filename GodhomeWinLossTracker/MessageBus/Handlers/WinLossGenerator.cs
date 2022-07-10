@@ -98,7 +98,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _healAmount = 0;
                 _hitCount = 0;
                 _hitAmount = 0;
-                _bossHP = float.NaN;
+                _bossHP = 1; // Assume boss has 100% HP at start of fight
             }
         }
 
@@ -112,6 +112,20 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             _hitCount++;
             _hitAmount += msg.Damage;
+
+            bus.Put(new RawTKHit(
+                DateTime.Now.ToString("yyyy'-'MM'-'dd HH':'mm':'ss"),
+                _currentSequence,
+                _currentBoss.BossName,
+                _currentBoss.SceneName,
+                TKUtils.GetTKStatus(),
+                msg.HealthBefore,
+                msg.Damage,
+                msg.DamageSource,
+                _bossHP,
+                _getGameTime() - _fightStartGameTime,
+                RecordSources.Mod
+            ));
         }
 
         public void OnBossHP(TheMessageBus bus, Modding.ILogger logger, BossHP msg)

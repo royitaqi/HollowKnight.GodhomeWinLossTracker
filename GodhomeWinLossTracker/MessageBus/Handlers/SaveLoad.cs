@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using Newtonsoft.Json;
@@ -107,15 +108,38 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private void ExportFolderData(TheMessageBus bus, Modding.ILogger logger)
         {
-            string filename = GetExportSaveFilename();
+            ExportWinLoss(bus, logger);
+            ExportTKHit(bus, logger);
+            bus.Put(new ExportedFolderData());
+        }
+
+        private void ExportWinLoss(TheMessageBus bus, Modding.ILogger logger)
+        {
+            string filename = GetExportWinLossSaveFilename();
             // Skip if not a valid profile ID
             if (filename == null)
             {
                 return;
             }
+            ExportList(bus, logger, filename, _mod.folderData.RawRecords);
+        }
+
+        private void ExportTKHit(TheMessageBus bus, Modding.ILogger logger)
+        {
+            string filename = GetExportTKHitSaveFilename();
+            // Skip if not a valid profile ID
+            if (filename == null)
+            {
+                return;
+            }
+            ExportList(bus, logger, filename, _mod.folderData.RawTKHits);
+        }
+
+        private void ExportList<T>(TheMessageBus bus, Modding.ILogger logger, string filename, List<T> list)
+        {
             string path = Path.Combine(ModSaveDirectory, filename);
 
-            var ps = typeof(RawWinLoss).GetProperties();
+            var ps = typeof(T).GetProperties();
 
             using (var sw = new System.IO.StreamWriter(path))
             {
@@ -131,7 +155,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 sw.WriteLine();
 
                 // Write values
-                foreach (var r in _mod.folderData.RawRecords)
+                foreach (var r in list)
                 {
                     first = true;
                     foreach (var p in ps)
@@ -145,9 +169,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }
             }
 #if DEBUG
-            logger.Log($"{path} exported: {_mod.folderData.RawRecords.Count} lines");
+            logger.Log($"{path} exported: {list.Count} lines");
 #endif
-            bus.Put(new ExportedFolderData { Filename = filename });
         }
 
         private string GetDataSaveFilename()
@@ -160,14 +183,24 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             return $"Data.Save{slot}.json";
         }
 
-        private string GetExportSaveFilename()
+        private string GetExportWinLossSaveFilename()
         {
             int slot = _mod.localData.ProfileID;
             if (slot == 0)
             {
                 return null;
             }
-            return $"Export.Save{slot}.txt";
+            return $"Export.WinLoss.Save{slot}.txt";
+        }
+
+        private string GetExportTKHitSaveFilename()
+        {
+            int slot = _mod.localData.ProfileID;
+            if (slot == 0)
+            {
+                return null;
+            }
+            return $"Export.TKHit.Save{slot}.txt";
         }
 
         private readonly IGodhomeWinLossTracker _mod;

@@ -17,6 +17,7 @@ namespace GodhomeWinLossTracker
     public class FolderData
     {
         public List<RawWinLoss> RawRecords = new();
+        public List<RawTKHit> RawTKHits = new();
     }
 
     [Serializable]

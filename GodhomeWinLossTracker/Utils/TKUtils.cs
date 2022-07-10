@@ -21,16 +21,16 @@ namespace GodhomeWinLossTracker.Utils
                 false,
                 false,
                 false,
-                //
+                // action
+                HeroController.instance.cState.attacking,
                 HeroController.instance.cState.dashing,
-                HeroController.instance.cState.jumping || HeroController.instance.cState.doubleJumping,
+                HeroController.instance.cState.jumping || HeroController.instance.cState.doubleJumping || HeroController.instance.cState.falling, // airborne
                 HeroController.instance.cState.superDashing,
-                HeroController.instance.cState.falling,
-                HeroController.instance.cState.willHardLand,
                 HeroController.instance.cState.swimming,
                 HeroController.instance.cState.recoiling,
                 false,
-                //
+                false,
+                // wall
                 HeroController.instance.wallLocked,
                 HeroController.instance.cState.wallJumping,
                 HeroController.instance.cState.touchingWall,
@@ -40,11 +40,11 @@ namespace GodhomeWinLossTracker.Utils
                 false,
                 false,
                 //
-                HeroController.instance.cState.attacking,
-                HeroController.instance.CanCast(),
-                HeroController.instance.CanSuperDash(),
-                HeroController.instance.CanQuickMap(),
-                HeroController.instance.CanOpenInventory(),
+                false,
+                false,
+                false,
+                false,
+                false,
                 false,
                 false,
                 // Leave one bit unused

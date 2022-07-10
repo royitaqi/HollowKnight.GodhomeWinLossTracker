@@ -51,11 +51,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // For any other types of message, simply display the message itself.
             if (_mod.globalData.NotifyForExport)
             {
-                string text = string.Format(
-                    "Notification/Exported to {0}".Localize(),
-                    msg.Filename
-                );
-                ModDisplay.instance.Notify(text);
+                ModDisplay.instance.Notify("Notification/Exported successfully".Localize());
             }
         }
 

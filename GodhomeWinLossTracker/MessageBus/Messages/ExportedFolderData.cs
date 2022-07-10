@@ -8,11 +8,9 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
 {
     internal class ExportedFolderData : IMessage
     {
-        public string Filename { get; set; }
-
         public override string ToString()
         {
-            return $"Exported to {Filename}";
+            return $"Exported successfully";
         }
     }
 }
