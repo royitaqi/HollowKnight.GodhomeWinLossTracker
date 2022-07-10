@@ -1,8 +1,10 @@
-﻿using HutongGames.PlayMaker;
+﻿using GodhomeWinLossTracker.Utils;
+using HutongGames.PlayMaker;
 using UnityEngine;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {
+    [ModLogLevel(Modding.LogLevel.Debug)]
     internal class BossStateChange : IMessage
     {
         public GameObject BossGO { get; set; }

@@ -26,20 +26,17 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
-        public override string GetVersion() => "0.4.2.0";
+        public override string GetVersion() => "0.4.3.0";
         
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
-#if DEBUG
-            Log("Initializing mod");
-#endif
+            this.LogMod("Initializing mod");
+
             instance = this;
 
             Handler[] handlers = new Handler[] {
-#if DEBUG
                 // Put logger first, so that it prints messages on the bus before other handlers can handle it.
                 new MessageBus.Handlers.Logger(),
-#endif
                 new BossChangeDetector(),
                 new BossDeathObserver(),
                 new BossHPUpdater(),
@@ -76,33 +73,31 @@ namespace GodhomeWinLossTracker
 
             ModDisplay.Initialize();
 
-#if DEBUG
-            Log("Initialized");
-#endif
+            this.LogMod("Initialized");
         }
 
+#if DEBUG
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
         {
-            Log($"DEBUG GameManager_Start");
+            this.LogMod($"GameManager_Start");
             orig(self);
         }
 
         private void HeroController_Start(On.HeroController.orig_Start orig, HeroController self)
         {
-            Log($"DEBUG HeroController_Start");
+            this.LogMod($"HeroController_Start");
             orig(self);
         }
 
-#if DEBUG
         private void OnHeroUpdate()
         {
             if (Input.GetKeyDown(KeyCode.O))
             {
-                Log(JsonConvert.SerializeObject(folderData));
+                this.LogMod(JsonConvert.SerializeObject(folderData));
             }
             else if (Input.GetKeyDown(KeyCode.P))
             {
-                Log(DevUtils.DumpLogCount());
+                this.LogMod(LoggingUtils.DumpLogCount());
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
@@ -142,32 +137,24 @@ namespace GodhomeWinLossTracker
         public void OnLoadLocal(LocalData data)
         {
             localData = data;
-#if DEBUG
-            Log($"Loading local data (slot {localData.ProfileID})");
-#endif
+            this.LogMod($"Loading local data (slot {localData.ProfileID})");
             // actual read
             if (messageBus != null)
             {
                 messageBus.Put(new LoadFolderData());
             }
-#if DEBUG
-            Log($"Loaded local data (slot {localData.ProfileID})");
-#endif
+            this.LogMod($"Loaded local data (slot {localData.ProfileID})");
         }
         public LocalData OnSaveLocal()
         {
             localData.ProfileID = GameManager.instance.profileID;
-#if DEBUG
-            Log($"Saving local data (slot {localData.ProfileID})");
-#endif
+            this.LogMod($"Saving local data (slot {localData.ProfileID})");
             // actual save
             if (messageBus != null)
             {
                 messageBus.Put(new SaveFolderData());
             }
-#if DEBUG
-            Log($"Saved local data (slot {localData.ProfileID})");
-#endif
+            this.LogMod($"Saved local data (slot {localData.ProfileID})");
             return localData;
         }
     }

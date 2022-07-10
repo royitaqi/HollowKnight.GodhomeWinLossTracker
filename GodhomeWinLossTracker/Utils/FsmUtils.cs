@@ -35,7 +35,7 @@ namespace GodhomeWinLossTracker.Utils
             
             if (_filter(self))
             {
-                _logger.Log($"PlayMakerFSM_OnEnable: GO={self.gameObject.name} FsmName={self.FsmName}");
+                _logger.LogModDebug($"PlayMakerFSM_OnEnable: GO={self.gameObject.name} FsmName={self.FsmName}");
                 self.MakeLog();
             }
         }
@@ -44,7 +44,7 @@ namespace GodhomeWinLossTracker.Utils
         {
             if (_filter(self))
             {
-                _logger.Log($"PlayMakerFSM_Start: GO={self.gameObject.name} FsmName={self.FsmName}");
+                _logger.LogModDebug($"PlayMakerFSM_Start: GO={self.gameObject.name} FsmName={self.FsmName}");
             }
             orig(self);
         }
@@ -53,7 +53,7 @@ namespace GodhomeWinLossTracker.Utils
         {
             if (_filter(self))
             {
-                DevUtils.CountedLog($"PlayMakerFSM_SetState: GO={self.gameObject.name} FsmName={self.FsmName} stateName={stateName}");
+                LoggingUtils.CountedLog($"PlayMakerFSM_SetState: GO={self.gameObject.name} FsmName={self.FsmName} stateName={stateName}");
             }
             orig(self, stateName);
         }
@@ -62,7 +62,7 @@ namespace GodhomeWinLossTracker.Utils
         {
             if (_filter(self))
             {
-                DevUtils.CountedLog($"PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
+                LoggingUtils.CountedLog($"PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
             }
             orig(self);
         }
@@ -71,7 +71,7 @@ namespace GodhomeWinLossTracker.Utils
         {
             if (_filter(self))
             {
-                DevUtils.CountedLog($"PlayMakerFSM_SendEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
+                LoggingUtils.CountedLog($"PlayMakerFSM_SendEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
             }
             orig(self, eventName);
         }
@@ -80,7 +80,7 @@ namespace GodhomeWinLossTracker.Utils
         {
             if (_filter(self))
             {
-                DevUtils.CountedLog($"PlayMakerFSM_SendRemoteFsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
+                LoggingUtils.CountedLog($"PlayMakerFSM_SendRemoteFsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
             }
             orig(self, eventName);
         }
@@ -89,7 +89,7 @@ namespace GodhomeWinLossTracker.Utils
         {
             if (_filter(self))
             {
-                DevUtils.CountedLog($"PlayMakerFSM_ChangeState_FsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={fsmEvent.Name}");
+                LoggingUtils.CountedLog($"PlayMakerFSM_ChangeState_FsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={fsmEvent.Name}");
             }
             orig(self, fsmEvent);
         }

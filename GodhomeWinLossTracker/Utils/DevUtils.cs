@@ -26,30 +26,5 @@ namespace GodhomeWinLossTracker.Utils
         {
             return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
-
-        public static void CountedLog(string log)
-        {
-            if (_countedLog.ContainsKey(log))
-            {
-                _countedLog[log]++;
-            }
-            else
-            {
-                _countedLog[log] = 1;
-            }
-        }
-
-        public static string DumpLogCount()
-        {
-            StringBuilder sb = new();
-            foreach (var kvp in _countedLog.OrderByDescending(kvp => kvp.Value))
-            {
-                sb.AppendLine($"CountedLog: {kvp.Key}: {kvp.Value}");
-            }
-            _countedLog.Clear();
-            return sb.ToString();
-        }
-
-        private static Dictionary<string, int> _countedLog = new();
     }
 }

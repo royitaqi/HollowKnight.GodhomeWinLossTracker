@@ -20,9 +20,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private string ModHooks_BeforeSceneLoadHook(string sceneName)
         {
-#if DEBUG
-            _mod.Log($"OnSceneLoad: {sceneName}");
-#endif
+            _mod.LogMod($"OnSceneLoad: {sceneName}");
             _bus.Put(new SceneChange { Name = sceneName });
             return sceneName;
         }

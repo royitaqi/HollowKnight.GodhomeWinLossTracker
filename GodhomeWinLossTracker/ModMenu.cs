@@ -101,6 +101,29 @@ namespace GodhomeWinLossTracker
                     "",
                     _ => ExportStatsAsTsv()
                 ),
+#if DEBUG
+                new HorizontalOption(
+                    "Log Level",
+                    "",
+                    new []{ "INFO", "DEBUG", "FINE" },
+                    selectedIndex => {
+                        LoggingUtils.LogLevel = selectedIndex switch
+                        {
+                            0 => Modding.LogLevel.Info,
+                            1 => Modding.LogLevel.Debug,
+                            2 => Modding.LogLevel.Fine,
+                            _ => throw new AssertionFailedException("Should never arrive here"),
+                        };
+                    },
+                    () => LoggingUtils.LogLevel switch
+                    {
+                        Modding.LogLevel.Info => 0,
+                        Modding.LogLevel.Debug => 1,
+                        Modding.LogLevel.Fine => 2,
+                        _ => throw new AssertionFailedException("Should never arrive here"),
+                    }
+                ),
+#endif
             });
         }
 

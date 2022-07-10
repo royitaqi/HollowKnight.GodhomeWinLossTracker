@@ -8,7 +8,7 @@ using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus
 {
-    internal abstract class Handler
+    internal class Handler
     {
         public virtual void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
         {
@@ -42,30 +42,26 @@ namespace GodhomeWinLossTracker.MessageBus
 
         public void Validate(Modding.ILogger logger)
         {
-#if DEBUG
-            logger.Log($"Validating {GetType().Name}");
-#endif
+            logger.LogModFine($"Validating {GetType().Name}");
             foreach (var m in GetType().GetMethods())
             {
                 var ps = m.GetParameters();
-#if DEBUG
-                logger.Log($"Validating {GetType().Name}.{m.Name}()");
+
+                logger.LogModFine($"Validating {GetType().Name}.{m.Name}()");
                 if (ps.Length == 3)
                 {
-                    logger.Log($"  {ps[0].Name}: {ps[0].ParameterType.Name} - {ps[0].ParameterType == typeof(TheMessageBus)}");
-                    logger.Log($"  {ps[1].Name}: {ps[1].ParameterType.Name} - {typeof(Modding.ILogger).IsAssignableFrom(ps[1].ParameterType)}");
-                    logger.Log($"  {ps[2].Name}: {ps[2].ParameterType.Name} - {typeof(IMessage).IsAssignableFrom(ps[2].ParameterType)}");
+                    logger.LogModFine($"  {ps[0].Name}: {ps[0].ParameterType.Name} - {ps[0].ParameterType == typeof(TheMessageBus)}");
+                    logger.LogModFine($"  {ps[1].Name}: {ps[1].ParameterType.Name} - {typeof(Modding.ILogger).IsAssignableFrom(ps[1].ParameterType)}");
+                    logger.LogModFine($"  {ps[2].Name}: {ps[2].ParameterType.Name} - {typeof(IMessage).IsAssignableFrom(ps[2].ParameterType)}");
                 }
-#endif
+
                 if (ps.Length == 3 &&
                     ps[0].ParameterType == typeof(TheMessageBus) &&
                     typeof(Modding.ILogger).IsAssignableFrom(ps[1].ParameterType) &&
                     typeof(IMessage).IsAssignableFrom(ps[2].ParameterType))
                 {
-#if DEBUG
-                    logger.Log($"Validating {GetType().Name}.{m.Name}()'s name");
-#endif
                     string expectedTypeName = ps[2].ParameterType.Name == "IMessage" ? "Message" : ps[2].ParameterType.Name;
+                    logger.LogModDebug($"Validating {GetType().Name}.{m.Name}()'s name with message type {expectedTypeName}");
                     DevUtils.Assert(m.Name == $"On{expectedTypeName}", $"{GetType().Name}.{m.Name}() should be renamed to {GetType().Name}.On{expectedTypeName}()");
                 }
             }

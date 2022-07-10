@@ -48,7 +48,7 @@ namespace GodhomeWinLossTracker.Utils
                     ModDisplay.instance.TextPosition.x - 0.01f,
                     ModDisplay.instance.TextPosition.y
                 );
-                GodhomeWinLossTracker.instance.Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
                 ModDisplay.instance.Redraw();
             }
             else if (Input.GetKeyDown(KeyCode.H))
@@ -57,7 +57,7 @@ namespace GodhomeWinLossTracker.Utils
                     ModDisplay.instance.TextPosition.x + 0.01f,
                     ModDisplay.instance.TextPosition.y
                 );
-                GodhomeWinLossTracker.instance.Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
                 ModDisplay.instance.Redraw();
             }
             else if (Input.GetKeyDown(KeyCode.T))
@@ -66,7 +66,7 @@ namespace GodhomeWinLossTracker.Utils
                     ModDisplay.instance.TextPosition.x,
                     ModDisplay.instance.TextPosition.y + 0.01f
                 );
-                GodhomeWinLossTracker.instance.Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
                 ModDisplay.instance.Redraw();
             }
             else if (Input.GetKeyDown(KeyCode.G))
@@ -75,7 +75,7 @@ namespace GodhomeWinLossTracker.Utils
                     ModDisplay.instance.TextPosition.x,
                     ModDisplay.instance.TextPosition.y - 0.01f
                 );
-                GodhomeWinLossTracker.instance.Log($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
                 ModDisplay.instance.Redraw();
             }
         }

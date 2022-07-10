@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using GodhomeWinLossTracker.MessageBus.Messages;
+using GodhomeWinLossTracker.Utils;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -52,9 +53,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
 
             File.WriteAllText(path, jsonString);
-#if DEBUG
-            logger.Log($"{path} saved: {_mod.folderData.RawWinLosses.Count} records");
-#endif
+            logger.LogMod($"{path} saved: {_mod.folderData.RawWinLosses.Count} records");
         }
 
         private void LoadFolderData(TheMessageBus bus, Modding.ILogger logger)
@@ -71,16 +70,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
-#if DEBUG
-                logger.Log($"{path} loaded: {_mod.folderData.RawWinLosses.Count} records");
-#endif
+                logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} records");
             }
             else
             {
                 _mod.folderData = new FolderData();
-#if DEBUG
-                logger.Log($"{path} doesn't exist. New/empty folder data will be used.");
-#endif
+                logger.LogMod($"{path} doesn't exist. New/empty folder data will be used.");
             }
         }
 
@@ -100,9 +95,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (File.Exists(path))
             {
                 File.Copy(path, backupPath);
-#if DEBUG
-                logger.Log($"{path} backed up to {backupPath}");
-#endif
+                logger.LogMod($"{path} backed up to {backupPath}");
             }
         }
 
@@ -168,9 +161,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     sw.WriteLine();
                 }
             }
-#if DEBUG
-            logger.Log($"{path} exported: {list.Count} lines");
-#endif
+            logger.LogMod($"{path} exported: {list.Count} lines");
         }
 
         private string GetDataSaveFilename()
