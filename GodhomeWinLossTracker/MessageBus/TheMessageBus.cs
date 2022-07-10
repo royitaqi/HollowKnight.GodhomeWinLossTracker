@@ -13,6 +13,13 @@ namespace GodhomeWinLossTracker.MessageBus
     {
         public TheMessageBus(IGodhomeWinLossTracker mod, IEnumerable<Handler> handlers)
         {
+#if DEBUG
+            foreach (Handler h in handlers)
+            {
+                h.Validate(mod);
+            }
+#endif
+
             _logger = mod;
             _handlers = new List<Handler>(handlers);
             _messages = new();
