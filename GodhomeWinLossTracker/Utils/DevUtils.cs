@@ -44,7 +44,7 @@ namespace GodhomeWinLossTracker.Utils
             StringBuilder sb = new();
             foreach (var kvp in _countedLog.OrderByDescending(kvp => kvp.Value))
             {
-                sb.AppendLine($"{kvp.Key}: {kvp.Value}");
+                sb.AppendLine($"CountedLog: {kvp.Key}: {kvp.Value}");
             }
             _countedLog.Clear();
             return sb.ToString();

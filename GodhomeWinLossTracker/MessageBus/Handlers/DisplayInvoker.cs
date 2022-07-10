@@ -10,9 +10,9 @@ using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class DisplayUpdater : Handler
+    internal class DisplayInvoker : Handler
     {
-        public DisplayUpdater(IGodhomeWinLossTracker mod)
+        public DisplayInvoker(IGodhomeWinLossTracker mod)
         {
             _mod = mod;
         }

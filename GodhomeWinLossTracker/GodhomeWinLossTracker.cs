@@ -25,8 +25,8 @@ namespace GodhomeWinLossTracker
         /// Mod
         ///
 
-        // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.4.1.0";
+        // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
+        public override string GetVersion() => "0.4.2.0";
         
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
@@ -42,20 +42,20 @@ namespace GodhomeWinLossTracker
 #endif
                 new BossChangeDetector(),
                 new BossDeathObserver(),
-                new BossHPObserver(),
+                new BossHPUpdater(),
                 new ChallengeMenuInjector(),
-                new DisplayUpdater(this),
+                new DisplayInvoker(this),
                 new EnemyStateObserver(),
+                new FightTracker(() => GameManagerUtils.PlayTimeMs),
                 new GameLoadDetector(),
                 new HoGStatsQueryProcessor(this, str => str.Localize()),
                 new PantheonStatsQueryProcessor(this, str => str.Localize()),
+                new RecordCollector(this),
                 new SaveLoad(this),
                 new SceneChangeObserver(),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
-                new TKHealthObserver(),
-                new WinLossGenerator(() => GameManagerUtils.PlayTimeMs),
-                new WinLossTracker(this)
+                new TKHealthObserver()
             };
             messageBus = new(this, handlers);
 
@@ -64,8 +64,14 @@ namespace GodhomeWinLossTracker
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
-            //FsmUtils.Initialize(); // Turn this line on/off to get FSM related events
-            //ModDisplayUtils.Initialize(); // Turn this line on/off to get ModDisplay related backdoors
+
+            // Turn this line on/off to get FSM related events
+            //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.FsmName == "Mage Knight");
+            //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
+            //FsmUtils.Load(this);
+
+            // Turn this line on/off to get ModDisplay related backdoors
+            //ModDisplayUtils.Initialize(); 
 #endif
 
             ModDisplay.Initialize();

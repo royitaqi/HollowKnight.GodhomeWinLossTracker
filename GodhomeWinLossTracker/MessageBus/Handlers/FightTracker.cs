@@ -4,9 +4,9 @@ using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class WinLossGenerator : Handler
+    internal class FightTracker : Handler
     {
-        public WinLossGenerator(Func<long> getGameTime)
+        public FightTracker(Func<long> getGameTime)
         {
             _getGameTime = getGameTime;
         }
@@ -99,6 +99,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _hitCount = 0;
                 _hitAmount = 0;
                 _bossHP = 1; // Assume boss has 100% HP at start of fight
+                _bossState = null;
             }
         }
 
@@ -123,6 +124,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 msg.Damage,
                 msg.DamageSource,
                 _bossHP,
+                _bossState,
                 _getGameTime() - _fightStartGameTime,
                 RecordSources.Mod
             ));
@@ -134,6 +136,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 _bossHP = (float)msg.HP / msg.MaxHP;
             }
+        }
+
+        public void OnBossStateChange(TheMessageBus bus, Modding.ILogger logger, BossStateChange msg)
+        {
+            _bossState = msg.State.Name;
         }
 
         private void EmitRecord(TheMessageBus bus, bool winLoss)
@@ -166,6 +173,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _hitCount = -1;
             _hitAmount = -1;
             _bossHP = float.NaN;
+            _bossState = null;
         }
 
         Func<long> _getGameTime;
@@ -182,5 +190,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private int _hitCount = -1;
         private int _hitAmount = -1;
         private float _bossHP = float.NaN;
+        private string _bossState = null;
     }
 }
