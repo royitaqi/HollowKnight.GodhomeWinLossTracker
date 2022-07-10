@@ -41,6 +41,7 @@ namespace GodhomeWinLossTracker
                 new MessageBus.Handlers.Logger(),
 #endif
                 new BossChangeDetector(),
+                new BossDeathDetector(),
                 new BossHPObserver(),
                 new DisplayUpdater(this),
                 new GameLoadDetector(),
@@ -56,7 +57,6 @@ namespace GodhomeWinLossTracker
             messageBus = new(this, handlers);
 
             // Production hooks
-            On.BossSceneController.EndBossScene += OnEndBossScene;
             On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
             On.PlayerData.TakeHealth += PlayerData_TakeHealth;
@@ -126,18 +126,6 @@ namespace GodhomeWinLossTracker
         private void HeroController_Start(On.HeroController.orig_Start orig, HeroController self)
         {
             Log($"DEBUG HeroController_Start");
-            orig(self);
-        }
-
-        private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
-        {
-#if DEBUG
-            Log("OnEndBossScene");
-#endif
-            // At least one boss died.
-            // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
-            messageBus.Put(new BossDeath());
-
             orig(self);
         }
 
