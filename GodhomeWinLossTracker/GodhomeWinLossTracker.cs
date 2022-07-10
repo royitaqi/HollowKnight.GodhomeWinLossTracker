@@ -26,7 +26,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.3.1.1";
+        public override string GetVersion() => "0.4.0.0";
         
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
@@ -202,6 +202,10 @@ namespace GodhomeWinLossTracker
         private void OnHeroUpdate()
         {
             if (Input.GetKeyDown(KeyCode.O))
+            {
+                Log(JsonConvert.SerializeObject(folderData));
+            }
+            else if (Input.GetKeyDown(KeyCode.P))
             {
                 Log(DevUtils.DumpLogCount());
             }
