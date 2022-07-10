@@ -1,5 +1,4 @@
 ﻿using GodhomeWinLossTracker.MessageBus.Messages;
-using Vasi;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
