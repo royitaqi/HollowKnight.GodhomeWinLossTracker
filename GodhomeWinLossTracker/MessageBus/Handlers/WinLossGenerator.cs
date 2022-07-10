@@ -137,7 +137,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _hitAmount,
                 _bossHP,
                 _getGameTime() - _fightStartGameTime,
-                RawWinLoss.Sources.Mod
+                RecordSources.Mod
             ));
         }
 
