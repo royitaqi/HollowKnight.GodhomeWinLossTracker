@@ -21,7 +21,7 @@ namespace GodhomeWinLossTracker.Utils
                 false,
                 false,
                 false,
-                // action
+                // Action
                 HeroController.instance.cState.attacking,
                 HeroController.instance.cState.dashing,
                 HeroController.instance.cState.jumping || HeroController.instance.cState.doubleJumping || HeroController.instance.cState.falling, // airborne
@@ -30,7 +30,8 @@ namespace GodhomeWinLossTracker.Utils
                 HeroController.instance.cState.recoiling,
                 false,
                 false,
-                // wall
+                // Wall
+                // - Note: When being hit, before PlayerData_TakeHealth(), these status will already be cleared to false.
                 HeroController.instance.wallLocked,
                 HeroController.instance.cState.wallJumping,
                 HeroController.instance.cState.touchingWall,
@@ -47,7 +48,7 @@ namespace GodhomeWinLossTracker.Utils
                 false,
                 false,
                 false,
-                // Leave one bit unused
+                // Leave the highest bit unused
             };
             return bits.Zip(Enumerable.Range(0, bits.Length), (bit, index) => bit ? (1 << index) : 0).Sum();
         }
