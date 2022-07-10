@@ -25,6 +25,11 @@ namespace GodhomeWinLossTracker.MessageBus
             _messages = new();
             _processing = false;
 
+            foreach (Handler h in handlers)
+            {
+                h.Load(mod, this);
+            }
+
             this.Put(new BusEvent { Event = "initialized" });
         }
 

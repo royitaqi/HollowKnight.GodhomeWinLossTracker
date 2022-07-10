@@ -26,7 +26,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking big feature/fix>.<non-breaking small feature/fix>.<patch>
-        public override string GetVersion() => "0.4.0.1";
+        public override string GetVersion() => "0.4.1.0";
         
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
@@ -41,28 +41,24 @@ namespace GodhomeWinLossTracker
                 new MessageBus.Handlers.Logger(),
 #endif
                 new BossChangeDetector(),
+                new BossDeathObserver(),
                 new BossHPObserver(),
+                new ChallengeMenuInjector(),
                 new DisplayUpdater(this),
+                new EnemyStateObserver(),
                 new GameLoadDetector(),
                 new HoGStatsQueryProcessor(this, str => str.Localize()),
                 new PantheonStatsQueryProcessor(this, str => str.Localize()),
                 new SaveLoad(this),
+                new SceneChangeObserver(),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
+                new TKHealthObserver(),
                 new WinLossGenerator(() => GameManagerUtils.PlayTimeMs),
                 new WinLossTracker(this)
             };
             messageBus = new(this, handlers);
 
-            // Production hooks
-            ModHooks.BeforeSceneLoadHook += OnSceneLoad;
-            On.BossSceneController.EndBossScene += OnEndBossScene;
-            On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
-            On.BossChallengeUI.Setup += BossChallengeUI_Setup;
-            On.PlayerData.TakeHealth += PlayerData_TakeHealth;
-            On.PlayerData.AddHealth += PlayerData_AddHealth;
-            ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
-            On.HealthManager.TakeDamage += HealthManager_TakeDamage;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
@@ -79,44 +75,6 @@ namespace GodhomeWinLossTracker
 #endif
         }
 
-        private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
-        {
-            orig(self, hitInstance);
-            messageBus.Put(new EnemyDamaged());
-        }
-
-        private bool ModHooks_OnEnableEnemyHook(GameObject enemy, bool isAlreadyDead)
-        {
-            messageBus.Put(new EnemyEnabled { Enemy = enemy });
-            return isAlreadyDead;
-        }
-
-        private void PlayerData_AddHealth(On.PlayerData.orig_AddHealth orig, PlayerData self, int amount)
-        {
-            int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            orig(self, amount);
-            int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            int heal = healthAfter - healthBefore;
-
-            if (heal != 0)
-            {
-                messageBus.Put(new TKHeal { Heal = heal, HealthAfter = healthAfter });
-            }
-        }
-
-        private void PlayerData_TakeHealth(On.PlayerData.orig_TakeHealth orig, PlayerData self, int amount)
-        {
-            int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            orig(self, amount);
-            int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            int damage = healthBefore - healthAfter;
-
-            if (damage != 0)
-            {
-                messageBus.Put(new TKHit { Damage = damage, HealthAfter = healthAfter });
-            }
-        }
-
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
         {
             Log($"DEBUG GameManager_Start");
@@ -127,75 +85,6 @@ namespace GodhomeWinLossTracker
         {
             Log($"DEBUG HeroController_Start");
             orig(self);
-        }
-
-        private string OnSceneLoad(string sceneName)
-        {
-#if DEBUG
-            Log($"OnSceneLoad: {sceneName}");
-#endif
-            messageBus.Put(new SceneChange { Name = sceneName });
-            return sceneName;
-        }
-
-        private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
-        {
-#if DEBUG
-            Log("OnEndBossScene");
-#endif
-            // At least one boss died.
-            // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
-            messageBus.Put(new BossDeath());
-
-            orig(self);
-        }
-
-        private void BossDoorChallengeUI_Setup(On.BossDoorChallengeUI.orig_Setup orig, BossDoorChallengeUI self, BossSequenceDoor door)
-        {
-            orig(self, door);
-
-            if (globalData.ShowStatsInChallengeMenu)
-            {
-                int? indexq = GodhomeUtils.GetPantheonIndexFromDescriptionKey(door.descriptionKey);
-                if (indexq == null)
-                {
-                    // Unknown pantheon. No change to challenge menu.
-                    return;
-                }
-                int index = (int)indexq;
-
-                messageBus.Put(new PantheonStatsQuery(index, (runs, pb, churns) =>
-                {
-                    if (runs != null)
-                    {
-                        self.titleTextSuper.text = runs;
-                    }
-                    if (pb != null)
-                    {
-                        self.titleTextMain.text = pb;
-                    }
-                    if (churns != null)
-                    {
-                        self.descriptionText.text = churns;
-                    }
-                }));
-            }
-        }
-
-        private void BossChallengeUI_Setup(On.BossChallengeUI.orig_Setup orig, BossChallengeUI self, BossStatue bossStatue, string bossNameSheet, string bossNameKey, string descriptionSheet, string descriptionKey)
-        {
-            orig(self, bossStatue, bossNameSheet, bossNameKey, descriptionSheet, descriptionKey);
-
-            if (globalData.ShowStatsInChallengeMenu)
-            {
-                messageBus.Put(new HoGStatsQuery(bossNameKey, statsText =>
-                {
-                    if (statsText != null)
-                    {
-                        self.descriptionText.text = statsText;
-                    }
-                }));
-            }
         }
 
 #if DEBUG

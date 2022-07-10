@@ -10,6 +10,14 @@ namespace GodhomeWinLossTracker.MessageBus
 {
     internal abstract class Handler
     {
+        public virtual void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
+        {
+            _mod = mod;
+            _bus = bus;
+        }
+
+        public virtual void Unload(IGodhomeWinLossTracker mod, TheMessageBus bus) { }
+
         public virtual void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
         {
             var msgType = msg.GetType();
@@ -62,5 +70,8 @@ namespace GodhomeWinLossTracker.MessageBus
                 }
             }
         }
+
+        protected IGodhomeWinLossTracker _mod;
+        protected TheMessageBus _bus;
     }
 }
