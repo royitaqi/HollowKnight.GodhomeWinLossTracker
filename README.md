@@ -5,7 +5,7 @@ GodhomeWinLossTracker is a mod for the game Hollow Knight. Its goal is to improv
 
 ## Stats tracking
 
-The mod automatically tracks your boss fight results, be it in Hall of Gods or pantheons.
+The mod automatically tracks your boss fights' win/loss info and hits into, be it in Hall of Gods or pantheons.
 
 In Hall of Gods, different boss variants (dream version or different forms) are tracked separately. For the same boss variant/form, if it has different arenas for Attuned and Ascended/Radiant, they are tracked separately, too. Stats are displayed in the "Challenge" menu.
 
@@ -18,7 +18,7 @@ In pantheons, the number of runs, your PB (personal best, i.e. how far you go in
 
 ## In-game notifications
 
-Whenever the mod detects that a boss fight has ended, it shows a small notification at the bottom left corner of the game to indicate that the result has been recorded.
+Whenever the mod detects a boss fight's win/loss event, it shows a small notification at the bottom left corner of the game to indicate that the result has been recorded.
 
 ![Hollow Knight 2022-06-21 17-48-03 a](https://user-images.githubusercontent.com/14790745/174921467-d980e3f8-1230-45ba-a8b9-acfed7b93d56.png)
 
@@ -46,6 +46,6 @@ You can find the mod's menu by pausing the game -> "Options" -> "Mods" -> "Godho
 
 **Where to find**: All stats can be found in the `GodhomeWinLossTracker` subfolder in your game's save folder. On a PC, you can press `Windows + R`, put in `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker"`, and then press `ENTER`.
 
-**Export as TSV**: While playing (i.e. a game save is loaded), select **Export stats now** in the mod's menu. This will write stats into `Export.SaveX.txt` in TSV format (X being the current game slot ID, from 1 to 4). The exported file can then be imported into spreadsheet apps for data analysis ([an example](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing) data analysis spreadsheet).
+**Export as TSV**: While playing (i.e. a game save is loaded), select **Export stats now** in the mod's menu. This will write stats into `Export.WinLoss.SaveX.txt` and `Export.Hit.SaveX.txt` in TSV format. They each contain win/loss and hit records. The exported files can then be imported into spreadsheet apps for data analysis ([an example](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing) data analysis spreadsheet).
 
 **Automatic export when saving games**: You can turn on **Auto export stats** in the mod's menu. This makes the mod export every time the game is being saved. This helps if you plan to constantly pull stats into another app.
