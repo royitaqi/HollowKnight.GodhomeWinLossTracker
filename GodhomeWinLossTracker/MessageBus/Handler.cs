@@ -56,9 +56,8 @@ namespace GodhomeWinLossTracker.MessageBus
                 {
 #if DEBUG
                     logger.Log($"Validating {GetType().Name}.{m.Name}()'s name");
-
-                    string expectedTypeName = ps[2].ParameterType.Name == "IMessage" ? "Message" : ps[2].ParameterType.Name;
 #endif
+                    string expectedTypeName = ps[2].ParameterType.Name == "IMessage" ? "Message" : ps[2].ParameterType.Name;
                     DevUtils.Assert(m.Name == $"On{expectedTypeName}", $"{GetType().Name}.{m.Name}() should be renamed to {GetType().Name}.On{expectedTypeName}()");
                 }
             }
