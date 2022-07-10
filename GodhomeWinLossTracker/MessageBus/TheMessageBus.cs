@@ -27,7 +27,7 @@ namespace GodhomeWinLossTracker.MessageBus
 
             foreach (Handler h in handlers)
             {
-                h.Load(this, mod);
+                h.Load(mod, this);
             }
 
             this.Put(new BusEvent { Event = "initialized" });

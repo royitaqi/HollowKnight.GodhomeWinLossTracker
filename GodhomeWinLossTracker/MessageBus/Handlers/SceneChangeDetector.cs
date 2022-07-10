@@ -12,10 +12,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class SceneChangeDetector: Handler
     {
-        public override void Load(TheMessageBus bus, ILogger logger)
+        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
         {
             _bus = bus;
-            _logger = logger;
+            _mod = mod;
 
             ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
         }
@@ -23,13 +23,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private string ModHooks_BeforeSceneLoadHook(string sceneName)
         {
 #if DEBUG
-            _logger.Log($"OnSceneLoad: {sceneName}");
+            _mod.Log($"OnSceneLoad: {sceneName}");
 #endif
             _bus.Put(new SceneChange { Name = sceneName });
             return sceneName;
         }
 
+        private IGodhomeWinLossTracker _mod;
         private TheMessageBus _bus;
-        private ILogger _logger;
     }
 }

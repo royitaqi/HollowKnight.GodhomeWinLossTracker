@@ -12,10 +12,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class BossDeathDetector: Handler
     {
-        public override void Load(TheMessageBus bus, ILogger logger)
+        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
         {
             _bus = bus;
-            _logger = logger;
+            _mod = mod;
 
             On.BossSceneController.EndBossScene += OnEndBossScene;
         }
@@ -23,7 +23,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
         {
 #if DEBUG
-            _logger.Log("OnEndBossScene");
+            _mod.Log("OnEndBossScene");
 #endif
             // At least one boss died.
             // Note that this event can trigger twice in a fight (e.g. Oro and Mato).
@@ -32,7 +32,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             orig(self);
         }
 
+        private IGodhomeWinLossTracker _mod;
         private TheMessageBus _bus;
-        private ILogger _logger;
     }
 }

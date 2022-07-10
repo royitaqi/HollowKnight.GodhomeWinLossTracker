@@ -43,6 +43,7 @@ namespace GodhomeWinLossTracker
                 new BossChangeDetector(),
                 new BossDeathDetector(),
                 new BossHPObserver(),
+                new ChallengeUIInjector(),
                 new DisplayUpdater(this),
                 new GameLoadDetector(),
                 new HoGStatsQueryProcessor(this, str => str.Localize()),
@@ -57,8 +58,6 @@ namespace GodhomeWinLossTracker
             messageBus = new(this, handlers);
 
             // Production hooks
-            On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
-            On.BossChallengeUI.Setup += BossChallengeUI_Setup;
             On.PlayerData.TakeHealth += PlayerData_TakeHealth;
             On.PlayerData.AddHealth += PlayerData_AddHealth;
             ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
@@ -127,54 +126,6 @@ namespace GodhomeWinLossTracker
         {
             Log($"DEBUG HeroController_Start");
             orig(self);
-        }
-
-        private void BossDoorChallengeUI_Setup(On.BossDoorChallengeUI.orig_Setup orig, BossDoorChallengeUI self, BossSequenceDoor door)
-        {
-            orig(self, door);
-
-            if (globalData.ShowStatsInChallengeMenu)
-            {
-                int? indexq = GodhomeUtils.GetPantheonIndexFromDescriptionKey(door.descriptionKey);
-                if (indexq == null)
-                {
-                    // Unknown pantheon. No change to challenge menu.
-                    return;
-                }
-                int index = (int)indexq;
-
-                messageBus.Put(new PantheonStatsQuery(index, (runs, pb, churns) =>
-                {
-                    if (runs != null)
-                    {
-                        self.titleTextSuper.text = runs;
-                    }
-                    if (pb != null)
-                    {
-                        self.titleTextMain.text = pb;
-                    }
-                    if (churns != null)
-                    {
-                        self.descriptionText.text = churns;
-                    }
-                }));
-            }
-        }
-
-        private void BossChallengeUI_Setup(On.BossChallengeUI.orig_Setup orig, BossChallengeUI self, BossStatue bossStatue, string bossNameSheet, string bossNameKey, string descriptionSheet, string descriptionKey)
-        {
-            orig(self, bossStatue, bossNameSheet, bossNameKey, descriptionSheet, descriptionKey);
-
-            if (globalData.ShowStatsInChallengeMenu)
-            {
-                messageBus.Put(new HoGStatsQuery(bossNameKey, statsText =>
-                {
-                    if (statsText != null)
-                    {
-                        self.descriptionText.text = statsText;
-                    }
-                }));
-            }
         }
 
 #if DEBUG
