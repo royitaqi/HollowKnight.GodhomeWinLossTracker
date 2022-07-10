@@ -136,6 +136,17 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
         }
 
+        public void OnEnemyEnabled(TheMessageBus bus, Modding.ILogger logger, EnemyEnabled msg)
+        {
+            if (msg.FSM != null)
+            {
+                FsmUtils.HookAllStates(msg.FSM, state =>
+                {
+                    logger.Log($"DEBUG: {msg.EnemyGO.name} {msg.FSM.FsmName} {state.Name}");
+                });
+            }
+        }
+
         private void EmitRecord(TheMessageBus bus, bool winLoss)
         {
             bus.Put(new RawWinLoss(

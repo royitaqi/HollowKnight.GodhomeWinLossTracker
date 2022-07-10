@@ -1,4 +1,5 @@
 ﻿using System;
+using HutongGames.PlayMaker;
 using SFCore.Utils;
 
 namespace GodhomeWinLossTracker.Utils
@@ -95,5 +96,13 @@ namespace GodhomeWinLossTracker.Utils
 
         private static Modding.ILogger _logger;
         private static Func<PlayMakerFSM, bool> _filter;
+
+        public static void HookAllStates(PlayMakerFSM fsm, Action<FsmState> act)
+        {
+            foreach (var state in fsm.FsmStates)
+            {
+                state.InsertMethod(() => act(state), 0);
+            }
+        }
     }
 }
