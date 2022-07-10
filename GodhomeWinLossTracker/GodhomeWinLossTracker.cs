@@ -64,8 +64,12 @@ namespace GodhomeWinLossTracker
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
-            //FsmUtils.Initialize(); // Turn this line on/off to get FSM related events
-            //ModDisplayUtils.Initialize(); // Turn this line on/off to get ModDisplay related backdoors
+
+            // Turn this line on/off to get FSM related events
+            FsmUtils.Load(fsm => fsm.gameObject.name == "Mage Knight" && fsm.name == "Mage Knight");
+
+            // Turn this line on/off to get ModDisplay related backdoors
+            //ModDisplayUtils.Initialize(); 
 #endif
 
             ModDisplay.Initialize();
