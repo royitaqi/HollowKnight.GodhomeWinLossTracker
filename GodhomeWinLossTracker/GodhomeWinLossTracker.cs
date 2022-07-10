@@ -42,20 +42,20 @@ namespace GodhomeWinLossTracker
 #endif
                 new BossChangeDetector(),
                 new BossDeathObserver(),
-                new BossHPObserver(),
+                new BossHPUpdater(),
                 new ChallengeMenuInjector(),
-                new DisplayUpdater(this),
+                new DisplayInvoker(this),
                 new EnemyStateObserver(),
+                new FightTracker(() => GameManagerUtils.PlayTimeMs),
                 new GameLoadDetector(),
                 new HoGStatsQueryProcessor(this, str => str.Localize()),
                 new PantheonStatsQueryProcessor(this, str => str.Localize()),
+                new RecordCollector(this),
                 new SaveLoad(this),
                 new SceneChangeObserver(),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
-                new TKHealthObserver(),
-                new WinLossGenerator(() => GameManagerUtils.PlayTimeMs),
-                new WinLossTracker(this)
+                new TKHealthObserver()
             };
             messageBus = new(this, handlers);
 
@@ -66,8 +66,9 @@ namespace GodhomeWinLossTracker
             On.GameManager.Start += GameManager_Start;
 
             // Turn this line on/off to get FSM related events
-            //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.name == "Mage Knight");
-            FsmUtils.Load(this);
+            //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.FsmName == "Mage Knight");
+            FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
+            //FsmUtils.Load(this);
 
             // Turn this line on/off to get ModDisplay related backdoors
             //ModDisplayUtils.Initialize(); 

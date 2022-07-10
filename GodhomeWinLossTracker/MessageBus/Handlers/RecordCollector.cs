@@ -2,9 +2,9 @@
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class WinLossTracker : Handler
+    internal class RecordCollector : Handler
     {
-        public WinLossTracker(IGodhomeWinLossTracker mod)
+        public RecordCollector(IGodhomeWinLossTracker mod)
         {
             _mod = mod;
         }

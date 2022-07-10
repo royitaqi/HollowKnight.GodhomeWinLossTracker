@@ -4,9 +4,9 @@ using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class WinLossGenerator : Handler
+    internal class FightTracker : Handler
     {
-        public WinLossGenerator(Func<long> getGameTime)
+        public FightTracker(Func<long> getGameTime)
         {
             _getGameTime = getGameTime;
         }
