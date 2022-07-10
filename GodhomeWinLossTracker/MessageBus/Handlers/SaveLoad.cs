@@ -200,7 +200,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 return null;
             }
-            return $"Export.TKHit.Save{slot}.txt";
+            return $"Export.Hit.Save{slot}.txt";
         }
 
         private readonly IGodhomeWinLossTracker _mod;
