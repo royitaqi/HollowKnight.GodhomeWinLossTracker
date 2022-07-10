@@ -11,7 +11,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         public void OnRawWinLoss(TheMessageBus bus, Modding.ILogger logger, RawWinLoss msg)
         {
-            _mod.folderData.RawRecords.Add(msg);
+            _mod.folderData.RawWinLosses.Add(msg);
 
             // Put the message back as registered. This should allow display a UI notification in the game.
             bus.Put(new RegisteredRawWinLoss { InnerMessage = msg });

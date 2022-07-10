@@ -33,7 +33,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 string pbString = "";
                 if (_mod.globalData.NotifyPBTime && record.Wins > 0 && record.Losses == 0)
                 {
-                    var records = _mod.folderData.RawRecords.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
+                    var records = _mod.folderData.RawWinLosses.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
                     if (records.Count >= 10 && records.Min(r => r.FightLengthMs) == record.FightLengthMs)
                     {
                         long minutes = record.FightLengthMs / 1000 / 60;

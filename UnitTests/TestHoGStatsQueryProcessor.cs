@@ -96,7 +96,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "TwoSceneBothStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsTwoSceneBothStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsTwoSceneBothStats) },
                     InputMessages = new IMessage[] { QueryTwoSceneBothStats },
                     ExpectedMessages = new IMessage[] {
                         QueryTwoSceneBothStats,
@@ -106,7 +106,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "TwoSceneOnlyAttunedStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsTwoSceneOnlyAttunedStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsTwoSceneOnlyAttunedStats) },
                     InputMessages = new IMessage[] { QueryTwoSceneOnlyAttunedStats },
                     ExpectedMessages = new IMessage[] {
                         QueryTwoSceneOnlyAttunedStats,
@@ -116,7 +116,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "TwoSceneOnlyAscendedStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsTwoSceneOnlyAscendedStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsTwoSceneOnlyAscendedStats) },
                     InputMessages = new IMessage[] { QueryTwoSceneOnlyAscendedStats },
                     ExpectedMessages = new IMessage[] {
                         QueryTwoSceneOnlyAscendedStats,
@@ -126,7 +126,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "TwoSceneNoStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsTwoSceneNoStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsTwoSceneNoStats) },
                     InputMessages = new IMessage[] { QueryTwoSceneNoStats },
                     ExpectedMessages = new IMessage[] {
                         QueryTwoSceneNoStats,
@@ -136,7 +136,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "OneSceneSomeStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsOneSceneSomeStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsOneSceneSomeStats) },
                     InputMessages = new IMessage[] { QueryOneSceneSomeStats },
                     ExpectedMessages = new IMessage[] {
                         QueryOneSceneSomeStats,
@@ -146,7 +146,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "OneSceneNoStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsOneSceneNoStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsOneSceneNoStats) },
                     InputMessages = new IMessage[] { QueryOneSceneNoStats },
                     ExpectedMessages = new IMessage[] {
                         QueryOneSceneNoStats,

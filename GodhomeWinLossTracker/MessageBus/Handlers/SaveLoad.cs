@@ -53,7 +53,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
             File.WriteAllText(path, jsonString);
 #if DEBUG
-            logger.Log($"{path} saved: {_mod.folderData.RawRecords.Count} records");
+            logger.Log($"{path} saved: {_mod.folderData.RawWinLosses.Count} records");
 #endif
         }
 
@@ -72,7 +72,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
 #if DEBUG
-                logger.Log($"{path} loaded: {_mod.folderData.RawRecords.Count} records");
+                logger.Log($"{path} loaded: {_mod.folderData.RawWinLosses.Count} records");
 #endif
             }
             else
@@ -121,7 +121,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 return;
             }
-            ExportList(bus, logger, filename, _mod.folderData.RawRecords);
+            ExportList(bus, logger, filename, _mod.folderData.RawWinLosses);
         }
 
         private void ExportTKHit(TheMessageBus bus, Modding.ILogger logger)

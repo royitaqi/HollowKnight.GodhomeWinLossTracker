@@ -56,7 +56,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "won",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsWon) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsWon) },
                     InputMessages = new IMessage[] { Query },
                     ExpectedMessages = new IMessage[] {
                         Query,
@@ -66,7 +66,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "halfway through",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsHalfwayThrough) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsHalfwayThrough) },
                     InputMessages = new IMessage[] { Query },
                     ExpectedMessages = new IMessage[] {
                         Query,
@@ -76,7 +76,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "failed from start",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsFailedFromStart) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsFailedFromStart) },
                     InputMessages = new IMessage[] { Query },
                     ExpectedMessages = new IMessage[] {
                         Query,
@@ -86,7 +86,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "never attempted",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsNeverAttempted) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsNeverAttempted) },
                     InputMessages = new IMessage[] { Query },
                     ExpectedMessages = new IMessage[] {
                         Query,
