@@ -47,6 +47,7 @@ namespace GodhomeWinLossTracker
                 new HoGStatsQueryProcessor(this, str => str.Localize()),
                 new PantheonStatsQueryProcessor(this, str => str.Localize()),
                 new SaveLoad(this),
+                new SceneChangeDetector(),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
                 new WinLossGenerator(() => GameManagerUtils.PlayTimeMs),
@@ -55,7 +56,6 @@ namespace GodhomeWinLossTracker
             messageBus = new(this, handlers);
 
             // Production hooks
-            ModHooks.BeforeSceneLoadHook += OnSceneLoad;
             On.BossSceneController.EndBossScene += OnEndBossScene;
             On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
@@ -127,15 +127,6 @@ namespace GodhomeWinLossTracker
         {
             Log($"DEBUG HeroController_Start");
             orig(self);
-        }
-
-        private string OnSceneLoad(string sceneName)
-        {
-#if DEBUG
-            Log($"OnSceneLoad: {sceneName}");
-#endif
-            messageBus.Put(new SceneChange { Name = sceneName });
-            return sceneName;
         }
 
         private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
