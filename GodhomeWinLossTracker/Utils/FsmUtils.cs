@@ -6,8 +6,9 @@ namespace GodhomeWinLossTracker.Utils
     internal static class FsmUtils
     {
         // Enable this can make the FPS drop from 270 to 200
-        public static void Load(Func<PlayMakerFSM, bool> filter = null)
+        public static void Load(Modding.ILogger logger, Func<PlayMakerFSM, bool> filter = null)
         {
+            _logger = logger;
             if (filter == null)
             {
                 // Allow all logs by default
@@ -33,6 +34,7 @@ namespace GodhomeWinLossTracker.Utils
             
             if (_filter(self))
             {
+                _logger.Log($"PlayMakerFSM_OnEnable: GO={self.gameObject.name} FsmName={self.FsmName}");
                 self.MakeLog();
             }
         }
@@ -41,7 +43,7 @@ namespace GodhomeWinLossTracker.Utils
         {
             if (_filter(self))
             {
-                DevUtils.CountedLog($"PlayMakerFSM_Start: GO={self.gameObject.name} FsmName={self.FsmName}");
+                _logger.Log($"PlayMakerFSM_Start: GO={self.gameObject.name} FsmName={self.FsmName}");
             }
             orig(self);
         }
@@ -91,6 +93,7 @@ namespace GodhomeWinLossTracker.Utils
             orig(self, fsmEvent);
         }
 
+        private static Modding.ILogger _logger;
         private static Func<PlayMakerFSM, bool> _filter;
     }
 }

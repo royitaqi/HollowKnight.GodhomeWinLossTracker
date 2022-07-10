@@ -66,7 +66,8 @@ namespace GodhomeWinLossTracker
             On.GameManager.Start += GameManager_Start;
 
             // Turn this line on/off to get FSM related events
-            FsmUtils.Load(fsm => fsm.gameObject.name == "Mage Knight" && fsm.name == "Mage Knight");
+            //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.name == "Mage Knight");
+            FsmUtils.Load(this);
 
             // Turn this line on/off to get ModDisplay related backdoors
             //ModDisplayUtils.Initialize(); 
