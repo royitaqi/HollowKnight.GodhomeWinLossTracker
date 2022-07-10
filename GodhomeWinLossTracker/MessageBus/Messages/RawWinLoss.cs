@@ -16,7 +16,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
             Mod = 1,
         }
 
-        public RawWinLoss(string timestamp, string sequenceName, string bossName, string sceneName, int wins, int losses, int heals, int healAmount, int hits, int hitAmount, long fightLengthMs, Sources source)
+        public RawWinLoss(string timestamp, string sequenceName, string bossName, string sceneName, int wins, int losses, int heals, int healAmount, int hits, int hitAmount, float bossHP, long fightLengthMs, Sources source)
         {
             DevUtils.Assert(timestamp!= null, "timestamp shouldn't be null");
             DevUtils.Assert(sequenceName != null, "sequenceName shouldn't be null");
@@ -33,6 +33,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
             HealAmount = healAmount;
             Hits = hits;
             HitAmount = hitAmount;
+            BossHP = bossHP;
             FightLengthMs = fightLengthMs;
             Source = source;
         }
@@ -55,6 +56,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
         public int HealAmount { get; private set; }
         public int Hits { get; private set; }
         public int HitAmount { get; private set; }
+        public float BossHP { get; private set; }
         public long FightLengthMs { get; private set; }
         public Sources Source { get; private set; }
     }

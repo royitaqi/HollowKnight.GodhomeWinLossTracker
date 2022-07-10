@@ -88,7 +88,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
 
             // Initialize to new boss.
-            if (!msg.IsNoBoss())
+            if (msg.IsBoss())
             {
                 _currentBoss = msg;
                 _tkDreamDeaths = 0;
@@ -98,6 +98,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _healAmount = 0;
                 _hitCount = 0;
                 _hitAmount = 0;
+                _bossHP = float.NaN;
             }
         }
 
@@ -113,6 +114,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _hitAmount += msg.Damage;
         }
 
+        public void OnBossHP(TheMessageBus bus, Modding.ILogger logger, BossHP msg)
+        {
+            if (msg.MaxHP != 0)
+            {
+                _bossHP = (float)msg.HP / msg.MaxHP;
+            }
+        }
+
         private void EmitRecord(TheMessageBus bus, bool winLoss)
         {
             bus.Put(new RawWinLoss(
@@ -126,6 +135,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _healAmount,
                 _hitCount,
                 _hitAmount,
+                _bossHP,
                 _getGameTime() - _fightStartGameTime,
                 RawWinLoss.Sources.Mod
             ));
@@ -141,6 +151,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _healAmount = -1;
             _hitCount = -1;
             _hitAmount = -1;
+            _bossHP = float.NaN;
         }
 
         Func<long> _getGameTime;
@@ -156,5 +167,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private int _healAmount = -1;
         private int _hitCount = -1;
         private int _hitAmount = -1;
+        private float _bossHP = float.NaN;
     }
 }
