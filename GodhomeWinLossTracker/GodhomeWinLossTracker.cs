@@ -41,27 +41,24 @@ namespace GodhomeWinLossTracker
                 new MessageBus.Handlers.Logger(),
 #endif
                 new BossChangeDetector(),
-                new BossDeathDetector(),
+                new BossDeathObserver(),
                 new BossHPObserver(),
-                new ChallengeUIInjector(),
+                new ChallengeMenuInjector(),
                 new DisplayUpdater(this),
+                new EnemyStateObserver(),
                 new GameLoadDetector(),
                 new HoGStatsQueryProcessor(this, str => str.Localize()),
                 new PantheonStatsQueryProcessor(this, str => str.Localize()),
                 new SaveLoad(this),
-                new SceneChangeDetector(),
+                new SceneChangeObserver(),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
+                new TKHealthObserver(),
                 new WinLossGenerator(() => GameManagerUtils.PlayTimeMs),
                 new WinLossTracker(this)
             };
             messageBus = new(this, handlers);
 
-            // Production hooks
-            On.PlayerData.TakeHealth += PlayerData_TakeHealth;
-            On.PlayerData.AddHealth += PlayerData_AddHealth;
-            ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
-            On.HealthManager.TakeDamage += HealthManager_TakeDamage;
 #if DEBUG
             // Debug hooks
             ModHooks.HeroUpdateHook += OnHeroUpdate;
@@ -76,44 +73,6 @@ namespace GodhomeWinLossTracker
 #if DEBUG
             Log("Initialized");
 #endif
-        }
-
-        private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
-        {
-            orig(self, hitInstance);
-            messageBus.Put(new EnemyDamaged());
-        }
-
-        private bool ModHooks_OnEnableEnemyHook(GameObject enemy, bool isAlreadyDead)
-        {
-            messageBus.Put(new EnemyEnabled { Enemy = enemy });
-            return isAlreadyDead;
-        }
-
-        private void PlayerData_AddHealth(On.PlayerData.orig_AddHealth orig, PlayerData self, int amount)
-        {
-            int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            orig(self, amount);
-            int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            int heal = healthAfter - healthBefore;
-
-            if (heal != 0)
-            {
-                messageBus.Put(new TKHeal { Heal = heal, HealthAfter = healthAfter });
-            }
-        }
-
-        private void PlayerData_TakeHealth(On.PlayerData.orig_TakeHealth orig, PlayerData self, int amount)
-        {
-            int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            orig(self, amount);
-            int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
-            int damage = healthBefore - healthAfter;
-
-            if (damage != 0)
-            {
-                messageBus.Put(new TKHit { Damage = damage, HealthAfter = healthAfter });
-            }
         }
 
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)

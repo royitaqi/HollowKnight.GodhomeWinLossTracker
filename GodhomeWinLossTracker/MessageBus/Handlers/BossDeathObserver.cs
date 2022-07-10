@@ -10,13 +10,11 @@ using Modding;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class BossDeathDetector: Handler
+    internal class BossDeathObserver: Handler
     {
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
         {
-            _bus = bus;
-            _mod = mod;
-
+            base.Load(mod, bus);
             On.BossSceneController.EndBossScene += OnEndBossScene;
         }
 
@@ -31,8 +29,5 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
             orig(self);
         }
-
-        private IGodhomeWinLossTracker _mod;
-        private TheMessageBus _bus;
     }
 }

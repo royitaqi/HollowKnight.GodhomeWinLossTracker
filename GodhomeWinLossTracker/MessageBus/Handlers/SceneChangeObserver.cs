@@ -10,13 +10,11 @@ using Modding;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class SceneChangeDetector: Handler
+    internal class SceneChangeObserver: Handler
     {
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
         {
-            _bus = bus;
-            _mod = mod;
-
+            base.Load(mod, bus);
             ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
         }
 
@@ -28,8 +26,5 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _bus.Put(new SceneChange { Name = sceneName });
             return sceneName;
         }
-
-        private IGodhomeWinLossTracker _mod;
-        private TheMessageBus _bus;
     }
 }

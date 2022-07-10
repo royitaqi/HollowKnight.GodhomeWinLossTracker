@@ -10,13 +10,11 @@ using Modding;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class ChallengeUIInjector : Handler
+    internal class ChallengeMenuInjector : Handler
     {
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
         {
-            _mod = mod;
-            _bus = bus;
-
+            base.Load(mod, bus);
             On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
         }
@@ -68,8 +66,5 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }));
             }
         }
-
-        private IGodhomeWinLossTracker _mod;
-        private TheMessageBus _bus;
     }
 }
