@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using GodhomeWinLossTracker.MessageBus.Messages;
+using GodhomeWinLossTracker.Utils;
 using Modding;
 using UnityEngine;
 
@@ -22,7 +23,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private bool ModHooks_OnEnableEnemyHook(GameObject enemy, bool isAlreadyDead)
         {
-            _bus.Put(new EnemyEnabled { EnemyGO = enemy, IsBoss = IsBoss(enemy), FSM = SelectFSM(enemy) });
+            var isBoss = IsBoss(enemy);
+            var fsm = isBoss ? SelectFSM(enemy) : null;
+
+            if (fsm != null)
+            {
+                FsmUtils.HookAllStates(fsm, state =>
+                {
+                    _bus.Put(new BossStateChange { BossGO = enemy, FSM = fsm, State = state });
+                });
+            }
+
+            _bus.Put(new EnemyEnabled { EnemyGO = enemy, IsBoss = isBoss, FSM = fsm });
             return isAlreadyDead;
         }
 
@@ -35,12 +47,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private PlayMakerFSM SelectFSM(GameObject enemy)
         {
-            // Don't find FSM for minions
-            if (!IsBoss(enemy))
-            {
-                return null;
-            }
-
             // Priority of selection:
             // 1. The only FSM
             // 2. The FSM with name "BOSS_NAME Control"
