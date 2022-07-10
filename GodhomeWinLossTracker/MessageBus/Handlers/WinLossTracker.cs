@@ -17,9 +17,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             bus.Put(new RegisteredRawWinLoss { InnerMessage = msg });
         }
 
-        public void OnRawTKHit(TheMessageBus bus, Modding.ILogger logger, RawTKHit msg)
+        public void OnRawHit(TheMessageBus bus, Modding.ILogger logger, RawHit msg)
         {
-            _mod.folderData.RawTKHits.Add(msg);
+            _mod.folderData.RawHits.Add(msg);
         }
 
         private readonly IGodhomeWinLossTracker _mod;

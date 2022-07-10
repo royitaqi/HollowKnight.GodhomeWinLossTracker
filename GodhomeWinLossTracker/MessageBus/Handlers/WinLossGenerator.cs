@@ -113,7 +113,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _hitCount++;
             _hitAmount += msg.Damage;
 
-            bus.Put(new RawTKHit(
+            bus.Put(new RawHit(
                 DateTime.Now.ToString("yyyy'-'MM'-'dd HH':'mm':'ss"),
                 _currentSequence,
                 _currentBoss.BossName,

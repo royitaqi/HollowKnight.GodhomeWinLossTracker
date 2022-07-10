@@ -8,9 +8,9 @@ using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {
-    public class RawTKHit : IMessage
+    public class RawHit : IMessage
     {
-        public RawTKHit(string timestamp, string sequenceName, string bossName, string sceneName, int tkStatus, int tkHealthBefore, int damageAmount, TKHit.DamageSources damageSource, float bossHP, long fightLengthMs, RecordSources recordSource)
+        public RawHit(string timestamp, string sequenceName, string bossName, string sceneName, int tkStatus, int tkHealthBefore, int damageAmount, TKHit.DamageSources damageSource, float bossHP, long fightLengthMs, RecordSources recordSource)
         {
             DevUtils.Assert(timestamp!= null, "timestamp shouldn't be null");
             DevUtils.Assert(sequenceName != null, "sequenceName shouldn't be null");

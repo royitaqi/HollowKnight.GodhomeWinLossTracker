@@ -132,7 +132,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 return;
             }
-            ExportList(bus, logger, filename, _mod.folderData.RawTKHits);
+            ExportList(bus, logger, filename, _mod.folderData.RawHits);
         }
 
         private void ExportList<T>(TheMessageBus bus, Modding.ILogger logger, string filename, List<T> list)
