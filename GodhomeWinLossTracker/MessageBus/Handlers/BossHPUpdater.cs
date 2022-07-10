@@ -47,7 +47,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
     //   (reset to 280 no matter the health)
     //   - 6th phase: 280/2280
 
-    internal class BossHPObserver : Handler
+    internal class BossHPUpdater : Handler
     {
         public void OnBossChange(TheMessageBus bus, Modding.ILogger logger, BossChange msg)
         {
@@ -60,7 +60,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             if (_isInFight)
             {
-                HealthManager hm = msg.Enemy.GetComponent<HealthManager>();
+                HealthManager hm = msg.EnemyGO.GetComponent<HealthManager>();
                 // The magic number 200 is borrowed from EnemyHPBar::Instance_OnEnableEnemyHook.
                 if (!hm.isDead && IsBoss(hm))
                 {

@@ -21,7 +21,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private bool ModHooks_OnEnableEnemyHook(GameObject enemy, bool isAlreadyDead)
         {
-            _bus.Put(new EnemyEnabled { Enemy = enemy });
+            _bus.Put(new EnemyEnabled { EnemyGO = enemy });
             return isAlreadyDead;
         }
     }

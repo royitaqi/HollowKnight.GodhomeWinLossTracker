@@ -9,10 +9,10 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
 {
     internal class EnemyEnabled : IMessage
     {
-        public GameObject Enemy { get; set; }
+        public GameObject EnemyGO { get; set; }
         public override string ToString()
         {
-            return $"Enemy enabled: name={Enemy.name} max_hp={Enemy.GetComponent<HealthManager>().hp}";
+            return $"Enemy enabled: name={EnemyGO.name} max_hp={EnemyGO.GetComponent<HealthManager>().hp}";
         }
     }
 }
