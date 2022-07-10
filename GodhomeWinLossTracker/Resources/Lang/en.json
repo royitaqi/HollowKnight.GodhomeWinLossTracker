@@ -55,7 +55,7 @@
 	"Menu/Show stats in challenge menus": "Show stats in challenge menus",
 	"Menu/When saving games": "When saving games",
 	"ModName": "Godhome Win Loss Tracker",
-	"Notification/Exported to {0}": "Exported to {0}",
+	"Notification/Exported successfully": "Exported successfully",
 	"Notification/Loss {0} in {1}": "Lost to {0} in {1}",
 	"Notification/PB": "PB",
 	"Notification/Won {0} in {1}": "Won against {0} in {1}",

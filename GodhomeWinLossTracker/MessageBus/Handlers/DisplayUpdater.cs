@@ -33,7 +33,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 string pbString = "";
                 if (_mod.globalData.NotifyPBTime && record.Wins > 0 && record.Losses == 0)
                 {
-                    var records = _mod.folderData.RawRecords.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
+                    var records = _mod.folderData.RawWinLosses.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
                     if (records.Count >= 10 && records.Min(r => r.FightLengthMs) == record.FightLengthMs)
                     {
                         long minutes = record.FightLengthMs / 1000 / 60;
@@ -51,11 +51,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // For any other types of message, simply display the message itself.
             if (_mod.globalData.NotifyForExport)
             {
-                string text = string.Format(
-                    "Notification/Exported to {0}".Localize(),
-                    msg.Filename
-                );
-                ModDisplay.instance.Notify(text);
+                ModDisplay.instance.Notify("Notification/Exported successfully".Localize());
             }
         }
 

@@ -22,41 +22,41 @@ namespace UnitTests
         private static readonly HoGStatsQuery QueryTwoSceneBothStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneBothStats = new[]
         {
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // Irellevant sequence
-            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAscendedScene, 10, 5, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAscendedScene, 10, 5, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // Reverted order of scenes
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 10, 5, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
-            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAttunedScene, 10, 5, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 10, 5, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
+            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAttunedScene, 10, 5, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // More stats
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 4, 1, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
-            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAttunedScene, 4, 1, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 20, 45, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
-            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAscendedScene, 20, 45, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 4, 1, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
+            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAttunedScene, 4, 1, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 20, 45, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
+            new RawWinLoss("", IrrelevantSequenceName, BossA, BossAAscendedScene, 20, 45, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
         };
         private static readonly string ExpectedTwoSceneBothStats = "Attuned: 20 fights, 14 wins (70%)\r\nAscended+: 80 fights, 30 wins (38%)\r\n";
 
         private static readonly HoGStatsQuery QueryTwoSceneOnlyAttunedStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneOnlyAttunedStats = new[]
         {
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 10, 5, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 10, 5, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // More stats
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 4, 1, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 4, 1, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
         };
         private static readonly string ExpectedTwoSceneOnlyAttunedStats = "Attuned: 20 fights, 14 wins (70%)\r\n";
 
         private static readonly HoGStatsQuery QueryTwoSceneOnlyAscendedStats = new(BossANameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsTwoSceneOnlyAscendedStats = new[]
         {
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 10, 5, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // More stats
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 20, 45, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 20, 45, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
         };
         private static readonly string ExpectedTwoSceneOnlyAscendedStats = "Ascended+: 80 fights, 30 wins (38%)\r\n";
 
@@ -64,18 +64,18 @@ namespace UnitTests
         private static readonly RawWinLoss[] RecordsTwoSceneNoStats = new[]
         {
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 1000, 2000, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
         };
         private static readonly string ExpectedTwoSceneNoStats = "null";
 
         private static readonly HoGStatsQuery QueryOneSceneSomeStats = new(BossBNameKey, DoNothing);
         private static readonly RawWinLoss[] RecordsOneSceneSomeStats = new[]
         {
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 10, 5, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 10, 5, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 1000, 2000, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAscendedScene, 1000, 2000, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // More stats
-            new RawWinLoss("", SequenceName, BossB, BossBScene, 20, 45, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossB, BossBScene, 20, 45, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
         };
         private static readonly string ExpectedOneSceneSomeStats = "80 fights, 30 wins (38%)\r\n";
 
@@ -83,9 +83,9 @@ namespace UnitTests
         private static readonly RawWinLoss[] RecordsOneSceneNoStats = new[]
         {
             // Irrelevant boss
-            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 1000, 2000, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", SequenceName, BossA, BossAAttunedScene, 1000, 2000, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
             // Irellevant sequence
-            new RawWinLoss("", IrrelevantSequenceName, BossB, BossBScene, 10, 5, 0, 0, 0, 0, 0, 0, RawWinLoss.Sources.Manual),
+            new RawWinLoss("", IrrelevantSequenceName, BossB, BossBScene, 10, 5, 0, 0, 0, 0, 0, 0, G.RecordSources.Test),
         };
         private static readonly string ExpectedOneSceneNoStats = "null";
 
@@ -96,7 +96,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "TwoSceneBothStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsTwoSceneBothStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsTwoSceneBothStats) },
                     InputMessages = new IMessage[] { QueryTwoSceneBothStats },
                     ExpectedMessages = new IMessage[] {
                         QueryTwoSceneBothStats,
@@ -106,7 +106,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "TwoSceneOnlyAttunedStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsTwoSceneOnlyAttunedStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsTwoSceneOnlyAttunedStats) },
                     InputMessages = new IMessage[] { QueryTwoSceneOnlyAttunedStats },
                     ExpectedMessages = new IMessage[] {
                         QueryTwoSceneOnlyAttunedStats,
@@ -116,7 +116,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "TwoSceneOnlyAscendedStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsTwoSceneOnlyAscendedStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsTwoSceneOnlyAscendedStats) },
                     InputMessages = new IMessage[] { QueryTwoSceneOnlyAscendedStats },
                     ExpectedMessages = new IMessage[] {
                         QueryTwoSceneOnlyAscendedStats,
@@ -126,7 +126,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "TwoSceneNoStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsTwoSceneNoStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsTwoSceneNoStats) },
                     InputMessages = new IMessage[] { QueryTwoSceneNoStats },
                     ExpectedMessages = new IMessage[] {
                         QueryTwoSceneNoStats,
@@ -136,7 +136,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "OneSceneSomeStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsOneSceneSomeStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsOneSceneSomeStats) },
                     InputMessages = new IMessage[] { QueryOneSceneSomeStats },
                     ExpectedMessages = new IMessage[] {
                         QueryOneSceneSomeStats,
@@ -146,7 +146,7 @@ namespace UnitTests
                 new TestUtils.MessageBusTestCase
                 {
                     Name = "OneSceneNoStats",
-                    FolderData = new G.FolderData { RawRecords = new(RecordsOneSceneNoStats) },
+                    FolderData = new G.FolderData { RawWinLosses = new(RecordsOneSceneNoStats) },
                     InputMessages = new IMessage[] { QueryOneSceneNoStats },
                     ExpectedMessages = new IMessage[] {
                         QueryOneSceneNoStats,

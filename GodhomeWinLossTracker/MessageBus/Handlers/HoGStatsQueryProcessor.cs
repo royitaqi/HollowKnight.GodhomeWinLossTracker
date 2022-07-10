@@ -35,7 +35,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 string scene = scenes[i];
                 string prefix = prefixes[i];
 
-                var records = _mod.folderData.RawRecords.Where(r => r.SequenceName == "HoG" && r.SceneName == scene);
+                var records = _mod.folderData.RawWinLosses.Where(r => r.SequenceName == "HoG" && r.SceneName == scene);
                 int wins = records.Sum(r => r.Wins);
                 int total = records.Sum(r => r.Wins + r.Losses);
 

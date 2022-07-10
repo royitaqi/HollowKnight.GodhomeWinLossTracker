@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {
-    internal class TKHit: IMessage
+    public class TKHit: IMessage
     {
-        public enum Types
+        public enum DamageSources
         {
             Unknown = 0,
             Enemy = 1,
@@ -16,12 +16,13 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
         }
 
         public int Damage { get; set; }
+        public int HealthBefore => HealthAfter + Damage;
         public int HealthAfter { get; set; }
-        public Types Type { get; set; }
+        public DamageSources DamageSource { get; set; }
 
         public override string ToString()
         {
-            return $"TK took hit: Damage={Damage} HealthAfter={HealthAfter} Type={Type}";
+            return $"TK took hit: Damage={Damage} HealthAfter={HealthAfter} DamageSource={DamageSource}";
         }
     }
 }

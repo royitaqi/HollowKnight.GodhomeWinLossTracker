@@ -55,7 +55,7 @@
 	"Menu/Show stats in challenge menus": "在 挑战菜单 中显示胜率",
 	"Menu/When saving games": "游戏存档时触发",
 	"ModName": "神居胜负记录器",
-	"Notification/Exported to {0}": "成功导出 {0}",
+	"Notification/Exported successfully": "成功导出",
 	"Notification/Loss {0} in {1}": "在 {1} 中负于 {0}",
 	"Notification/PB": "个人最快时间",
 	"Notification/Won {0} in {1}": "在 {1} 中战胜了 {0}",

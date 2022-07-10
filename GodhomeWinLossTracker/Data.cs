@@ -6,10 +6,19 @@ using GodhomeWinLossTracker.MessageBus.Messages;
 
 namespace GodhomeWinLossTracker
 {
+    public enum RecordSources
+    {
+        Manual = 0,
+        Mod = 1,
+        Test = 2,
+    }
+
     [Serializable]
     public class FolderData
     {
-        public List<RawWinLoss> RawRecords = new();
+        [JsonProperty("RawRecords")]
+        public List<RawWinLoss> RawWinLosses = new();
+        public List<RawHit> RawHits = new();
     }
 
     [Serializable]

@@ -22,7 +22,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             int index = msg.PantheonIndex;
 
             string sequenceName = $"P{index + 1}";
-            var records = _mod.folderData.RawRecords
+            var records = _mod.folderData.RawWinLosses
                 .Where(r => r.SequenceName == sequenceName)
                 .GroupBy(
                     r => r.SceneName,
