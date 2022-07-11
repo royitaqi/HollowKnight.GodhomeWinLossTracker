@@ -4,7 +4,7 @@ A **mod** for the game **Hollow Knight**.
 
 The mod's **goal** is to **improve Godhome boss fight training experience by stats tracking and data analysis**.
 
-## Features
+## Features and screenshots
 
 All in Godhome (both Hall of Gods and pantheons):
 * [**Win/loss and hit stats tracking**](#winloss-and-hit-stats-tracking) happens automatically during boss fights.
