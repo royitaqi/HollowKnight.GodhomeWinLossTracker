@@ -4,7 +4,9 @@ A **mod** for the game **Hollow Knight**.
 
 The mod's **goal** is to **improve Godhome boss fight training experience by stats tracking and data analysis**.
 
-## Have a question or a bug?
+## How to contact me?
+
+If you have any questions, suggestions or bugs, please feel free to reach out. I will be happy to hear them.
 
 Either create an issue here in github.com, or join my discord server: https://discord.gg/vqKTF26VGX
 
