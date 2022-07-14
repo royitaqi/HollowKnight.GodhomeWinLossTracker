@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GodhomeWinLossTracker.MessageBus.Messages;
+﻿using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
-using Modding;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -25,15 +18,15 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
             if (_mod.globalData.ShowStatsInChallengeMenu)
             {
+                // Unidentified pantheons are okay to pass into the query.
+                // They will change the sequence to null.
                 int? indexq = GodhomeUtils.GetPantheonIndexFromDescriptionKey(door.descriptionKey);
-                if (indexq == null)
-                {
-                    // Unknown pantheon. No change to challenge menu.
-                    return;
-                }
-                int index = (int)indexq;
 
-                _bus.Put(new PantheonStatsQuery(index, (runs, pb, churns) =>
+                var attributes = self.descriptionText.text == "GodSeeker+/SelectSegment".Localize()
+                    ? GodhomeUtils.PantheonAttributes.IsSegment
+                    : GodhomeUtils.PantheonAttributes.None;
+
+                _bus.Put(new PantheonStatsQuery(indexq, attributes, (runs, pb, churns) =>
                 {
                     if (runs != null)
                     {

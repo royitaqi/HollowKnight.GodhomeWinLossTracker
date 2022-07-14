@@ -19,9 +19,21 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         public void OnPantheonStatsQuery(TheMessageBus bus, Modding.ILogger logger, PantheonStatsQuery msg)
         {
-            int index = msg.PantheonIndex;
+            // If the pantheon is unidentified, don't call callback.
+            int? indexq = msg.PantheonIndex;
+            if (indexq == null)
+            {
+                return;
+            }
 
-            string sequenceName = $"P{index + 1}";
+            // If it's the p5 segment portal in GodSeeker+, don't call callback.
+            if (msg.PantheonAttribute == GodhomeUtils.PantheonAttributes.IsSegment)
+            {
+                return;
+            }
+
+            int index = (int)indexq;
+            string sequenceName = GodhomeUtils.GetPantheonSequenceName(index, msg.PantheonAttribute);
             var records = _mod.folderData.RawWinLosses
                 .Where(r => r.SequenceName == sequenceName)
                 .GroupBy(

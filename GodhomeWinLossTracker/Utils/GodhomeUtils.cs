@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace GodhomeWinLossTracker.Utils
@@ -37,6 +36,29 @@ namespace GodhomeWinLossTracker.Utils
         internal static string GetNullableBossNameByHoGNameKey(string hogNameKey)
         {
             return BossInfos.FirstOrDefault(info => info.HoGNameKey == hogNameKey)?.CanonicalName;
+        }
+
+        [Flags]
+        public enum PantheonAttributes
+        {
+            None = 0,
+            IsSegment = 1,
+        }
+
+        internal static string GetPantheonSequenceName(int? pantheonIndex, PantheonAttributes attributes)
+        {
+            // No index, no name.
+            if (pantheonIndex == null)
+            {
+                return null;
+            }
+
+            string name = $"P{pantheonIndex + 1}";
+            if (attributes == PantheonAttributes.IsSegment)
+            {
+                name += "/Seg";
+            }
+            return name;
         }
 
         private static int? GetPantheonIndex(string previousSceneName, string bossSceneName)

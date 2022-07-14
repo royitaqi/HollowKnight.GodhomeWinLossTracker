@@ -11,26 +11,23 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class SequenceChangeDetector: Handler
     {
+        // Detect HoG sequence by scene GG_Workshop
         public void OnSceneChange(TheMessageBus bus, Modding.ILogger logger, SceneChange msg)
         {
-            // Detect HoG sequence by scene GG_Workshop
-            if (msg is SceneChange)
-            {
-                string currentSceneName = (msg as SceneChange).Name;
-                DevUtils.Assert(currentSceneName != null, "currentSceneName shouldn't be null");
+            string currentSceneName = msg.Name;
+            DevUtils.Assert(currentSceneName != null, "currentSceneName shouldn't be null");
 
-                if (currentSceneName == "GG_Workshop")
-                {
-                    bus.Put(new SequenceChange { Name = "HoG" });
-                }
+            if (currentSceneName == "GG_Workshop")
+            {
+                bus.Put(new SequenceChange { Name = "HoG" });
             }
         }
 
         public void OnPantheonStatsQuery(TheMessageBus bus, Modding.ILogger logger, PantheonStatsQuery msg)
         {
-            // Detect pantheon sequences by stats queries
-            int pantheonIndex = msg.PantheonIndex;
-            bus.Put(new SequenceChange { Name = $"P{pantheonIndex + 1}" });
+            // Detect pantheon sequences by stats queries.
+            // When the pantheon index is null (i.e. unidentified pantheon), the sequence name becomes null as returned by `GodhomeUtils.GetPantheonSequenceName()`.
+            bus.Put(new SequenceChange { Name = GodhomeUtils.GetPantheonSequenceName(msg.PantheonIndex, msg.PantheonAttribute) });
         }
     }
 }
