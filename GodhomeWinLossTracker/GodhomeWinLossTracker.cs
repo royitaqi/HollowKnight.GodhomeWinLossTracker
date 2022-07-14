@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using Modding;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using GodhomeWinLossTracker.MessageBus;
 using GodhomeWinLossTracker.MessageBus.Handlers;
 using GodhomeWinLossTracker.MessageBus.Messages;
-using Newtonsoft.Json;
-using Vasi;
 using GodhomeWinLossTracker.Utils;
+using Modding;
+using UnityEngine;
+using Logger = GodhomeWinLossTracker.MessageBus.Handlers.Logger;
 
 namespace GodhomeWinLossTracker
 {
@@ -26,8 +22,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
-        public override string GetVersion() => "0.4.3.0";
-        
+        public override string GetVersion() => "0.4.3.1";
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
             this.LogMod("Initializing mod");
@@ -36,11 +31,12 @@ namespace GodhomeWinLossTracker
 
             Handler[] handlers = new Handler[] {
                 // Put logger first, so that it prints messages on the bus before other handlers can handle it.
-                new MessageBus.Handlers.Logger(),
+                new Logger(),
                 new BossChangeDetector(),
                 new BossDeathObserver(),
                 new BossHPUpdater(),
                 new ChallengeMenuInjector(),
+                new Debugger(),
                 new DisplayInvoker(this),
                 new EnemyStateObserver(),
                 new FightTracker(() => GameManagerUtils.PlayTimeMs),
@@ -57,11 +53,6 @@ namespace GodhomeWinLossTracker
             messageBus = new(this, handlers);
 
 #if DEBUG
-            // Debug hooks
-            ModHooks.HeroUpdateHook += OnHeroUpdate;
-            On.HeroController.Start += HeroController_Start;
-            On.GameManager.Start += GameManager_Start;
-
             // Turn this line on/off to get FSM related events
             //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.FsmName == "Mage Knight");
             //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
@@ -75,45 +66,6 @@ namespace GodhomeWinLossTracker
 
             this.LogMod("Initialized");
         }
-
-#if DEBUG
-        private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
-        {
-            this.LogMod($"GameManager_Start");
-            orig(self);
-        }
-
-        private void HeroController_Start(On.HeroController.orig_Start orig, HeroController self)
-        {
-            this.LogMod($"HeroController_Start");
-            orig(self);
-        }
-
-        private void OnHeroUpdate()
-        {
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                this.LogMod(JsonConvert.SerializeObject(folderData));
-            }
-            else if (Input.GetKeyDown(KeyCode.P))
-            {
-                this.LogMod(LoggingUtils.DumpLogCount());
-            }
-            else if (Input.GetKeyDown(KeyCode.T))
-            {
-                messageBus.Put(new BusEvent { ForTest = true });
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-            }
-        }
-#endif
 
         ///
         /// ICustomMenuMod
