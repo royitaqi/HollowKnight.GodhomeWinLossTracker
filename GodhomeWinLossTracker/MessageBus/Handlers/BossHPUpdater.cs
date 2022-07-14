@@ -49,14 +49,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
     internal class BossHPUpdater : Handler
     {
-        public void OnBossChange(TheMessageBus bus, Modding.ILogger logger, BossChange msg)
+        public void OnBossChange(BossChange msg)
         {
             _healthManagers.Clear();
             _isInFight = msg.IsBoss();
             _maxHP = 0;
         }
 
-        public void OnEnemyEnabled(TheMessageBus bus, Modding.ILogger logger, EnemyEnabled msg)
+        public void OnEnemyEnabled(EnemyEnabled msg)
         {
             if (_isInFight && msg.IsBoss)
             {
@@ -66,11 +66,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
         }
 
-        public void OnEnemyDamaged(TheMessageBus bus, Modding.ILogger logger, EnemyDamaged msg)
+        public void OnEnemyDamaged(EnemyDamaged msg)
         {
             if (_isInFight)
             {
-                bus.Put(new BossHP { MaxHP = _maxHP, HP = Math.Min(_maxHP, _healthManagers.Select(hm => GetHP(hm)).Sum()) });
+                _bus.Put(new BossHP { MaxHP = _maxHP, HP = Math.Min(_maxHP, _healthManagers.Select(hm => GetHP(hm)).Sum()) });
             }
         }
 

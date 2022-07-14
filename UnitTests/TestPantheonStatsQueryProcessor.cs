@@ -101,7 +101,7 @@ namespace UnitTests
         {
             foreach (var testCase in GetTestCases())
             {
-                testCase.HandlersCreator = mod => new[] { new PantheonStatsQueryProcessor(mod, str => str.Substring(str.LastIndexOf('/') + 1)) };
+                testCase.HandlersCreator = mod => new[] { new PantheonStatsQueryProcessor(str => str.Substring(str.LastIndexOf('/') + 1)) };
                 testCase.InputMessages = testCase.InputMessages;
                 testCase.ExpectedMessages = testCase.ExpectedMessages;
                 TestUtils.TestMessageBus(testCase);

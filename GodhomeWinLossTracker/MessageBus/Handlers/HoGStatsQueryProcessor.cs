@@ -11,13 +11,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class HoGStatsQueryProcessor : Handler
     {
-        public HoGStatsQueryProcessor(IGodhomeWinLossTracker mod, Func<string, string> localizer)
+        public HoGStatsQueryProcessor(Func<string, string> localizer)
         {
-            _mod = mod;
             _localizer = localizer;
         }
 
-        public void OnHoGStatsQuery(TheMessageBus bus, Modding.ILogger logger, HoGStatsQuery msg)
+        public void OnHoGStatsQuery(HoGStatsQuery msg)
         {
             // Get all scenes of the boss, ordered.
             // Also get matching prefixes.
@@ -58,11 +57,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 #if DEBUG
             // For unittesting
             text ??= "null";
-            bus.Put(new BusEvent { ForTest = true, Event = text });
+            _bus.Put(new BusEvent { ForTest = true, Event = text });
 #endif
         }
 
-        private readonly IGodhomeWinLossTracker _mod;
         private readonly Func<string, string> _localizer;
     }
 }

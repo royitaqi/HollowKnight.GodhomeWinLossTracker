@@ -4,18 +4,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class GameLoadDetector : Handler
     {
-        public void OnLoadFolderData(TheMessageBus bus, Modding.ILogger logger, LoadFolderData msg)
+        public void OnLoadFolderData(LoadFolderData msg)
         {
             _freshlyLoaded = true;
         }
 
-        public void OnSceneChange(TheMessageBus bus, Modding.ILogger logger, SceneChange msg)
+        public void OnSceneChange(SceneChange msg)
         {
             // Trigger game loaded event by first scene change
             if (_freshlyLoaded)
             {
                 _freshlyLoaded = false;
-                bus.Put(new GameLoaded());
+                _bus.Put(new GameLoaded());
             }
         }
 

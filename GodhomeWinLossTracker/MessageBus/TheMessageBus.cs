@@ -20,14 +20,13 @@ namespace GodhomeWinLossTracker.MessageBus
             }
 #endif
 
-            _logger = mod;
             _handlers = new List<Handler>(handlers);
             _messages = new();
             _processing = false;
 
             foreach (Handler h in handlers)
             {
-                h.Load(mod, this);
+                h.Load(mod, this, mod);
             }
 
             this.Put(new BusEvent { Event = "initialized" });
@@ -49,7 +48,7 @@ namespace GodhomeWinLossTracker.MessageBus
                     IMessage msg = _messages.Dequeue();
                     foreach (Handler handler in _handlers)
                     {
-                        handler.OnMessage(this, _logger, msg);
+                        handler.OnMessage(msg);
                     }
                 }
                 _processing = false;
@@ -58,7 +57,6 @@ namespace GodhomeWinLossTracker.MessageBus
 
         private List<Handler> _handlers;
         private Queue<IMessage> _messages;
-        private Modding.ILogger _logger;
         private bool _processing;
     }
 }

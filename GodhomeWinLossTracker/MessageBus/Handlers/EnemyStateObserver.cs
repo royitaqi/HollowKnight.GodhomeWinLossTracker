@@ -8,9 +8,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class EnemyStateObserver : Handler
     {
-        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
+        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
-            base.Load(mod, bus);
+            base.Load(mod, bus, logger);
             ModHooks.OnEnableEnemyHook += ModHooks_OnEnableEnemyHook;
             On.HealthManager.TakeDamage += HealthManager_TakeDamage;
         }

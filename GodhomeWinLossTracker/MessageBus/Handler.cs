@@ -10,20 +10,22 @@ namespace GodhomeWinLossTracker.MessageBus
 {
     internal class Handler
     {
-        public virtual void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
+        public virtual void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
             _mod = mod;
             _bus = bus;
+            _logger = logger;
         }
 
-        public virtual void Unload(IGodhomeWinLossTracker mod, TheMessageBus bus) { }
+        public virtual void Unload() { }
 
-        public virtual void OnMessage(TheMessageBus bus, Modding.ILogger logger, IMessage msg)
+        public virtual void OnMessage(IMessage msg)
         {
             var msgType = msg.GetType();
 
             // Getting message processing method by name.
-            // This can be improved to get method by parameter types.
+            // The method name should have been validated by `Validate()`.
+            // Using name to find the method is faster than using paramter types.
             string methodName = $"On{msgType.Name}";
             MethodInfo method = GetType().GetMethod(methodName);
 
@@ -31,7 +33,7 @@ namespace GodhomeWinLossTracker.MessageBus
             {
                 try
                 {
-                    method.Invoke(this, new object[] { bus, logger, msg });
+                    method.Invoke(this, new object[] { msg });
                 }
                 catch (TargetInvocationException ex)
                 {
@@ -42,32 +44,38 @@ namespace GodhomeWinLossTracker.MessageBus
 
         public void Validate(Modding.ILogger logger)
         {
-            logger.LogModFine($"Validating {GetType().Name}");
+            string handlerName = GetType().Name;
+            logger.LogModFine($"Validating {handlerName}");
             foreach (var m in GetType().GetMethods())
             {
+                if (!m.Name.StartsWith("On"))
+                {
+                    // Skip validating methods which is not named "On...".
+                    continue;
+                }
+
+                // All "On..." methods should meet these requirements:
+                // 1. Method has one parameter
+                // 2. Parameter type is IMessage or its subclass
+                // 3. Method name is either "OnMessage" (when IMessage) or "On<MessageClassName>" (when a subclass of IMessage)
+
+                logger.LogModFine($"Validating {handlerName}.{m.Name}()");
                 var ps = m.GetParameters();
 
-                logger.LogModFine($"Validating {GetType().Name}.{m.Name}()");
-                if (ps.Length == 3)
-                {
-                    logger.LogModFine($"  {ps[0].Name}: {ps[0].ParameterType.Name} - {ps[0].ParameterType == typeof(TheMessageBus)}");
-                    logger.LogModFine($"  {ps[1].Name}: {ps[1].ParameterType.Name} - {typeof(Modding.ILogger).IsAssignableFrom(ps[1].ParameterType)}");
-                    logger.LogModFine($"  {ps[2].Name}: {ps[2].ParameterType.Name} - {typeof(IMessage).IsAssignableFrom(ps[2].ParameterType)}");
-                }
+                // 1
+                DevUtils.Assert(ps.Length == 1, $"{handlerName}.{m.Name}() should have one parameter");
 
-                if (ps.Length == 3 &&
-                    ps[0].ParameterType == typeof(TheMessageBus) &&
-                    typeof(Modding.ILogger).IsAssignableFrom(ps[1].ParameterType) &&
-                    typeof(IMessage).IsAssignableFrom(ps[2].ParameterType))
-                {
-                    string expectedTypeName = ps[2].ParameterType.Name == "IMessage" ? "Message" : ps[2].ParameterType.Name;
-                    logger.LogModDebug($"Validating {GetType().Name}.{m.Name}()'s name with message type {expectedTypeName}");
-                    DevUtils.Assert(m.Name == $"On{expectedTypeName}", $"{GetType().Name}.{m.Name}() should be renamed to {GetType().Name}.On{expectedTypeName}()");
-                }
+                // 2
+                DevUtils.Assert(typeof(IMessage).IsAssignableFrom(ps[0].ParameterType), $"{handlerName}.{m.Name}()'s parameter should be IMessage");
+
+                // 3
+                string expectedMethodName = "On" + (ps[0].ParameterType.Name == "IMessage" ? "Message" : ps[0].ParameterType.Name);
+                DevUtils.Assert(m.Name == $"{expectedMethodName}", $"{handlerName}.{m.Name}() should be renamed to {handlerName}.{expectedMethodName}()");
             }
         }
 
         protected IGodhomeWinLossTracker _mod;
         protected TheMessageBus _bus;
+        protected Modding.ILogger _logger;
     }
 }

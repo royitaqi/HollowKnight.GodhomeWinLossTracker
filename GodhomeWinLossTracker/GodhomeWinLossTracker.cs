@@ -22,7 +22,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
-        public override string GetVersion() => "0.4.4.0";
+        public override string GetVersion() => "0.4.5.0";
         // Make sure this mod is loaded after GodSeeker+.
         public override int LoadPriority() => 5;
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -39,14 +39,14 @@ namespace GodhomeWinLossTracker
                 new BossHPUpdater(),
                 new ChallengeMenuInjector(),
                 new Debugger(),
-                new DisplayInvoker(this),
+                new DisplayInvoker(),
                 new EnemyStateObserver(),
                 new FightTracker(() => GameManagerUtils.PlayTimeMs),
                 new GameLoadDetector(),
-                new HoGStatsQueryProcessor(this, str => str.Localize()),
-                new PantheonStatsQueryProcessor(this, str => str.Localize()),
-                new RecordCollector(this),
-                new SaveLoad(this),
+                new HoGStatsQueryProcessor(str => str.Localize()),
+                new PantheonStatsQueryProcessor(str => str.Localize()),
+                new RecordCollector(),
+                new SaveLoad(),
                 new SceneChangeObserver(),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),

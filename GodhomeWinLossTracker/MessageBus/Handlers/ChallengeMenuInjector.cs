@@ -5,9 +5,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class ChallengeMenuInjector : Handler
     {
-        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
+        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
-            base.Load(mod, bus);
+            base.Load(mod, bus, logger);
             On.BossDoorChallengeUI.Setup += BossDoorChallengeUI_Setup;
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
         }

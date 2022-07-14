@@ -31,13 +31,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         //   2.4 Always: reset and/or prepare according to next boss.
         // 3. Boss kills and TK dream deaths outside boss fights will be ignored.
 
-        public void OnSequenceChange(TheMessageBus bus, Modding.ILogger logger, SequenceChange msg)
+        public void OnSequenceChange(SequenceChange msg)
         {
             DevUtils.Assert(msg.Name != null, "Sequence name shouldn't be null");
             _currentSequence = msg.Name;
         }
 
-        public void OnTKDreamDeath(TheMessageBus bus, Modding.ILogger logger, TKDreamDeath msg)
+        public void OnTKDreamDeath(TKDreamDeath msg)
         {
             if (_currentBoss != null)
             {
@@ -50,7 +50,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
         }
 
-        public void OnBossDeath(TheMessageBus bus, Modding.ILogger logger, BossDeath msg)
+        public void OnBossDeath(BossDeath msg)
         {
             if (_currentBoss != null)
             {
@@ -63,7 +63,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
         }
 
-        public void OnBossChange(TheMessageBus bus, Modding.ILogger logger, BossChange msg)
+        public void OnBossChange(BossChange msg)
         {
             // 2
             // If a boss fight was on going (and hasn't been concluded yet), it's time to conclude the boss fight and register either a win or a loss.
@@ -73,7 +73,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 if (_tkDreamDeaths > 0)
                 {
                     // 2.1
-                    EmitRecord(bus, false);
+                    EmitRecord(false);
                 }
                 else
                 {
@@ -81,7 +81,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     DevUtils.Assert(_bossKills <= requiredBossKills, "Actually boss kill counts should never exceed required counts");
 
                     // 2.2 and 2.3
-                    EmitRecord(bus, _bossKills == requiredBossKills);
+                    EmitRecord(_bossKills == requiredBossKills);
                 }
                 // 2.4
                 Reset();
@@ -103,18 +103,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
         }
 
-        public void OnTKHeal(TheMessageBus bus, Modding.ILogger logger, TKHeal msg)
+        public void OnTKHeal(TKHeal msg)
         {
             _healCount++;
             _healAmount += msg.Heal;
         }
 
-        public void OnTKHit(TheMessageBus bus, Modding.ILogger logger, TKHit msg)
+        public void OnTKHit(TKHit msg)
         {
             _hitCount++;
             _hitAmount += msg.Damage;
 
-            bus.Put(new RawHit(
+            _bus.Put(new RawHit(
                 DateTime.Now.ToString("yyyy'-'MM'-'dd HH':'mm':'ss"),
                 _currentSequence,
                 _currentBoss.BossName,
@@ -130,7 +130,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             ));
         }
 
-        public void OnBossHP(TheMessageBus bus, Modding.ILogger logger, BossHP msg)
+        public void OnBossHP(BossHP msg)
         {
             if (msg.MaxHP != 0)
             {
@@ -138,14 +138,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
         }
 
-        public void OnBossStateChange(TheMessageBus bus, Modding.ILogger logger, BossStateChange msg)
+        public void OnBossStateChange(BossStateChange msg)
         {
             _bossState = msg.State.Name;
         }
 
-        private void EmitRecord(TheMessageBus bus, bool winLoss)
+        private void EmitRecord(bool winLoss)
         {
-            bus.Put(new RawWinLoss(
+            _bus.Put(new RawWinLoss(
                 DateTime.Now.ToString("yyyy'-'MM'-'dd HH':'mm':'ss"),
                 _currentSequence,
                 _currentBoss.BossName,

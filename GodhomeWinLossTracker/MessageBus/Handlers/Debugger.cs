@@ -11,9 +11,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class Debugger : Handler
     {
-        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
+        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
-            base.Load(mod, bus);
+            base.Load(mod, bus, logger);
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;

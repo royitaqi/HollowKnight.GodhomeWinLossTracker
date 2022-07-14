@@ -11,13 +11,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class PantheonStatsQueryProcessor : Handler
     {
-        public PantheonStatsQueryProcessor(IGodhomeWinLossTracker mod, Func<string, string> localizer)
+        public PantheonStatsQueryProcessor(Func<string, string> localizer)
         {
-            _mod = mod;
             _localizer = localizer;
         }
 
-        public void OnPantheonStatsQuery(TheMessageBus bus, Modding.ILogger logger, PantheonStatsQuery msg)
+        public void OnPantheonStatsQuery(PantheonStatsQuery msg)
         {
             // If the pantheon is unidentified, don't call callback.
             int? indexq = msg.PantheonIndex;
@@ -119,11 +118,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             runsText ??= "null";
             pb ??= "null";
             churnsText ??= "null";
-            bus.Put(new BusEvent { ForTest = true, Event = $"{runsText} | {pb} | {churnsText}" });
+            _bus.Put(new BusEvent { ForTest = true, Event = $"{runsText} | {pb} | {churnsText}" });
 #endif
         }
 
-        private readonly IGodhomeWinLossTracker _mod;
         private readonly Func<string, string> _localizer;
     }
 }

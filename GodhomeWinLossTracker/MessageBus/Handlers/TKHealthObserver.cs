@@ -11,9 +11,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class TKHealthObserver : Handler
     {
-        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus)
+        public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
-            base.Load(mod, bus);
+            base.Load(mod, bus, logger);
             On.PlayerData.TakeHealth += PlayerData_TakeHealth;
             On.PlayerData.AddHealth += PlayerData_AddHealth;
         }

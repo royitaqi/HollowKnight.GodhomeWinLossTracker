@@ -13,34 +13,33 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
         private static readonly string ModBackupDirectory = ModSaveDirectory + "/backup";
 
-        public SaveLoad(IGodhomeWinLossTracker mod)
+        public SaveLoad()
         {
-            _mod = mod;
             Directory.CreateDirectory(ModSaveDirectory);
             Directory.CreateDirectory(ModBackupDirectory);
         }
 
-        public void OnSaveFolderData(TheMessageBus bus, Modding.ILogger logger, SaveFolderData msg)
+        public void OnSaveFolderData(SaveFolderData msg)
         {
-            SaveFolderData(bus, logger);
+            SaveFolderData();
             if (_mod.globalData.AutoExport)
             {
-                ExportFolderData(bus, logger);
+                ExportFolderData();
             }
         }
 
-        public void OnLoadFolderData(TheMessageBus bus, Modding.ILogger logger, LoadFolderData msg)
+        public void OnLoadFolderData(LoadFolderData msg)
         {
-            LoadFolderData(bus, logger);
-            BackupFolderData(bus, logger);
+            LoadFolderData();
+            BackupFolderData();
         }
 
-        public void OnExportFolderData(TheMessageBus bus, Modding.ILogger logger, ExportFolderData msg)
+        public void OnExportFolderData(ExportFolderData msg)
         {
-            ExportFolderData(bus, logger);
+            ExportFolderData();
         }
 
-        private void SaveFolderData(TheMessageBus bus, Modding.ILogger logger)
+        private void SaveFolderData()
         {
             string filename = GetDataSaveFilename();
             // Skip if not a valid profile ID
@@ -53,10 +52,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
 
             File.WriteAllText(path, jsonString);
-            logger.LogMod($"{path} saved: {_mod.folderData.RawWinLosses.Count} records");
+            _logger.LogMod($"{path} saved: {_mod.folderData.RawWinLosses.Count} records");
         }
 
-        private void LoadFolderData(TheMessageBus bus, Modding.ILogger logger)
+        private void LoadFolderData()
         {
             string filename = GetDataSaveFilename();
             // Skip if not a valid profile ID
@@ -70,16 +69,16 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
-                logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} records");
+                _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} records");
             }
             else
             {
                 _mod.folderData = new FolderData();
-                logger.LogMod($"{path} doesn't exist. New/empty folder data will be used.");
+                _logger.LogMod($"{path} doesn't exist. New/empty folder data will be used.");
             }
         }
 
-        private void BackupFolderData(TheMessageBus bus, Modding.ILogger logger)
+        private void BackupFolderData()
         {
             string filename = GetDataSaveFilename();
             // Skip if not a valid profile ID
@@ -95,18 +94,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (File.Exists(path))
             {
                 File.Copy(path, backupPath);
-                logger.LogMod($"{path} backed up to {backupPath}");
+                _logger.LogMod($"{path} backed up to {backupPath}");
             }
         }
 
-        private void ExportFolderData(TheMessageBus bus, Modding.ILogger logger)
+        private void ExportFolderData()
         {
-            ExportWinLoss(bus, logger);
-            ExportTKHit(bus, logger);
-            bus.Put(new ExportedFolderData());
+            ExportWinLoss();
+            ExportTKHit();
+            _bus.Put(new ExportedFolderData());
         }
 
-        private void ExportWinLoss(TheMessageBus bus, Modding.ILogger logger)
+        private void ExportWinLoss()
         {
             string filename = GetExportWinLossSaveFilename();
             // Skip if not a valid profile ID
@@ -114,10 +113,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 return;
             }
-            ExportList(bus, logger, filename, _mod.folderData.RawWinLosses);
+            ExportList(filename, _mod.folderData.RawWinLosses);
         }
 
-        private void ExportTKHit(TheMessageBus bus, Modding.ILogger logger)
+        private void ExportTKHit()
         {
             string filename = GetExportTKHitSaveFilename();
             // Skip if not a valid profile ID
@@ -125,10 +124,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 return;
             }
-            ExportList(bus, logger, filename, _mod.folderData.RawHits);
+            ExportList(filename, _mod.folderData.RawHits);
         }
 
-        private void ExportList<T>(TheMessageBus bus, Modding.ILogger logger, string filename, List<T> list)
+        private void ExportList<T>(string filename, List<T> list)
         {
             string path = Path.Combine(ModSaveDirectory, filename);
 
@@ -161,7 +160,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     sw.WriteLine();
                 }
             }
-            logger.LogMod($"{path} exported: {list.Count} lines");
+            _logger.LogMod($"{path} exported: {list.Count} lines");
         }
 
         private string GetDataSaveFilename()
@@ -193,7 +192,5 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             return $"Export.Hit.Save{slot}.txt";
         }
-
-        private readonly IGodhomeWinLossTracker _mod;
     }
 }

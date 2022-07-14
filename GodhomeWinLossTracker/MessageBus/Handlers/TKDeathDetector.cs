@@ -7,9 +7,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class TKDeathDetector: Handler
     {
-        public void OnGameLoaded(TheMessageBus bus, Modding.ILogger logger, GameLoaded msg)
+        public void OnGameLoaded(GameLoaded msg)
         {
-            logger.LogMod("Hooking FSM event: TK dream death");
+            _logger.LogMod("Hooking FSM event: TK dream death");
 
             // This FSM event detects TK dream death.
             // For TK real death, use "Map Zone" instead of "Anim Start".
@@ -23,11 +23,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             fsm.GetState("Anim Start")
                 .AddMethod(() =>
                 {
-                    logger.LogMod("OnHeroDeathAnimStartInDream");
-                    bus.Put(new TKDreamDeath());
+                    _logger.LogMod("OnHeroDeathAnimStartInDream");
+                    _bus.Put(new TKDreamDeath());
                 });
 
-            logger.LogMod("Hooked FSM event: TK dream death");
+            _logger.LogMod("Hooked FSM event: TK dream death");
         }
     }
 }

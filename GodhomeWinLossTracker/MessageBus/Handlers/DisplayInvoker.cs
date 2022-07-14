@@ -12,12 +12,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class DisplayInvoker : Handler
     {
-        public DisplayInvoker(IGodhomeWinLossTracker mod)
-        {
-            _mod = mod;
-        }
-
-        public void OnRegisteredRawWinLoss(TheMessageBus bus, Modding.ILogger logger, RegisteredRawWinLoss msg)
+        public void OnRegisteredRawWinLoss(RegisteredRawWinLoss msg)
         {
             // For RegisteredRawWinLoss, we need to display the inner message.
             if (_mod.globalData.NotifyForRecord)
@@ -46,7 +41,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
         }
 
-        public void OnExportedFolderData(TheMessageBus bus, Modding.ILogger logger, ExportedFolderData msg)
+        public void OnExportedFolderData(ExportedFolderData msg)
         {
             // For any other types of message, simply display the message itself.
             if (_mod.globalData.NotifyForExport)
@@ -54,7 +49,5 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 ModDisplay.instance.Notify("Notification/Exported successfully".Localize());
             }
         }
-
-        private readonly IGodhomeWinLossTracker _mod;
     }
 }

@@ -28,17 +28,14 @@ namespace UnitTests
                 _id = id;
             }
 
-            public override void OnMessage(TheMessageBus bus, ILogger logger, IMessage msg)
+            public void OnBusEvent(BusEvent msg)
             {
-                if (msg is BusEvent)
-                {
-                    string evt = (msg as BusEvent).Event;
+                string evt = msg.Event;
 
-                    // Echo message + id if length < 3
-                    if (evt.Length < 3)
-                    {
-                        bus.Put(new BusEvent { Event = evt + _id });
-                    }
+                // Echo message + id if length < 3
+                if (evt.Length < 3)
+                {
+                    _bus.Put(new BusEvent { Event = evt + _id });
                 }
             }
 
