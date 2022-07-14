@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GodhomeWinLossTracker.MessageBus.Messages;
+﻿using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 using Modding;
 using Newtonsoft.Json;
@@ -33,7 +30,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private void OnHeroUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+            }
+            else if (Input.GetKeyDown(KeyCode.P))
             {
                 _mod.LogMod(LoggingUtils.DumpLogCount());
             }
