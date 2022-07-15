@@ -78,6 +78,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     Y = 0,
                 };
 
+                int count = 0;
                 foreach (var boss in _bossGOs)
                 {
                     HealthManager hm = boss.GetComponent<HealthManager>();
@@ -86,11 +87,17 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                         continue;
                     }
 
-                    ret.X += (int)Math.Round(boss.transform.position.x);
-                    ret.Y += (int)Math.Round(boss.transform.position.y);
+                    ret.X += boss.transform.position.x;
+                    ret.Y += boss.transform.position.y;
                     ret.HP += Math.Max(0, hm.hp);
+                    count++;
                 }
                 ret.HP = Math.Min(ret.HP, ret.MaxHP);
+                if (count != 0)
+                {
+                    ret.X /= count;
+                    ret.Y /= count;
+                }
 
                 _bus.Put(ret);
             }

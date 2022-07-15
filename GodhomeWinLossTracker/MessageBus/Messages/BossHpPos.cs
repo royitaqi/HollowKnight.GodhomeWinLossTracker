@@ -10,8 +10,8 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
     {
         public int MaxHP { get; set; }
         public int HP { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
 
         public override string ToString()
         {

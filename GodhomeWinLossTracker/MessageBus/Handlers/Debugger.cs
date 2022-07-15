@@ -37,6 +37,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             else if (Input.GetKeyDown(KeyCode.P))
             {
                 _mod.LogMod(LoggingUtils.DumpLogCount());
+                _bus.Put(new SaveFolderData());
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
@@ -102,12 +103,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                //// Wipe all previous status in Hit records
-                //foreach (var hit in _mod.folderData.RawHits)
-                //{
-                //    typeof(RawHit).GetProperty("TKStatus").SetValue(hit, 0);
-                //}
-                //_mod.LogMod("!!! All TKStatus wiped !!!");
+                //WipeRawHitTkStats();
+                //WipeRawHitTkBossPos();
             }
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
@@ -115,6 +112,29 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             else if (Input.GetKeyDown(KeyCode.Alpha3))
             {
             }
+        }
+
+        private void WipeRawHitTkStats()
+        {
+            // Wipe all TK status in previous Hit records
+            foreach (var hit in _mod.folderData.RawHits)
+            {
+                typeof(RawHit).GetProperty("TKStatus").SetValue(hit, 0);
+            }
+            _mod.LogMod("!!! All TKStatus wiped in Hit records !!!");
+        }
+
+        private void WipeRawHitTkBossPos()
+        {
+            // Wipe all TK and boss position info in previous Hit records
+            foreach (var hit in _mod.folderData.RawHits)
+            {
+                typeof(RawHit).GetProperty("TKPosX").SetValue(hit, 0);
+                typeof(RawHit).GetProperty("TKPosY").SetValue(hit, 0);
+                typeof(RawHit).GetProperty("BossPosX").SetValue(hit, 0);
+                typeof(RawHit).GetProperty("BossPosY").SetValue(hit, 0);
+            }
+            _mod.LogMod("!!! All TK and boss position wiped in Hit records !!!");
         }
     }
 }

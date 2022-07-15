@@ -130,8 +130,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _lastTKHit.DamageSource,
                 _lastBossHpPos.MaxHP != 0 ? (float)_lastBossHpPos.HP / _lastBossHpPos.MaxHP : 1,
                 _bossState,
-                _lastBossHpPos.X,
-                _lastBossHpPos.Y,
+                (int)Math.Round(_lastBossHpPos.X),
+                (int)Math.Round(_lastBossHpPos.Y),
                 _getGameTime() - _fightStartGameTime,
                 RecordSources.Mod
             ));
