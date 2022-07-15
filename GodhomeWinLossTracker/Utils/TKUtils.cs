@@ -32,22 +32,22 @@ namespace GodhomeWinLossTracker.Utils
                 HeroController.instance.cState.touchingWall,
                 false,
                 
-                // Action
-                HeroController.instance.cState.attacking,
-                HeroController.instance.cState.nailCharging,
-                HeroController.instance.cState.focusing,
+                // Movement
+                HeroController.instance.cState.dashing, // This includes normal dash and shadow dash (HeroController.instance.cState.shadowDashing)
+                HeroController.instance.cState.superDashing || HeroController.instance.cState.superDashOnWall,
+                HeroController.instance.cState.wallSliding,
                 false,
                 false,
                 false,
                 false,
                 false,
                 
-                // Movement
-                HeroController.instance.cState.dashing, // This includes normal dash and shadow dash (HeroController.instance.cState.shadowDashing)
-                HeroController.instance.cState.jumping || HeroController.instance.cState.doubleJumping,
-                HeroController.instance.cState.falling,
-                HeroController.instance.cState.superDashing || HeroController.instance.cState.superDashOnWall,
-                HeroController.instance.cState.wallSliding,
+                // Action
+                HeroController.instance.cState.attacking,
+                HeroController.instance.cState.nailCharging,
+                HeroController.instance.cState.focusing,
+                false,
+                false,
                 false,
                 false,
                 false, // Leave the highest bit unused

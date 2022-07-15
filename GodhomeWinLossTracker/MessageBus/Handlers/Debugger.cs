@@ -1,4 +1,5 @@
-﻿using GodhomeWinLossTracker.MessageBus.Messages;
+﻿using System.Linq;
+using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 using Modding;
 using Newtonsoft.Json;
@@ -89,10 +90,24 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                _mod.LogMod(JsonConvert.SerializeObject(_mod.folderData));
+                // Print the last win/loss and hit record
+                if (_mod.folderData.RawWinLosses.Count > 0)
+                {
+                    _mod.LogMod(JsonConvert.SerializeObject(_mod.folderData.RawWinLosses.Last()));
+                }
+                if (_mod.folderData.RawHits.Count > 0)
+                {
+                    _mod.LogMod(JsonConvert.SerializeObject(_mod.folderData.RawHits.Last()));
+                }
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
+                //// Wipe all previous status in Hit records
+                //foreach (var hit in _mod.folderData.RawHits)
+                //{
+                //    typeof(RawHit).GetProperty("TKStatus").SetValue(hit, 0);
+                //}
+                //_mod.LogMod("!!! All TKStatus wiped !!!");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
