@@ -14,7 +14,8 @@ namespace GodhomeWinLossTracker.Utils
 #if DEBUG
             if (LogLevel <= Modding.LogLevel.Info)
             {
-                logger.Log($"[I] {message}");
+                var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
+                logger.Log($"{time} [I] {message}");
             }
 #endif
         }
@@ -24,7 +25,8 @@ namespace GodhomeWinLossTracker.Utils
 #if DEBUG
             if (LogLevel <= Modding.LogLevel.Debug)
             {
-                logger.Log($"[D] {message}");
+                var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
+                logger.Log($"{time} [D] {message}");
             }
 #endif
         }
@@ -34,7 +36,8 @@ namespace GodhomeWinLossTracker.Utils
 #if DEBUG
             if (LogLevel <= Modding.LogLevel.Fine)
             {
-                logger.Log($"[F] {message}");
+                var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
+                logger.Log($"{time} [F] {message}");
             }
 #endif
         }
