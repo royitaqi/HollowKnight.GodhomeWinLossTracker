@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using UnityEngine;
 
@@ -81,6 +80,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 int count = 0;
                 foreach (var boss in _bossGOs)
                 {
+                    // Bosses killed during a fight can become null
+                    if (boss == null)
+                    {
+                        continue;
+                    }
+
                     HealthManager hm = boss.GetComponent<HealthManager>();
                     if (hm.isDead)
                     {

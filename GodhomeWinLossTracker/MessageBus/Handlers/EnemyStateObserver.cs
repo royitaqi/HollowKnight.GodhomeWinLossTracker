@@ -77,6 +77,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 return fsm;
             }
 
+            _logger.LogModWarn($"Cannot find FSM for boss {enemy.name}");
             return null;
         }
     }

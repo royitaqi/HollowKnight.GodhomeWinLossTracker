@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GodhomeWinLossTracker.MessageBus.Messages
 {
-    [ModLogLevel(Modding.LogLevel.Debug)]
+    [ModLogLevel(Modding.LogLevel.Fine)]
     internal class BossStateChange : IMessage
     {
         public GameObject BossGO { get; set; }
