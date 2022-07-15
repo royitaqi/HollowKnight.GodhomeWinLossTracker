@@ -40,7 +40,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
             if (damage != 0)
             {
+                // First send out TKHit to trigger updates, then send out RawHitRequest to create a record.
                 _bus.Put(new TKHit { Damage = damage, HealthAfter = healthAfter });
+                _bus.Put(new RawHitRequest());
             }
         }
     }

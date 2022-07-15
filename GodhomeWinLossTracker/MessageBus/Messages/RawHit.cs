@@ -10,7 +10,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
 {
     public class RawHit : IMessage
     {
-        public RawHit(string timestamp, string sequenceName, string bossName, string sceneName, int tkStatus, int tkHealthBefore, int damageAmount, TKHit.DamageSources damageSource, float bossHP, string bossState, long fightLengthMs, RecordSources recordSource)
+        public RawHit(string timestamp, string sequenceName, string bossName, string sceneName, int tkStatus, int tkPosX, int tkPosY, int tkHealthBefore, int damageAmount, TKHit.DamageSources damageSource, float bossHP, string bossState, int bossPosX, int bossPosY, long fightLengthMs, RecordSources recordSource)
         {
             DevUtils.Assert(timestamp!= null, "timestamp shouldn't be null");
             DevUtils.Assert(sequenceName != null, "sequenceName shouldn't be null");
@@ -22,11 +22,15 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
             BossName = bossName;
             SceneName = sceneName;
             TKStatus = tkStatus;
+            TKPosX = tkPosX;
+            TKPosY = tkPosY;
             TKHealthBefore = tkHealthBefore;
             DamageAmount = damageAmount;
             DamageSource = damageSource;
             BossHP = bossHP;
             BossState = bossState;
+            BossPosX = bossPosX;
+            BossPosY = bossPosY;
             FightLengthMs = fightLengthMs;
             RecordSource = recordSource;
         }
@@ -42,11 +46,15 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
         public string BossName { get; private set; }
         public string SceneName { get; private set; }
         public int TKStatus { get; private set; }
+        public int TKPosX { get; private set; }
+        public int TKPosY { get; private set; }
         public int TKHealthBefore { get; private set; }
         public int DamageAmount { get; private set; }
         public TKHit.DamageSources DamageSource { get; private set; }
         public float BossHP { get; private set; }
         public string BossState { get; private set; }
+        public int BossPosX { get; private set; }
+        public int BossPosY { get; private set; }
         public long FightLengthMs { get; private set; } // The amount of time into the fight (not finish time)
         public RecordSources RecordSource { get; private set; }
     }

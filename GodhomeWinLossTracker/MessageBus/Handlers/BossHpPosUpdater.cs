@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using GodhomeWinLossTracker.MessageBus.Messages;
+using UnityEngine;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -47,11 +48,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
     //   (reset to 280 no matter the health)
     //   - 6th phase: 280/2280
 
-    internal class BossHPUpdater : Handler
+    internal class BossHpPosUpdater : Handler
     {
         public void OnBossChange(BossChange msg)
         {
-            _healthManagers.Clear();
+            _bossGOs.Clear();
             _isInFight = msg.IsBoss();
             _maxHP = 0;
         }
@@ -60,26 +61,42 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             if (_isInFight && msg.IsBoss)
             {
-                HealthManager hm = msg.EnemyGO.GetComponent<HealthManager>();
-                _healthManagers.Add(hm);
-                _maxHP += hm.hp;
+                _bossGOs.Add(msg.EnemyGO);
+                _maxHP += msg.EnemyGO.GetComponent<HealthManager>().hp;
             }
         }
 
-        public void OnEnemyDamaged(EnemyDamaged msg)
+        public void OnBossHpPosRequest(BossHpPosRequest msg)
         {
             if (_isInFight)
             {
-                _bus.Put(new BossHP { MaxHP = _maxHP, HP = Math.Min(_maxHP, _healthManagers.Select(hm => GetHP(hm)).Sum()) });
+                var ret = new BossHpPos
+                {
+                    MaxHP = _maxHP,
+                    HP = 0,
+                    X = 0,
+                    Y = 0,
+                };
+
+                foreach (var boss in _bossGOs)
+                {
+                    HealthManager hm = boss.GetComponent<HealthManager>();
+                    if (hm.isDead)
+                    {
+                        continue;
+                    }
+
+                    ret.X += (int)Math.Round(boss.transform.position.x);
+                    ret.Y += (int)Math.Round(boss.transform.position.y);
+                    ret.HP += Math.Max(0, hm.hp);
+                }
+                ret.HP = Math.Min(ret.HP, ret.MaxHP);
+
+                _bus.Put(ret);
             }
         }
 
-        private int GetHP(HealthManager hm)
-        {
-            return hm.isDead ? 0 : Math.Max(0, hm.hp);
-        }
-
-        private readonly List<HealthManager> _healthManagers = new();
+        private readonly List<GameObject> _bossGOs = new();
         private bool _isInFight = false;
         private int _maxHP = 0;
     }

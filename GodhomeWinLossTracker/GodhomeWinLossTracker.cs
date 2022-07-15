@@ -22,7 +22,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
-        public override string GetVersion() => "0.4.6.0";
+        public override string GetVersion() => "0.4.7.0";
         // Make sure this mod is loaded after GodSeeker+.
         public override int LoadPriority() => 5;
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -36,7 +36,7 @@ namespace GodhomeWinLossTracker
                 new Logger(),
                 new BossChangeDetector(),
                 new BossDeathObserver(),
-                new BossHPUpdater(),
+                new BossHpPosUpdater(),
                 new ChallengeMenuInjector(),
                 new Debugger(),
                 new DisplayInvoker(),
