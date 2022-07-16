@@ -34,7 +34,6 @@ namespace GodhomeWinLossTracker
     [Serializable]
     public class LocalData
     {
-        public int ProfileID = 0;
     }
 
     internal interface IDataHolder

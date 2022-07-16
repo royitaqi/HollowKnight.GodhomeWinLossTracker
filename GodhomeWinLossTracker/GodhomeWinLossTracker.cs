@@ -22,7 +22,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
-        public override string GetVersion() => "0.4.8.0";
+        public override string GetVersion() => "0.4.9.0";
         // Make sure this mod is loaded after GodSeeker+.
         public override int LoadPriority() => 5;
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -88,28 +88,7 @@ namespace GodhomeWinLossTracker
         /// ILocalSettings<LocalData>
         ///
 
-        public void OnLoadLocal(LocalData data)
-        {
-            localData = data;
-            this.LogMod($"Loading local data (slot {localData.ProfileID})");
-            // actual read
-            if (messageBus != null)
-            {
-                messageBus.Put(new LoadFolderData());
-            }
-            this.LogMod($"Loaded local data (slot {localData.ProfileID})");
-        }
-        public LocalData OnSaveLocal()
-        {
-            localData.ProfileID = GameManager.instance.profileID;
-            this.LogMod($"Saving local data (slot {localData.ProfileID})");
-            // actual save
-            if (messageBus != null)
-            {
-                messageBus.Put(new SaveFolderData());
-            }
-            this.LogMod($"Saved local data (slot {localData.ProfileID})");
-            return localData;
-        }
+        public void OnLoadLocal(LocalData data) => localData = data;
+        public LocalData OnSaveLocal() => localData;
     }
 }

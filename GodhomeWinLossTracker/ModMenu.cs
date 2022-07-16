@@ -107,7 +107,7 @@ namespace GodhomeWinLossTracker
 
         private static void ExportStatsAsTsv()
         {
-            GodhomeWinLossTracker.instance.messageBus.Put(new ExportFolderData());
+            GodhomeWinLossTracker.instance.messageBus.Put(new ExportFolderData { Slot = GameManager.instance.profileID });
         }
     }
 }
