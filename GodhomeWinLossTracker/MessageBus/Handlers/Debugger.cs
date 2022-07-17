@@ -100,6 +100,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 {
                     _mod.LogMod(JsonConvert.SerializeObject(_mod.folderData.RawHits.Last()));
                 }
+
+                // Save data right now!
+                _bus.Put(new SaveFolderData { Slot = GameManager.instance.profileID });
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {

@@ -29,6 +29,7 @@ namespace GodhomeWinLossTracker
         public bool NotifyPBTime = true;
         public bool NotifyForExport = false;
         public bool AutoExport = false;
+        public bool AsyncWrites = false;
     }
 
     [Serializable]

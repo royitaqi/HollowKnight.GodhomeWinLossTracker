@@ -44,6 +44,8 @@
 	"Boss/Winged Nosk": "Winged Nosk",
 	"Boss/Xero": "Xero",
 	"GodSeeker+/SelectSegment": "Select Segment",
+	"Menu/Async save": "Async save",
+	"Menu/Async save description": "Avoid stalling the game when saving large data sets, but may lose data",
 	"Menu/Auto export stats": "Auto export stats",
 	"Menu/Both HoG and pantheons": "Both HoG and pantheons",
 	"Menu/Export stats now": "Export stats now",

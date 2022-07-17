@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 using Modding;
@@ -36,22 +37,43 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         public void OnSaveFolderData(SaveFolderData msg)
         {
-            SaveFolderData(msg.Slot);
-            if (_mod.globalData.AutoExport)
+            WriteAndMaybeWait(() =>
             {
-                ExportFolderData(msg.Slot);
-            }
+                SaveFolderData(msg.Slot);
+                if (_mod.globalData.AutoExport)
+                {
+                    ExportFolderData(msg.Slot);
+                }
+            });
         }
 
         public void OnLoadFolderData(LoadFolderData msg)
         {
             LoadFolderData(msg.Slot);
-            BackupFolderData(msg.Slot);
+            WriteAndMaybeWait(() =>
+            {
+                BackupFolderData(msg.Slot);
+            });
         }
 
         public void OnExportFolderData(ExportFolderData msg)
         {
-            ExportFolderData(msg.Slot);
+            WriteAndMaybeWait(() =>
+            {
+                ExportFolderData(msg.Slot);
+            });
+        }
+
+        private void WriteAndMaybeWait(Action write)
+        {
+            Task writeJson = new Task(write);
+            writeJson.Start();
+
+            // If writes should be synchronize, wait for writes.
+            if (!_mod.globalData.AsyncWrites)
+            {
+                writeJson.Wait();
+            }
         }
 
         private void SaveFolderData(int slot)

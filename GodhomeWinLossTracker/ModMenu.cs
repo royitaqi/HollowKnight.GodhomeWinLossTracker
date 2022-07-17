@@ -101,6 +101,15 @@ namespace GodhomeWinLossTracker
                     "",
                     _ => ExportStatsAsTsv()
                 ),
+                new HorizontalOption(
+                    "Menu/Async save".Localize(),
+                    "Menu/Async save description".Localize(),
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
+                    selectedIndex => {
+                        GodhomeWinLossTracker.instance.globalData.AsyncWrites = selectedIndex == 1;
+                    },
+                    () => GodhomeWinLossTracker.instance.globalData.AsyncWrites? 1 : 0
+                ),
             });
         }
 
