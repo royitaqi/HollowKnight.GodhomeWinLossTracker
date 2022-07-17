@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Threading.Tasks;
 using Modding;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GodhomeWinLossTracker
 {

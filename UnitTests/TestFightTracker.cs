@@ -1,5 +1,3 @@
-using Modding;
-
 namespace UnitTests
 {
     [TestClass]

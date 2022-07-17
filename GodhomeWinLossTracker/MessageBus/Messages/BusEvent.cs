@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GodhomeWinLossTracker.MessageBus.Messages
+﻿namespace GodhomeWinLossTracker.MessageBus.Messages
 {
     // BusEvent should be completely deletable for the bus to run properly.
     // It's here for dev/debug purpose.

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Modding;
+﻿using Modding;
 using UnityEngine;
 
 namespace GodhomeWinLossTracker.Utils
@@ -14,7 +10,6 @@ namespace GodhomeWinLossTracker.Utils
         {
             ModHooks.HeroUpdateHook += OnHeroUpdate;
         }
-
 
         private static void OnHeroUpdate()
         {

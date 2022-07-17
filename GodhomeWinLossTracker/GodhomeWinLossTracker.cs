@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using GodhomeWinLossTracker.MessageBus;
 using GodhomeWinLossTracker.MessageBus.Handlers;
-using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 using Modding;
 using UnityEngine;
@@ -22,7 +21,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
-        public override string GetVersion() => "0.4.10.0";
+        public override string GetVersion() => "0.4.10.1";
         // Make sure this mod is loaded after GodSeeker+.
         public override int LoadPriority() => 5;
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)

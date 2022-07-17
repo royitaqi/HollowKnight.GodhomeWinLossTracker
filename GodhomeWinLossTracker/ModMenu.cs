@@ -1,11 +1,11 @@
-﻿using Modding;
-using Satchel.BetterMenus;
-using GodhomeWinLossTracker.MessageBus.Messages;
+﻿using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
-using UnityEngine;
+using Modding;
 using Osmi.Utils;
-using MenuButton = Satchel.BetterMenus.MenuButton;
+using Satchel.BetterMenus;
+using UnityEngine;
 using UnityEngine.UI;
+using MenuButton = Satchel.BetterMenus.MenuButton;
 
 namespace GodhomeWinLossTracker
 {

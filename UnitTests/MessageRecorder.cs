@@ -1,5 +1,3 @@
-using Modding;
-
 namespace UnitTests
 {
     // Validates that some of the messages received match the given ones in order.

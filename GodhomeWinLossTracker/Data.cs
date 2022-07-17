@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using GodhomeWinLossTracker.MessageBus.Messages;
+using Newtonsoft.Json;
 
 namespace GodhomeWinLossTracker
 {
