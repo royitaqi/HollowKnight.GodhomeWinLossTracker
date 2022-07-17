@@ -25,7 +25,7 @@ namespace GodhomeWinLossTracker
     {
         public bool ShowStatsInChallengeMenu = true;
         public bool NotifyForRecord = true;
-        public bool NotifyPBTime = true;
+        public bool NotifyPB = true;
         public bool NotifyForExport = false;
         public bool AutoExport = false;
         public bool AsyncWrites = false;

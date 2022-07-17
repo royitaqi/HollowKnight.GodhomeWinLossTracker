@@ -70,13 +70,13 @@ namespace GodhomeWinLossTracker
                     () => GodhomeWinLossTracker.instance.globalData.NotifyForRecord ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Menu/Notify personal best time".Localize(),
+                    "Menu/Notify personal best".Localize(),
                     "Menu/In win notifications".Localize(),
                     new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {
-                        GodhomeWinLossTracker.instance.globalData.NotifyPBTime = selectedIndex == 1;
+                        GodhomeWinLossTracker.instance.globalData.NotifyPB = selectedIndex == 1;
                     },
-                    () => GodhomeWinLossTracker.instance.globalData.NotifyPBTime ? 1 : 0
+                    () => GodhomeWinLossTracker.instance.globalData.NotifyPB ? 1 : 0
                 ),
                 new HorizontalOption(
                     "Menu/Notify exports".Localize(),

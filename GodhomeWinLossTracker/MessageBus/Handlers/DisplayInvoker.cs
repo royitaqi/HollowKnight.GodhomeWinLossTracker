@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
@@ -7,6 +8,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class DisplayInvoker : Handler
     {
+        public DisplayInvoker(Func<string, string> localizer, Action<string> display)
+        {
+            _localizer = localizer;
+            _display = display;
+        }
+
         public void OnRegisteredRawWinLoss(RegisteredRawWinLoss msg)
         {
             // For RegisteredRawWinLoss, we need to display the inner message.
@@ -17,50 +24,57 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
                 // Generate the basic message
                 string winLossString = string.Format(
-                    (record.Wins > 0 ? "Notification/Won {0} in {1}" : "Notification/Loss {0} in {1}").Localize(),
-                    $"Boss/{record.BossName}".Localize(),
-                    $"Sequence/{record.SequenceName}".Localize()
+                    _localizer(record.Wins > 0 ? "Notification/Won against {0} in {1}" : "Notification/Loss to {0} in {1}"),
+                    _localizer($"Boss/{record.BossName}"),
+                    _localizer($"Sequence/{record.SequenceName}")
                 );
 
-                // Generate pb time
-                string pbString = null;
-                if (_mod.globalData.NotifyPBTime && record.Wins > 0 && record.Losses == 0)
+                // Generate pb messsage
+                string timeString = null;
+                string hitString = null;
+                if (_mod.globalData.NotifyPB && record.Wins > 0 && record.Losses == 0)
                 {
-                    var records = _mod.folderData.RawWinLosses.Where(r => r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
-                    if (records.Count >= 10 && records.Min(r => r.FightLengthMs) == record.FightLengthMs)
+                    // Get all win records before this one
+                    var records = _mod.folderData.RawWinLosses.Where(r => r != record && r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
+
+                    // Generate time
+                    if (records.Count == 0 || record.FightLengthMs < records.Min(r => r.FightLengthMs))
                     {
                         long minutes = record.FightLengthMs / 1000 / 60;
                         long seconds = record.FightLengthMs / 1000 % 60;
-                        pbString = "Notification/PB".Localize() + $" {minutes}:{seconds:D2}";
+                        timeString = $"{minutes}:{seconds:D2}";
                     }
-                }
 
-                // Generate hits
-                string hitString = null;
-                if (record.Wins > 0 && record.Losses == 0 && record.Hits < 2)
-                {
-                    hitString = record.Hits == 0 ? "Notification/Hitless".Localize() : "Notification/Hit 1".Localize();
+                    // Generate hits
+                    if (record.Hits < 2 && (records.Count == 0 || record.Hits < records.Min(r => r.Hits)))
+                    {
+                        hitString = _localizer(record.Hits == 0 ? "Notification/hitless" : "Notification/1 hit");
+                    }
                 }
 
                 // Combine the strings
                 StringBuilder sb = new(winLossString);
-                if (pbString != null)
+                if (timeString != null)
                 {
                     if (hitString != null)
                     {
-                        sb.AppendFormat(" ({0}, {1})", pbString, hitString);
+                        sb.AppendFormat(" ({0} {1}, {2})", _localizer("Notification/PB"), timeString, hitString);
                     }
                     else
                     {
-                        sb.AppendFormat(" ({0})", pbString);
+                        sb.AppendFormat(" ({0} {1})", _localizer("Notification/PB"), timeString);
                     }
                 }
                 else if (hitString != null)
                 {
-                    sb.AppendFormat(" ({0})", hitString);
+                    sb.AppendFormat(" ({0} {1})", _localizer("Notification/PB"), hitString);
                 }
 
-                ModDisplay.instance.Notify(sb.ToString());
+                _display(sb.ToString());
+
+#if DEBUG
+                _bus.Put(new BusEvent { ForTest = true, Event = sb.ToString() });
+#endif
             }
         }
 
@@ -69,8 +83,16 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // For any other types of message, simply display the message itself.
             if (_mod.globalData.NotifyForExport)
             {
-                ModDisplay.instance.Notify("Notification/Exported successfully".Localize());
+                string text = "Notification/Exported successfully".Localize();
+                _display(text);
+
+#if DEBUG
+                _bus.Put(new BusEvent { ForTest = true, Event = text });
+#endif
             }
         }
+
+        private Func<string, string> _localizer;
+        private Action<string> _display;
     }
 }

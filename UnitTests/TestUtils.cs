@@ -11,6 +11,7 @@ namespace UnitTests
             public G.LocalData LocalData { get; set; }
             public G.FolderData FolderData { get; set; }
             public Func<G.IGodhomeWinLossTracker, IEnumerable<Handler>> HandlersCreator { get; set; }
+            public Func<IEnumerable<IMessage>, IEnumerable<IMessage>> OutputMessageFilter { get; set; }
             public IEnumerable<IMessage> InputMessages { get; set; }
             public IEnumerable<IMessage> ExpectedMessages { get; set; }
             public AssertionFailedException ExpectedException { get; set; }
@@ -51,7 +52,14 @@ namespace UnitTests
 
             if (testCase.ExpectedMessages != null)
             {
+                // Run message bus and get output messages
                 IEnumerable<IMessage> outputMessages = RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.HandlersCreator, testCase.InputMessages);
+
+                // Filter output messages if specified
+                if (testCase.OutputMessageFilter != null)
+                {
+                    outputMessages = testCase.OutputMessageFilter(outputMessages);
+                }
 
                 // Verify output messages
                 Assert.AreEqual(
@@ -84,6 +92,11 @@ namespace UnitTests
                     throw new AssertFailedException($"{ex.ToString()}. {testCase}", ex);
                 }
             }
+        }
+
+        public static string TestLocalizer(string str)
+        {
+            return str.Substring(str.LastIndexOf('/') + 1);
         }
 
         private static IEnumerable<IMessage> RunMessageBus(
