@@ -59,6 +59,8 @@
 	"Menu/When saving games": "游戏存档时触发",
 	"ModName": "神居胜负记录器",
 	"Notification/Exported successfully": "成功导出",
+	"Notification/Hit 1": "1伤",
+	"Notification/Hitless": "无伤",
 	"Notification/Loss {0} in {1}": "在 {1} 中负于 {0}",
 	"Notification/PB": "个人最快时间",
 	"Notification/Won {0} in {1}": "在 {1} 中战胜了 {0}",

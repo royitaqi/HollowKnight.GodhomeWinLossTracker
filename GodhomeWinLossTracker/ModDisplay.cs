@@ -10,7 +10,7 @@ namespace GodhomeWinLossTracker
         internal static ModDisplay instance;
         private GameObject _canvas;
 
-        private Vector2 TextSize = new(200, 100);
+        public Vector2 TextSize = new(240, 100);
         public Vector2 TextPosition = new(0.12f, 0.04f);
 
         public string Text = "Godhome Win Loss Tracker";

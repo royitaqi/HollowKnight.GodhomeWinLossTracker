@@ -35,44 +35,99 @@ namespace GodhomeWinLossTracker.Utils
             }
             else if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                ModDisplay.instance.Notify("Godhome Win Loss Tracker");
+                ModDisplay.instance.Notify("Won against Soul Warrior in HoG (PB 1:32, hitless)");
+            }
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                _mode = _mode switch
+                {
+                    "pan" => "scale",
+                    "scale" => "pan",
+                    _ => throw new AssertionFailedException("Should never arrive here"),
+                };
             }
             else if (Input.GetKeyDown(KeyCode.F))
             {
-                ModDisplay.instance.TextPosition = new Vector2(
-                    ModDisplay.instance.TextPosition.x - 0.01f,
-                    ModDisplay.instance.TextPosition.y
-                );
-                GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                if (_mode == "pan")
+                {
+                    ModDisplay.instance.TextPosition = new Vector2(
+                        ModDisplay.instance.TextPosition.x - 0.01f,
+                        ModDisplay.instance.TextPosition.y
+                    );
+                    GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                }
+                else if (_mode == "scale")
+                {
+                    ModDisplay.instance.TextSize = new Vector2(
+                        ModDisplay.instance.TextSize.x - 10,
+                        ModDisplay.instance.TextSize.y
+                    );
+                    GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextSize.x,0:F0} {ModDisplay.instance.TextSize.y,0:F0}");
+                }
                 ModDisplay.instance.Redraw();
             }
             else if (Input.GetKeyDown(KeyCode.H))
             {
-                ModDisplay.instance.TextPosition = new Vector2(
-                    ModDisplay.instance.TextPosition.x + 0.01f,
-                    ModDisplay.instance.TextPosition.y
-                );
-                GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                if (_mode == "pan")
+                {
+                    ModDisplay.instance.TextPosition = new Vector2(
+                        ModDisplay.instance.TextPosition.x + 0.01f,
+                        ModDisplay.instance.TextPosition.y
+                    );
+                    GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                }
+                else if (_mode == "scale")
+                {
+                    ModDisplay.instance.TextSize = new Vector2(
+                        ModDisplay.instance.TextSize.x + 10,
+                        ModDisplay.instance.TextSize.y
+                    );
+                    GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextSize.x,0:F0} {ModDisplay.instance.TextSize.y,0:F0}");
+                }
                 ModDisplay.instance.Redraw();
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
-                ModDisplay.instance.TextPosition = new Vector2(
-                    ModDisplay.instance.TextPosition.x,
-                    ModDisplay.instance.TextPosition.y + 0.01f
-                );
-                GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                if (_mode == "pan")
+                {
+                    ModDisplay.instance.TextPosition = new Vector2(
+                        ModDisplay.instance.TextPosition.x,
+                        ModDisplay.instance.TextPosition.y + 0.01f
+                    );
+                    GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                }
+                else if (_mode == "scale")
+                {
+                    ModDisplay.instance.TextSize = new Vector2(
+                        ModDisplay.instance.TextSize.x,
+                        ModDisplay.instance.TextSize.y + 10
+                    );
+                    GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextSize.x,0:F0} {ModDisplay.instance.TextSize.y,0:F0}");
+                }
                 ModDisplay.instance.Redraw();
             }
             else if (Input.GetKeyDown(KeyCode.G))
             {
-                ModDisplay.instance.TextPosition = new Vector2(
-                    ModDisplay.instance.TextPosition.x,
-                    ModDisplay.instance.TextPosition.y - 0.01f
-                );
-                GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                if (_mode == "pan")
+                {
+                    ModDisplay.instance.TextPosition = new Vector2(
+                        ModDisplay.instance.TextPosition.x,
+                        ModDisplay.instance.TextPosition.y - 0.01f
+                    );
+                    GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextPosition.x,0:F2} {ModDisplay.instance.TextPosition.y,0:F2}");
+                }
+                else if (_mode == "scale")
+                {
+                    ModDisplay.instance.TextSize = new Vector2(
+                        ModDisplay.instance.TextSize.x,
+                        ModDisplay.instance.TextSize.y - 10
+                    );
+                    GodhomeWinLossTracker.instance.LogMod($"{ModDisplay.instance.TextSize.x,0:F0} {ModDisplay.instance.TextSize.y,0:F0}");
+                }
                 ModDisplay.instance.Redraw();
             }
         }
+
+        private static string _mode = "pan";
     }
 }
