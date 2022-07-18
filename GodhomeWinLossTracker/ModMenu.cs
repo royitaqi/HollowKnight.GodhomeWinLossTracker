@@ -70,7 +70,7 @@ namespace GodhomeWinLossTracker
                     () => GodhomeWinLossTracker.instance.globalData.NotifyForRecord ? 1 : 0
                 ),
                 new HorizontalOption(
-                    "Menu/Notify personal best".Localize(),
+                    "Menu/Notify personal bests".Localize(),
                     "Menu/In win notifications".Localize(),
                     new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
                     selectedIndex => {

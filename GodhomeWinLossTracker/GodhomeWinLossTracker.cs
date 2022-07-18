@@ -21,7 +21,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
-        public override string GetVersion() => "0.4.11.1";
+        public override string GetVersion() => "0.4.11.2";
         // Make sure this mod is loaded after GodSeeker+.
         public override int LoadPriority() => 5;
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
@@ -29,6 +29,9 @@ namespace GodhomeWinLossTracker
             this.LogMod("Initializing mod");
 
             instance = this;
+
+            // Initialize ModDisplay so that its instance can be used to initialize DisplayInvoker below.
+            ModDisplay.Initialize();
 
             Handler[] handlers = new Handler[] {
                 // Put logger first, so that it prints messages on the bus before other handlers can handle it.
@@ -62,8 +65,6 @@ namespace GodhomeWinLossTracker
             // Turn this line on/off to get ModDisplay related backdoors
             //ModDisplayUtils.Initialize(); 
 #endif
-
-            ModDisplay.Initialize();
 
             this.LogMod("Initialized");
         }
