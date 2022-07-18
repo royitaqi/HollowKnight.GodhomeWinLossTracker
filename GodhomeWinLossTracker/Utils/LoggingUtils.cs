@@ -9,7 +9,8 @@ namespace GodhomeWinLossTracker.Utils
     {
         public static Modding.LogLevel LogLevel = Modding.LogLevel.Info;
 
-        // Unexpected issue but okay to continue.
+        // These logs are accepted:
+        // - Unexpected issue but okay to continue.
         public static void LogModWarn(this Modding.ILogger logger, string message)
         {
 #if DEBUG
@@ -21,8 +22,8 @@ namespace GodhomeWinLossTracker.Utils
 #endif
         }
 
-        // Manually triggered, *infrequent* events (a few in a minute).
-        // One log for each user input.
+        // These logs are accepted:
+        // - The only log for a *manually triggered*, *infrequent* event (a few in a minute).
         public static void LogMod(this Modding.ILogger logger, string message)
         {
 #if DEBUG
@@ -34,8 +35,9 @@ namespace GodhomeWinLossTracker.Utils
 #endif
         }
 
-        // Manually triggered, *frequent* events (once every second).
-        // One log for each user input.
+        // These logs are accepted:
+        // - The more detailed logs for a *manually triggered*, *infrequent* event (a few in a minute).
+        // - The only log for a *manually triggered*, *frequent* event (once every second).
         public static void LogModDebug(this Modding.ILogger logger, string message)
         {
 #if DEBUG
@@ -47,7 +49,9 @@ namespace GodhomeWinLossTracker.Utils
 #endif
         }
 
-        // Multiple logs for each user input OR automatic events.
+        // These logs are accepted:
+        // - The more detailed logs for a *manually triggered*, *frequent* event (once every second).
+        // - Automatic events.
         public static void LogModFine(this Modding.ILogger logger, string message)
         {
 #if DEBUG

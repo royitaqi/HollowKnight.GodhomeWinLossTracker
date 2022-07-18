@@ -1,5 +1,8 @@
-﻿namespace GodhomeWinLossTracker.MessageBus.Messages
+﻿using GodhomeWinLossTracker.Utils;
+
+namespace GodhomeWinLossTracker.MessageBus.Messages
 {
+    [ModLogLevel(Modding.LogLevel.Debug)]
     public class TKHit: IMessage
     {
         public enum DamageSources
