@@ -5,13 +5,6 @@ using Newtonsoft.Json;
 
 namespace GodhomeWinLossTracker
 {
-    public enum RecordSources
-    {
-        Manual = 0,
-        Mod = 1,
-        Test = 2,
-    }
-
     [Serializable]
     public class FolderData
     {
@@ -41,5 +34,19 @@ namespace GodhomeWinLossTracker
         public GlobalData globalData { get; set; }
         public LocalData localData { get; set; }
         public FolderData folderData { get; set; }
+    }
+
+    public enum DamageSources
+    {
+        Unknown = 0,
+        Enemy = 1,
+        Hazard = 2,
+    }
+
+    public enum RecordSources
+    {
+        Manual = 0,
+        Mod = 1,
+        Test = 2,
     }
 }
