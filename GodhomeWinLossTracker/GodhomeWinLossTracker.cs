@@ -4,6 +4,7 @@ using GodhomeWinLossTracker.MessageBus.Handlers;
 using GodhomeWinLossTracker.Utils;
 using Modding;
 using UnityEngine;
+using Vasi;
 using Logger = GodhomeWinLossTracker.MessageBus.Handlers.Logger;
 
 namespace GodhomeWinLossTracker
@@ -21,7 +22,7 @@ namespace GodhomeWinLossTracker
         ///
 
         // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
-        public override string GetVersion() => "0.5.0.0";
+        public override string GetVersion() => VersionUtil.GetVersion<GodhomeWinLossTracker>();
         // Make sure this mod is loaded after GodSeeker+.
         public override int LoadPriority() => 5;
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
