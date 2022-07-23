@@ -9,6 +9,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
         public int HP { get; set; }
         public float X { get; set; }
         public float Y { get; set; }
+        public bool IsFinal { get; set; }
 
         public override string ToString()
         {

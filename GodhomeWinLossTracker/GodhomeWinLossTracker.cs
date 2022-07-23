@@ -53,7 +53,7 @@ namespace GodhomeWinLossTracker
                 new SceneChangeObserver(),
                 new SequenceChangeDetector(),
                 new TKDeathDetector(),
-                new TKHealthObserver()
+                new TKHpPosObserver()
             };
             messageBus = new(this, handlers);
 

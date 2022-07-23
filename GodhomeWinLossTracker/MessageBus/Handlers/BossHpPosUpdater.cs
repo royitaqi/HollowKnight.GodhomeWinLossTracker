@@ -65,47 +65,61 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
         }
 
-        public void OnBossHpPosRequest(BossHpPosRequest msg)
+        // Send boss hp and pos when any enemy is damaged
+        public void OnEnemyDamaged(EnemyDamaged _)
         {
-            if (_isInFight)
+            SendBossHpPos();
+        }
+
+        // Send boss hp and pos when requested
+        public void OnBossHpPosRequest(BossHpPosRequest _)
+        {
+            SendBossHpPos();
+        }
+
+        private void SendBossHpPos()
+        {
+            if (!_isInFight)
             {
-                var ret = new BossHpPos
-                {
-                    MaxHP = _maxHP,
-                    HP = 0,
-                    X = 0,
-                    Y = 0,
-                };
-
-                int count = 0;
-                foreach (var boss in _bossGOs)
-                {
-                    // Bosses killed during a fight can become null
-                    if (boss == null)
-                    {
-                        continue;
-                    }
-
-                    HealthManager hm = boss.GetComponent<HealthManager>();
-                    if (hm.isDead)
-                    {
-                        continue;
-                    }
-
-                    ret.X += boss.transform.position.x;
-                    ret.Y += boss.transform.position.y;
-                    ret.HP += Math.Max(0, hm.hp);
-                    count++;
-                }
-                ret.HP = Math.Min(ret.HP, ret.MaxHP);
-                if (count != 0)
-                {
-                    ret.X /= count;
-                    ret.Y /= count;
-                }
-
-                _bus.Put(ret);
+                return;
             }
+
+            var msg = new BossHpPos
+            {
+                MaxHP = _maxHP,
+                HP = 0,
+                X = 0,
+                Y = 0,
+            };
+
+            int count = 0;
+            foreach (var boss in _bossGOs)
+            {
+                // Bosses killed during a fight can become null
+                if (boss == null)
+                {
+                    continue;
+                }
+
+                HealthManager hm = boss.GetComponent<HealthManager>();
+                if (hm.isDead)
+                {
+                    continue;
+                }
+
+                msg.X += boss.transform.position.x;
+                msg.Y += boss.transform.position.y;
+                msg.HP += Math.Max(0, hm.hp);
+                count++;
+            }
+            msg.HP = Math.Min(msg.HP, msg.MaxHP);
+            if (count != 0)
+            {
+                msg.X /= count;
+                msg.Y /= count;
+            }
+
+            _bus.Put(msg);
         }
 
         private readonly List<GameObject> _bossGOs = new();

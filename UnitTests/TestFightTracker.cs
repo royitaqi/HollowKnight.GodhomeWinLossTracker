@@ -16,7 +16,7 @@ namespace UnitTests
         private readonly BossDeath BossKill = new BossDeath();
         private readonly TKDreamDeath TKDeath = new TKDreamDeath();
 
-        private IEnumerable<TestUtils.MessageBusTestCase> GetTestCases()
+        private IEnumerable<TestUtils.MessageBusTestCase> GetTestCasesWinLossDecisions()
         {
             return new[]
             {
@@ -300,9 +300,9 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void TestRunAll()
+        public void TestWinLossDecisions()
         {
-            foreach (var testCase in GetTestCases())
+            foreach (var testCase in GetTestCasesWinLossDecisions())
             {
                 testCase.HandlersCreator = _ => new[] { new FightTracker(() => 0) };
                 testCase.InputMessages = new[] { new SequenceChange { Name = "Test" } }.Concat(testCase.InputMessages);
@@ -313,5 +313,7 @@ namespace UnitTests
                 TestUtils.TestMessageBus(testCase);
             }
         }
+
+        //private IEnumerable<TestUtils.MessageBusTestCase> GetTestCasesHitsBoss()
     }
 }
