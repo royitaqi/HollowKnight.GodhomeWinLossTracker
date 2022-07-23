@@ -6,9 +6,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class FightTracker : Handler
     {
-        public FightTracker(Func<long> getGameTime)
+        public FightTracker(Func<long> getGameTime, Func<int> getTKStatus)
         {
             _getGameTime = getGameTime;
+            _getTKStatus = getTKStatus;
         }
 
         // Facts:
@@ -107,24 +108,19 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _lastTKHit = msg;
 
             // Poll for boss HP and pos info
-            _bus.Put(new BossHpPosRequest());
+            _bus.Put(new TKHpPosRequest());
         }
 
-        public void OnBossHpPos(BossHpPos msg)
-        {
-            _lastBossHpPos = msg;
-        }
-
-        public void OnRawHitRequest(RawHitRequest msg)
+        public void OnTKHpPos(TKHpPos msg)
         {
             _bus.Put(new RawHit(
                 DateTime.Now.ToString("yyyy'-'MM'-'dd HH':'mm':'ss"),
                 _currentSequence,
                 _currentBoss.BossName,
                 _currentBoss.SceneName,
-                TKUtils.GetTKStatus(),
-                (int)Math.Round(HeroController.instance.gameObject.transform.position.x),
-                (int)Math.Round(HeroController.instance.gameObject.transform.position.y),
+                _getTKStatus(),
+                (int)Math.Round(msg.X),
+                (int)Math.Round(msg.Y),
                 _lastTKHit.HealthBefore,
                 _lastTKHit.Damage,
                 _lastTKHit.DamageSource,
@@ -135,6 +131,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _getGameTime() - _fightStartGameTime,
                 RecordSources.Mod
             ));
+        }
+
+        public void OnBossHpPos(BossHpPos msg)
+        {
+            _lastBossHpPos = msg;
         }
 
         public void OnBossStateChange(BossStateChange msg)
@@ -155,7 +156,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _healAmount,
                 _hitCount,
                 _hitAmount,
-                _bossHP,
+                _lastBossHpPos.MaxHP != 0 ? (float)_lastBossHpPos.HP / _lastBossHpPos.MaxHP : 1,
                 _getGameTime() - _fightStartGameTime,
                 RecordSources.Mod
             ));
@@ -171,7 +172,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _healAmount = -1;
             _hitCount = -1;
             _hitAmount = -1;
-            _bossHP = float.NaN;
             _bossState = null;
             _lastTKHit = null;
             _lastBossHpPos = null;
@@ -187,13 +187,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _healAmount = 0;
             _hitCount = 0;
             _hitAmount = 0;
-            _bossHP = 1; // Assume boss has 100% HP at start of fight
             _bossState = "N/A";
             _lastTKHit = null; // This will be populated before emitting a RawHit record
             _lastBossHpPos = null; // This will be populated before emitting a RawHit record
         }
 
         Func<long> _getGameTime;
+        Func<int> _getTKStatus;
         // Always have the latest sequence name, even when not in a boss fight.
         private string _currentSequence = null;
         // Null value means currently no boss.
@@ -206,7 +206,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private int _healAmount = -1;
         private int _hitCount = -1;
         private int _hitAmount = -1;
-        private float _bossHP = float.NaN;
         private string _bossState = null;
         private TKHit _lastTKHit = null;
         private BossHpPos _lastBossHpPos = null;

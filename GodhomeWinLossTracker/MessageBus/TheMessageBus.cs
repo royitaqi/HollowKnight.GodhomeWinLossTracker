@@ -24,8 +24,6 @@ namespace GodhomeWinLossTracker.MessageBus
             {
                 h.Load(mod, this, mod);
             }
-
-            this.Put(new BusEvent { Event = "initialized" });
         }
 
         public void Put(IMessage message)

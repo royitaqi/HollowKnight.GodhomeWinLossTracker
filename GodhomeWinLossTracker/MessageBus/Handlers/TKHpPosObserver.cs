@@ -2,7 +2,7 @@
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
-    internal class TKHealthObserver : Handler
+    internal class TKHpPosObserver : Handler
     {
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
@@ -33,10 +33,17 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
             if (damage != 0)
             {
-                // First send out TKHit to trigger updates, then send out RawHitRequest to create a record.
                 _bus.Put(new TKHit { Damage = damage, HealthAfter = healthAfter });
-                _bus.Put(new RawHitRequest());
             }
+        }
+
+        public void OnTKHpPosRequest(TKHpPosRequest msg)
+        {
+            _bus.Put(new TKHpPos {
+                HP = PlayerData.instance.health + PlayerData.instance.healthBlue,
+                X = HeroController.instance.gameObject.transform.position.x,
+                Y = HeroController.instance.gameObject.transform.position.y,
+            });
         }
     }
 }
