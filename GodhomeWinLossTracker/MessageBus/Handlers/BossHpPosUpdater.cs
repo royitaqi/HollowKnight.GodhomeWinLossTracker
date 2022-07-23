@@ -62,17 +62,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 _bossGOs.Add(msg.EnemyGO);
                 _maxHP += msg.EnemyGO.GetComponent<HealthManager>().hp;
+
+                // Send boss hp and pos when boss is enabled
+                SendBossHpPos();
             }
         }
 
         // Send boss hp and pos when any enemy is damaged
         public void OnEnemyDamaged(EnemyDamaged _)
-        {
-            SendBossHpPos();
-        }
-
-        // Send boss hp and pos when requested
-        public void OnBossHpPosRequest(BossHpPosRequest _)
         {
             SendBossHpPos();
         }

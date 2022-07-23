@@ -63,7 +63,7 @@ namespace UnitTests
 
                 // Verify output messages
                 Assert.AreEqual(
-                    TestUtils.ConvertMessagesToString(new[] { new BusEvent { Event = "initialized" } }.Concat(testCase.ExpectedMessages)),
+                    TestUtils.ConvertMessagesToString(testCase.ExpectedMessages),
                     TestUtils.ConvertMessagesToString(outputMessages),
                     testCase.ToString()
                 );
@@ -142,7 +142,29 @@ namespace UnitTests
             sb.AppendLine();
             foreach (var msg in messages)
             {
-                sb.AppendLine($"    {msg.GetType().Name}: {msg}");
+                sb.AppendLine($"    {msg.GetType().Name}:{ConvertMessageToString(msg)}");
+            }
+            return sb.ToString();
+        }
+
+        private static string ConvertMessageToString(IMessage msg)
+        {
+            var skipNames = new HashSet<string>
+            {
+                "Timestamp",
+                "RecordSource",
+            };
+
+            StringBuilder sb = new();
+            foreach (var p in msg.GetType().GetProperties())
+            {
+                if (skipNames.Contains(p.Name)) continue;
+                sb.AppendFormat(" {0}={1}", p.Name, p.GetValue(msg));
+            }
+            foreach (var f in msg.GetType().GetFields())
+            {
+                if (skipNames.Contains(f.Name)) continue;
+                sb.AppendFormat(" {0}={1}", f.Name, f.GetValue(msg));
             }
             return sb.ToString();
         }

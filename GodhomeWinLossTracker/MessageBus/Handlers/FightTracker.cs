@@ -6,9 +6,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class FightTracker : Handler
     {
-        public FightTracker(Func<long> getGameTime)
+        public FightTracker(Func<long> getGameTime, Func<int> getTKStatus)
         {
             _getGameTime = getGameTime;
+            _getTKStatus = getTKStatus;
         }
 
         // Facts:
@@ -107,13 +108,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _lastTKHit = msg;
 
             // Poll for boss HP and pos info
-            _bus.Put(new BossHpPosRequest());
             _bus.Put(new TKHpPosRequest());
-        }
-
-        public void OnBossHpPos(BossHpPos msg)
-        {
-            _lastBossHpPos = msg;
         }
 
         public void OnTKHpPos(TKHpPos msg)
@@ -123,7 +118,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _currentSequence,
                 _currentBoss.BossName,
                 _currentBoss.SceneName,
-                TKUtils.GetTKStatus(),
+                _getTKStatus(),
                 (int)Math.Round(msg.X),
                 (int)Math.Round(msg.Y),
                 _lastTKHit.HealthBefore,
@@ -136,6 +131,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _getGameTime() - _fightStartGameTime,
                 RecordSources.Mod
             ));
+        }
+
+        public void OnBossHpPos(BossHpPos msg)
+        {
+            _lastBossHpPos = msg;
         }
 
         public void OnBossStateChange(BossStateChange msg)
@@ -193,6 +193,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         }
 
         Func<long> _getGameTime;
+        Func<int> _getTKStatus;
         // Always have the latest sequence name, even when not in a boss fight.
         private string _currentSequence = null;
         // Null value means currently no boss.
