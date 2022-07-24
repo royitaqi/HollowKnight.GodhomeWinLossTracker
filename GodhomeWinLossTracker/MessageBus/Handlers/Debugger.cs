@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 using Modding;
@@ -31,13 +32,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private void OnHeroUpdate()
         {
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-            }
-            else if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.P))
             {
                 _mod.LogMod(LoggingUtils.DumpLogCount());
-                _bus.Put(new SaveFolderData());
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
@@ -45,49 +42,23 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.LeftBracket))
             {
-                switch (LoggingUtils.LogLevel)
-                {
-                    case LogLevel.Info:
-                        LoggingUtils.LogLevel = LogLevel.Debug;
-                        _mod.LogModDebug("LogLevel = Debug");
-                        ModDisplay.instance.Notify("LogLevel = Debug");
-                        break;
-                    case LogLevel.Debug:
-                        LoggingUtils.LogLevel = LogLevel.Fine;
-                        _mod.LogModFine("LogLevel = Fine");
-                        ModDisplay.instance.Notify("LogLevel = Fine");
-                        break;
-                    case LogLevel.Fine:
-                        LoggingUtils.LogLevel = LogLevel.Info;
-                        _mod.LogMod("LogLevel = Info");
-                        ModDisplay.instance.Notify("LogLevel = Info");
-                        break;
-                    default:
-                        throw new AssertionFailedException("Should never arrive here");
-                };
+                int idx = Array.IndexOf(_logLevels, LoggingUtils.LogLevel);
+                if (idx == -1) return;
+
+                idx = (idx + _logLevels.Length - 1) % _logLevels.Length;
+                LoggingUtils.LogLevel = _logLevels[idx];
+                _mod.LogMod($"LogLevel = {LoggingUtils.LogLevel}");
+                ModDisplay.instance.Notify($"LogLevel = {LoggingUtils.LogLevel}");
             }
             else if (Input.GetKeyDown(KeyCode.RightBracket))
             {
-                switch (LoggingUtils.LogLevel)
-                {
-                    case LogLevel.Info:
-                        LoggingUtils.LogLevel = LogLevel.Fine;
-                        _mod.LogModFine("LogLevel = Fine");
-                        ModDisplay.instance.Notify("LogLevel = Fine");
-                        break;
-                    case LogLevel.Fine:
-                        LoggingUtils.LogLevel = LogLevel.Debug;
-                        _mod.LogModDebug("LogLevel = Debug");
-                        ModDisplay.instance.Notify("LogLevel = Debug");
-                        break;
-                    case LogLevel.Debug:
-                        LoggingUtils.LogLevel = LogLevel.Info;
-                        _mod.LogMod("LogLevel = Info");
-                        ModDisplay.instance.Notify("LogLevel = Info");
-                        break;
-                    default:
-                        throw new AssertionFailedException("Should never arrive here");
-                };
+                int idx = Array.IndexOf(_logLevels, LoggingUtils.LogLevel);
+                if (idx == -1) return;
+
+                idx = (idx + 1) % _logLevels.Length;
+                LoggingUtils.LogLevel = _logLevels[idx];
+                _mod.LogMod($"LogLevel = {LoggingUtils.LogLevel}");
+                ModDisplay.instance.Notify($"LogLevel = {LoggingUtils.LogLevel}");
             }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
@@ -103,6 +74,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
                 // Save data right now!
                 _bus.Put(new SaveFolderData { Slot = GameManager.instance.profileID });
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                // Turn this line on/off to get FSM related events
+                //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.FsmName == "Mage Knight");
+                //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
+                FsmUtils.Load(_logger);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                // Turn this line on/off to get ModDisplay related backdoors
+                ModDisplayUtils.Initialize(); 
             }
             else if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -139,5 +122,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             _mod.LogMod("!!! All TK and boss position wiped in Hit records !!!");
         }
+
+        private LogLevel[] _logLevels = new[]
+        {
+            LogLevel.Fine,
+            LogLevel.Debug,
+            LogLevel.Info,
+        };
     }
 }

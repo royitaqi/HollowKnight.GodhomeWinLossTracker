@@ -57,16 +57,6 @@ namespace GodhomeWinLossTracker
             };
             messageBus = new(this, handlers);
 
-#if DEBUG
-            // Turn this line on/off to get FSM related events
-            //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.FsmName == "Mage Knight");
-            //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
-            //FsmUtils.Load(this);
-
-            // Turn this line on/off to get ModDisplay related backdoors
-            //ModDisplayUtils.Initialize(); 
-#endif
-
             this.LogMod("Initialized");
         }
 
