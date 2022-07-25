@@ -13,10 +13,40 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
             base.Load(mod, bus, logger);
+
+            FsmUtils.Load(_logger);
+
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
+
+            On.HeroController.SetCState += HeroController_SetCState;
+            On.HeroController.SetState += HeroController_SetState;
         }
+
+        private void HeroController_SetState(On.HeroController.orig_SetState orig, HeroController self, GlobalEnums.ActorStates newState)
+        {
+            _mod.LogModTEMP($"HeroController_SetState newState={newState.ToString()}");
+            orig(self, newState);
+            status = TKUtils.GetTKStatus();
+            _mod.LogModTEMP($"TK status = {status}");
+        }
+
+        private void HeroController_SetCState(On.HeroController.orig_SetCState orig, HeroController self, string stateName, bool value)
+        {
+            _mod.LogModTEMP($"HeroController_SetCState stateName={stateName} value={value}");
+            _mod.LogModTEMP($"TK status before = {status}");
+            orig(self, stateName, value);
+            status = TKUtils.GetTKStatus();
+            _mod.LogModTEMP($"TK status after = {status}");
+        }
+
+        public void OnTKHit(TKHit msg)
+        {
+            _mod.LogModTEMP($"TK HIT status = {status}");
+        }
+
+        private int status = 0;
 
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
         {
@@ -34,14 +64,17 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
+                _mod.LogMod("Debugger: 'P' pressed");
                 _mod.LogMod(LoggingUtils.DumpLogCount());
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
+                _mod.LogMod("Debugger: 'T' pressed");
                 _bus.Put(new BusEvent { ForTest = true });
             }
             else if (Input.GetKeyDown(KeyCode.LeftBracket))
             {
+                _mod.LogMod("Debugger: '[' pressed");
                 int idx = Array.IndexOf(_logLevels, LoggingUtils.LogLevel);
                 if (idx == -1) return;
 
@@ -52,6 +85,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.RightBracket))
             {
+                _mod.LogMod("Debugger: ']' pressed");
                 int idx = Array.IndexOf(_logLevels, LoggingUtils.LogLevel);
                 if (idx == -1) return;
 
@@ -62,6 +96,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
+                _mod.LogMod("Debugger: '0' pressed");
+
                 // Print the last win/loss and hit record
                 if (_mod.folderData.RawWinLosses.Count > 0)
                 {
@@ -77,6 +113,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.Alpha9))
             {
+                _mod.LogMod("Debugger: '9' pressed - loading FsmUtils");
+
                 // Turn this line on/off to get FSM related events
                 //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.FsmName == "Mage Knight");
                 //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
@@ -84,6 +122,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.Alpha8))
             {
+                _mod.LogMod("Debugger: '8' pressed - loading ModDisplayUtils");
+
                 // Turn this line on/off to get ModDisplay related backdoors
                 ModDisplayUtils.Initialize(); 
             }
