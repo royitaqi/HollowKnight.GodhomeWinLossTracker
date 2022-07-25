@@ -27,7 +27,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private void PlayerData_TakeHealth(On.PlayerData.orig_TakeHealth orig, PlayerData self, int amount)
         {
-            _mod.LogModTEMP($"PlayerData_TakeHealth TKStatus={TKUtils.GetTKStatus()}");
             int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
             orig(self, amount);
             int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;

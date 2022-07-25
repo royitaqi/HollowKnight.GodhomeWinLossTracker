@@ -13,38 +13,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
             base.Load(mod, bus, logger);
-
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;
-
-            On.HeroController.SetCState += HeroController_SetCState;
-            On.HeroController.SetState += HeroController_SetState;
         }
-
-        private void HeroController_SetState(On.HeroController.orig_SetState orig, HeroController self, GlobalEnums.ActorStates newState)
-        {
-            _mod.LogModTEMP($"HeroController_SetState newState={newState.ToString()}");
-            orig(self, newState);
-            status = TKUtils.GetTKStatus();
-            _mod.LogModTEMP($"TK status = {status}");
-        }
-
-        private void HeroController_SetCState(On.HeroController.orig_SetCState orig, HeroController self, string stateName, bool value)
-        {
-            _mod.LogModTEMP($"HeroController_SetCState stateName={stateName} value={value}");
-            _mod.LogModTEMP($"TK status before = {status}");
-            orig(self, stateName, value);
-            status = TKUtils.GetTKStatus();
-            _mod.LogModTEMP($"TK status after = {status}");
-        }
-
-        public void OnTKHit(TKHit msg)
-        {
-            _mod.LogModTEMP($"TK HIT status = {status}");
-        }
-
-        private int status = 0;
 
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
         {
