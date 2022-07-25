@@ -1,6 +1,6 @@
 ﻿using System;
 using HutongGames.PlayMaker;
-using SFCore.Utils;
+using Vasi;
 
 namespace GodhomeWinLossTracker.Utils
 {
@@ -53,7 +53,7 @@ namespace GodhomeWinLossTracker.Utils
         {
             foreach (var state in fsm.FsmStates)
             {
-                state.InsertMethod(() => act(state), 0);
+                state.InsertMethod(0, () => act(state));
             }
         }
 

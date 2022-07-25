@@ -14,8 +14,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             base.Load(mod, bus, logger);
 
-            FsmUtils.Load(_logger);
-
             ModHooks.HeroUpdateHook += OnHeroUpdate;
             On.HeroController.Start += HeroController_Start;
             On.GameManager.Start += GameManager_Start;

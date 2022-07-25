@@ -8,7 +8,6 @@ namespace UnitTests
         private const string BossSceneName = "GG_Hornet_1";
         private const string BossName2 = "Hornet (Sentinel)";
         private const string BossSceneName2 = "GG_Hornet_2";
-        private const int TKStatus = 8375;
         private const string BossState = "N/A"; // This is the hardcoded value in FightTracker as initial value for boss state.
         private readonly BossChange NonBoss = new BossChange();
         private readonly BossChange Boss = new BossChange(BossName, BossSceneName);
@@ -23,6 +22,9 @@ namespace UnitTests
         private readonly RawWinLoss Loss = new RawWinLoss("", SequenceName, BossName, BossSceneName, 0, 1, 0, 0, 0, 0, 0.8f, 0, G.RecordSources.Test);
         private readonly BossDeath BossKill = new BossDeath();
         private readonly TKDreamDeath TKDeath = new TKDreamDeath();
+        private readonly TKStatus TKStatus4 = new TKStatus { Status = 8375 };
+        private readonly TKStatus TKStatus3 = new TKStatus { Status = 6523 };
+        private readonly TKStatus TKStatus2 = new TKStatus { Status = 4034 };
         private readonly TKHit TKHit4To3 = new TKHit { Damage = 1, HealthAfter = 3 };
         private readonly TKHit TKHit3To2 = new TKHit { Damage = 1, HealthAfter = 2 };
         private readonly TKHit TKHit2To1 = new TKHit { Damage = 1, HealthAfter = 1 };
@@ -321,7 +323,7 @@ namespace UnitTests
         {
             foreach (var testCase in GetTestCasesWinLossResults())
             {
-                testCase.HandlersCreator = _ => new[] { new FightTracker(() => 0, () => TKStatus) };
+                testCase.HandlersCreator = _ => new[] { new FightTracker(() => 0) };
                 testCase.InputMessages = new[] { new SequenceChange { Name = "Test" } }.Concat(testCase.InputMessages);
                 if (testCase.ExpectedMessages != null)
                 {
@@ -351,14 +353,17 @@ namespace UnitTests
                     {
                         Boss,
                         BossHpPos100, // From BossHpPosUpdater
+                        TKStatus4,
                         TKHit4To3,
                         TKHpPos3, // From TKHpPosObserver
                         // Should RawHit
                         BossHpPos80, // From BossHpPosUpdater
+                        TKStatus3,
                         TKHit3To2,
                         TKHpPos2, // From TKHpPosObserver
                         // Should RawHit
                         BossHpPos60, // From BossHpPosUpdater
+                        TKStatus2,
                         TKHit2To1,
                         TKHpPos1, // From TKHpPosObserver
                         // Should RawHit
@@ -370,7 +375,7 @@ namespace UnitTests
                             SequenceName,
                             BossName,
                             BossSceneName,
-                            TKStatus,
+                            TKStatus4.Status,
                             (int)Math.Round(TKHpPos3.X),
                             (int)Math.Round(TKHpPos3.Y),
                             TKHit4To3.HealthBefore,
@@ -388,7 +393,7 @@ namespace UnitTests
                             SequenceName,
                             BossName,
                             BossSceneName,
-                            TKStatus,
+                            TKStatus3.Status,
                             (int)Math.Round(TKHpPos2.X),
                             (int)Math.Round(TKHpPos2.Y),
                             TKHit3To2.HealthBefore,
@@ -406,7 +411,7 @@ namespace UnitTests
                             SequenceName,
                             BossName,
                             BossSceneName,
-                            TKStatus,
+                            TKStatus2.Status,
                             (int)Math.Round(TKHpPos1.X),
                             (int)Math.Round(TKHpPos1.Y),
                             TKHit2To1.HealthBefore,
@@ -428,9 +433,11 @@ namespace UnitTests
                     {
                         Boss,
                         BossHpPos100, // From BossHpPosUpdater
+                        TKStatus4,
                         TKHit4To3,
                         TKHpPos3, // From TKHpPosObserver
                         // Should RawHit
+                        TKStatus3,
                         TKHit3To2,
                         TKHpPos2, // From TKHpPosObserver
                         // Should RawHit
@@ -442,7 +449,7 @@ namespace UnitTests
                             SequenceName,
                             BossName,
                             BossSceneName,
-                            TKStatus,
+                            TKStatus4.Status,
                             (int)Math.Round(TKHpPos3.X),
                             (int)Math.Round(TKHpPos3.Y),
                             TKHit4To3.HealthBefore,
@@ -460,7 +467,7 @@ namespace UnitTests
                             SequenceName,
                             BossName,
                             BossSceneName,
-                            TKStatus,
+                            TKStatus3.Status,
                             (int)Math.Round(TKHpPos2.X),
                             (int)Math.Round(TKHpPos2.Y),
                             TKHit3To2.HealthBefore,
@@ -483,7 +490,7 @@ namespace UnitTests
         {
             foreach (var testCase in GetTestCasesTKHits())
             {
-                testCase.HandlersCreator = _ => new[] { new FightTracker(() => 0, () => TKStatus) };
+                testCase.HandlersCreator = _ => new[] { new FightTracker(() => 0) };
                 testCase.InputMessages = new[] { new SequenceChange { Name = "Test" } }.Concat(testCase.InputMessages);
                 testCase.OutputMessageFilter = msgs => msgs.Where(msg => msg is RawHit);
 
