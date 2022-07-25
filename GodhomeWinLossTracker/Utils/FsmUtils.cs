@@ -1,6 +1,6 @@
 ﻿using System;
 using HutongGames.PlayMaker;
-using SFCore.Utils;
+using Vasi;
 
 namespace GodhomeWinLossTracker.Utils
 {
@@ -10,6 +10,9 @@ namespace GodhomeWinLossTracker.Utils
         public static void Load(Modding.ILogger logger, Func<PlayMakerFSM, bool> filter = null)
         {
             _logger = logger;
+            _logger.LogMod("FsmUtils: Loading. Switching log level to 'Fine'");
+            LoggingUtils.LogLevel = Modding.LogLevel.Fine;
+
             if (filter == null)
             {
                 // Allow all logs by default
@@ -22,22 +25,19 @@ namespace GodhomeWinLossTracker.Utils
 
             On.PlayMakerFSM.OnEnable += PlayMakerFSM_OnEnable;
             On.PlayMakerFSM.Start += PlayMakerFSM_Start;
-            On.PlayMakerFSM.SetState += PlayMakerFSM_SetState;
-            On.PlayMakerFSM.Update += PlayMakerFSM_Update;
-            On.PlayMakerFSM.SendEvent += PlayMakerFSM_SendEvent;
-            On.PlayMakerFSM.SendRemoteFsmEvent += PlayMakerFSM_SendRemoteFsmEvent;
-            On.PlayMakerFSM.ChangeState_FsmEvent += PlayMakerFSM_ChangeState_FsmEvent;
         }
 
         private static void PlayMakerFSM_OnEnable(On.PlayMakerFSM.orig_OnEnable orig, PlayMakerFSM self)
         {
-            orig(self);
-            
             if (_filter(self))
             {
                 _logger.LogModDebug($"PlayMakerFSM_OnEnable: GO={self.gameObject.name} FsmName={self.FsmName}");
-                self.MakeLog();
+                HookAllStates(self, state =>
+                {
+                    _logger.LogModFine($"FSM: GO={self.gameObject.name}, FSM={self.FsmName} State={state.Name}");
+                });
             }
+            orig(self);
         }
 
         private static void PlayMakerFSM_Start(On.PlayMakerFSM.orig_Start orig, PlayMakerFSM self)
@@ -49,60 +49,15 @@ namespace GodhomeWinLossTracker.Utils
             orig(self);
         }
 
-        private static void PlayMakerFSM_SetState(On.PlayMakerFSM.orig_SetState orig, PlayMakerFSM self, string stateName)
-        {
-            if (_filter(self))
-            {
-                LoggingUtils.CountedLog($"PlayMakerFSM_SetState: GO={self.gameObject.name} FsmName={self.FsmName} stateName={stateName}");
-            }
-            orig(self, stateName);
-        }
-
-        private static void PlayMakerFSM_Update(On.PlayMakerFSM.orig_Update orig, PlayMakerFSM self)
-        {
-            if (_filter(self))
-            {
-                LoggingUtils.CountedLog($"PlayMakerFSM_Update: GO={self.gameObject.name} FsmName={self.FsmName} ActiveStateName={self.ActiveStateName}");
-            }
-            orig(self);
-        }
-
-        private static void PlayMakerFSM_SendEvent(On.PlayMakerFSM.orig_SendEvent orig, PlayMakerFSM self, string eventName)
-        {
-            if (_filter(self))
-            {
-                LoggingUtils.CountedLog($"PlayMakerFSM_SendEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
-            }
-            orig(self, eventName);
-        }
-
-        private static void PlayMakerFSM_SendRemoteFsmEvent(On.PlayMakerFSM.orig_SendRemoteFsmEvent orig, PlayMakerFSM self, string eventName)
-        {
-            if (_filter(self))
-            {
-                LoggingUtils.CountedLog($"PlayMakerFSM_SendRemoteFsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={eventName}");
-            }
-            orig(self, eventName);
-        }
-
-        private static void PlayMakerFSM_ChangeState_FsmEvent(On.PlayMakerFSM.orig_ChangeState_FsmEvent orig, PlayMakerFSM self, HutongGames.PlayMaker.FsmEvent fsmEvent)
-        {
-            if (_filter(self))
-            {
-                LoggingUtils.CountedLog($"PlayMakerFSM_ChangeState_FsmEvent: GO={self.gameObject.name} FsmName={self.FsmName} eventName={fsmEvent.Name}");
-            }
-            orig(self, fsmEvent);
-        }
-
-        private static Modding.ILogger _logger;
-        private static Func<PlayMakerFSM, bool> _filter;
-
         public static void HookAllStates(PlayMakerFSM fsm, Action<FsmState> act)
         {
             foreach (var state in fsm.FsmStates)
             {
-                state.InsertMethod(() => act(state), 0);
+                state.InsertMethod(0, () => act(state));
             }
         }
+
+        private static Modding.ILogger _logger;
+        private static Func<PlayMakerFSM, bool> _filter;
     }
 }

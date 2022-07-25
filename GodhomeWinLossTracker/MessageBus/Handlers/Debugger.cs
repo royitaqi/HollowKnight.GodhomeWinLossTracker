@@ -34,14 +34,17 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
+                _mod.LogMod("Debugger: 'P' pressed");
                 _mod.LogMod(LoggingUtils.DumpLogCount());
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
+                _mod.LogMod("Debugger: 'T' pressed");
                 _bus.Put(new BusEvent { ForTest = true });
             }
             else if (Input.GetKeyDown(KeyCode.LeftBracket))
             {
+                _mod.LogMod("Debugger: '[' pressed");
                 int idx = Array.IndexOf(_logLevels, LoggingUtils.LogLevel);
                 if (idx == -1) return;
 
@@ -52,6 +55,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.RightBracket))
             {
+                _mod.LogMod("Debugger: ']' pressed");
                 int idx = Array.IndexOf(_logLevels, LoggingUtils.LogLevel);
                 if (idx == -1) return;
 
@@ -62,6 +66,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.Alpha0))
             {
+                _mod.LogMod("Debugger: '0' pressed");
+
                 // Print the last win/loss and hit record
                 if (_mod.folderData.RawWinLosses.Count > 0)
                 {
@@ -77,6 +83,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.Alpha9))
             {
+                _mod.LogMod("Debugger: '9' pressed - loading FsmUtils");
+
                 // Turn this line on/off to get FSM related events
                 //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.FsmName == "Mage Knight");
                 //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
@@ -84,6 +92,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             else if (Input.GetKeyDown(KeyCode.Alpha8))
             {
+                _mod.LogMod("Debugger: '8' pressed - loading ModDisplayUtils");
+
                 // Turn this line on/off to get ModDisplay related backdoors
                 ModDisplayUtils.Initialize(); 
             }

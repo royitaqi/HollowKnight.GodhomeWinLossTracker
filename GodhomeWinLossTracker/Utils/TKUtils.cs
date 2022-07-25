@@ -26,12 +26,12 @@ namespace GodhomeWinLossTracker.Utils
                 false,
                 false,
                 HeroController.instance.cState.touchingWall,
-                false,
+                HeroController.instance.cState.wallSliding,
                 
                 // Movement
                 HeroController.instance.cState.dashing, // This includes normal dash and shadow dash (HeroController.instance.cState.shadowDashing)
                 HeroController.instance.cState.superDashing || HeroController.instance.cState.superDashOnWall,
-                HeroController.instance.cState.wallSliding,
+                false,
                 false,
                 false,
                 false,

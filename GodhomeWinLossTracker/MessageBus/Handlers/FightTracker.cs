@@ -6,10 +6,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class FightTracker : Handler
     {
-        public FightTracker(Func<long> getGameTime, Func<int> getTKStatus)
+        public FightTracker(Func<long> getGameTime)
         {
             _getGameTime = getGameTime;
-            _getTKStatus = getTKStatus;
         }
 
         // Facts:
@@ -118,7 +117,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _currentSequence,
                 _currentBoss.BossName,
                 _currentBoss.SceneName,
-                _getTKStatus(),
+                _tkStatus,
                 (int)Math.Round(msg.X),
                 (int)Math.Round(msg.Y),
                 _lastTKHit.HealthBefore,
@@ -131,6 +130,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _getGameTime() - _fightStartGameTime,
                 RecordSources.Mod
             ));
+        }
+
+        public void OnTKStatus(TKStatus msg)
+        {
+            _tkStatus = msg.Status;
         }
 
         public void OnBossHpPos(BossHpPos msg)
@@ -175,6 +179,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _bossState = null;
             _lastTKHit = null;
             _lastBossHpPos = null;
+            _tkStatus = -1;
         }
 
         private void Init(BossChange newBoss)
@@ -190,10 +195,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _bossState = "N/A";
             _lastTKHit = null; // This will be populated before emitting a RawHit record
             _lastBossHpPos = null; // This will be populated before emitting a RawHit record
+            _tkStatus = -1;
         }
 
         Func<long> _getGameTime;
-        Func<int> _getTKStatus;
         // Always have the latest sequence name, even when not in a boss fight.
         private string _currentSequence = null;
         // Null value means currently no boss.
@@ -209,5 +214,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private string _bossState = null;
         private TKHit _lastTKHit = null;
         private BossHpPos _lastBossHpPos = null;
+        private int _tkStatus = -1;
     }
 }

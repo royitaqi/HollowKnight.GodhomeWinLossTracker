@@ -110,6 +110,13 @@ namespace GodhomeWinLossTracker
                     },
                     () => GodhomeWinLossTracker.instance.globalData.AsyncWrites? 1 : 0
                 ),
+#if DEBUG
+                new MenuButton(
+                    "DEBUG: Load FsmUtils",
+                    "",
+                    _ => FsmUtils.Load(GodhomeWinLossTracker.instance)
+                ),
+#endif
             });
         }
 

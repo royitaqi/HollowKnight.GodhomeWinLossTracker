@@ -9,6 +9,15 @@ namespace GodhomeWinLossTracker.Utils
     {
         public static Modding.LogLevel LogLevel = Modding.LogLevel.Info;
 
+        // All logs are accepted.
+        public static void LogModTEMP(this Modding.ILogger logger, string message)
+        {
+#if DEBUG
+            var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
+            logger.Log($"{time} [TEMP] {message}");
+#endif
+        }
+
         // These logs are accepted:
         // - Unexpected issue but okay to continue.
         public static void LogModWarn(this Modding.ILogger logger, string message)

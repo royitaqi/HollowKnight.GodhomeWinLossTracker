@@ -44,7 +44,7 @@ namespace GodhomeWinLossTracker
                 new Debugger(),
                 new DisplayInvoker(str => str.Localize(), ModDisplay.instance.Notify),
                 new EnemyStateObserver(),
-                new FightTracker(() => GameManagerUtils.PlayTimeMs, TKUtils.GetTKStatus),
+                new FightTracker(() => GameManagerUtils.PlayTimeMs),
                 new GameLoadDetector(),
                 new HoGStatsQueryProcessor(str => str.Localize()),
                 new PantheonStatsQueryProcessor(str => str.Localize()),
@@ -52,7 +52,7 @@ namespace GodhomeWinLossTracker
                 new SaveLoad(),
                 new SceneChangeObserver(),
                 new SequenceChangeDetector(),
-                new TKDeathDetector(),
+                new TKDeathAndStatusObserver(),
                 new TKHpPosObserver()
             };
             messageBus = new(this, handlers);
