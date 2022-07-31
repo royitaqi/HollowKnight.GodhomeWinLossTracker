@@ -30,44 +30,95 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 );
 
                 // Generate pb messsage
+                bool isBetter = false;
                 string timeString = null;
-                string hitString = null;
+                string hitsString = null;
                 if (_mod.globalData.NotifyPB && record.Wins > 0 && record.Losses == 0)
                 {
-                    // Get all win records before this one
-                    var records = _mod.folderData.RawWinLosses.Where(r => r != record && r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0).ToList();
+                    // Prepare pb strings.
+                    // These pb strings can be wiped to null if they are worse than previous records.
+                    long minutes = record.FightLengthMs / 1000 / 60;
+                    long seconds = record.FightLengthMs / 1000 % 60;
+                    timeString = $"{minutes}:{seconds:D2}";
+                    hitsString = record.Hits > 1 ? null : _localizer(record.Hits == 0 ? "Notification/hitless" : "Notification/1 hit");
 
-                    // Generate time
-                    if (records.Count == 0 || record.FightLengthMs < records.Min(r => r.FightLengthMs))
+                    // Get all win records before this one
+                    var records = _mod.folderData.RawWinLosses
+                        .Where(r => r != record && r.SequenceName == record.SequenceName && r.SceneName == record.SceneName && r.Wins > 0 && r.Losses == 0)
+                        .ToList();
+
+                    // Compare time
+                    if (records.Count == 0)
                     {
-                        long minutes = record.FightLengthMs / 1000 / 60;
-                        long seconds = record.FightLengthMs / 1000 % 60;
-                        timeString = $"{minutes}:{seconds:D2}";
+                        isBetter = true;
+                        // Keep time string
+                    }
+                    else
+                    {
+                        var bestTimeSoFar = records.Min(r => r.FightLengthMs);
+                        if (record.FightLengthMs < bestTimeSoFar)
+                        {
+                            isBetter = true;
+                            // Keep time string
+                        }
+                        else if (record.FightLengthMs == bestTimeSoFar)
+                        {
+                            // Keep time string
+                        }
+                        else
+                        {
+                            timeString = null;
+                        }
                     }
 
-                    // Generate hits
-                    if (record.Hits < 2 && (records.Count == 0 || record.Hits < records.Min(r => r.Hits)))
+                    // Compare hits
+                    if (records.Count == 0)
                     {
-                        hitString = _localizer(record.Hits == 0 ? "Notification/hitless" : "Notification/1 hit");
+                        isBetter = true;
+                    }
+                    else
+                    {
+                        var bestHitsSoFar = records.Min(r => r.Hits);
+                        if (record.Hits < bestHitsSoFar)
+                        {
+                            isBetter = true;
+                            // Keep hitsString
+                        }
+                        else if (record.Hits == bestHitsSoFar)
+                        {
+                            // Keep hitsString
+                        }
+                        else
+                        {
+                            hitsString = null;
+                        }
                     }
                 }
 
                 // Combine the strings
                 StringBuilder sb = new(winLossString);
-                if (timeString != null)
+                // If either time or hits is better, generate PB string
+                if (isBetter)
                 {
-                    if (hitString != null)
+                    if (timeString != null)
                     {
-                        sb.AppendFormat(" ({0} {1}, {2})", _localizer("Notification/PB"), timeString, hitString);
+                        if (hitsString != null)
+                        {
+                            sb.AppendFormat(" ({0} {1}, {2})", _localizer("Notification/PB"), timeString, hitsString);
+                        }
+                        else
+                        {
+                            sb.AppendFormat(" ({0} {1})", _localizer("Notification/PB"), timeString);
+                        }
+                    }
+                    else if (hitsString != null)
+                    {
+                        sb.AppendFormat(" ({0} {1})", _localizer("Notification/PB"), hitsString);
                     }
                     else
                     {
-                        sb.AppendFormat(" ({0} {1})", _localizer("Notification/PB"), timeString);
+                        // Not generating PB string, because both time and hits strings are null
                     }
-                }
-                else if (hitString != null)
-                {
-                    sb.AppendFormat(" ({0} {1})", _localizer("Notification/PB"), hitString);
                 }
 
                 _display(sb.ToString());
