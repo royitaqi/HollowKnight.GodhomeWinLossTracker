@@ -45,7 +45,6 @@ namespace GodhomeWinLossTracker
                 new DisplayInvoker(str => str.Localize(), ModDisplay.instance.Notify),
                 new EnemyStateObserver(),
                 new FightTracker(() => GameManagerUtils.PlayTimeMs),
-                new GameLoadDetector(),
                 new HoGStatsQueryProcessor(str => str.Localize()),
                 new PantheonStatsQueryProcessor(str => str.Localize()),
                 new RecordCollector(),

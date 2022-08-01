@@ -15,6 +15,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             On.HealthManager.TakeDamage += HealthManager_TakeDamage;
         }
 
+        public override void Unload()
+        {
+            base.Unload();
+            ModHooks.OnEnableEnemyHook -= ModHooks_OnEnableEnemyHook;
+            On.HealthManager.TakeDamage -= HealthManager_TakeDamage;
+        }
+
         private void HealthManager_TakeDamage(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
         {
             orig(self, hitInstance);

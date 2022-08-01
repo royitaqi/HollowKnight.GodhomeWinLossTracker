@@ -18,11 +18,15 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
             base.Load(mod, bus, logger);
-            Directory.CreateDirectory(ModSaveDirectory);
-            Directory.CreateDirectory(ModBackupDirectory);
-
             ModHooks.SavegameLoadHook += ModHooks_LoadHook;
             ModHooks.SavegameSaveHook += ModHooks_SaveHook;
+            Directory.CreateDirectory(ModSaveDirectory);
+            Directory.CreateDirectory(ModBackupDirectory);
+        }
+
+        public override void Unload()
+        {
+            // Don't unload
         }
 
         private void ModHooks_SaveHook(int obj)

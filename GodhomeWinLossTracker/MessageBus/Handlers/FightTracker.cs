@@ -11,6 +11,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _getGameTime = getGameTime;
         }
 
+        public override void Unload()
+        {
+            base.Unload();
+            Reset();
+            _currentSequence = null;
+        }
+
         // Facts:
         // A. It's possible to see BossDeath event after TKDreamDeath event.
         //   * This can happen when the boss has long death animation and has minions/hazards to kill TK while the death animation is playing. One example is The Collector.

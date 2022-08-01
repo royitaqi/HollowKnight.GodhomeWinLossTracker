@@ -8,6 +8,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
     {
         public override void OnMessage(IMessage msg)
         {
+            LogMessage(msg);
+
+            // Still call base handler to process any message
+            base.OnMessage(msg);
+        }
+
+        private void LogMessage(IMessage msg)
+        {
             string log = $"Message on bus: {msg.GetType().Name}: {msg}";
 
             var logLevel = msg.GetType().GetCustomAttribute<ModLogLevelAttribute>()?.LogLevel;

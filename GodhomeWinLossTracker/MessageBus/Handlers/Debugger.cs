@@ -18,6 +18,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             On.GameManager.Start += GameManager_Start;
         }
 
+        public override void Unload()
+        {
+            base.Unload();
+            ModHooks.HeroUpdateHook -= OnHeroUpdate;
+            On.HeroController.Start -= HeroController_Start;
+            On.GameManager.Start -= GameManager_Start;
+        }
+
         private void GameManager_Start(On.GameManager.orig_Start orig, GameManager self)
         {
             _mod.LogMod($"GameManager_Start");

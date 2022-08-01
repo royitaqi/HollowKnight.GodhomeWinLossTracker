@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 
 namespace GodhomeWinLossTracker.MessageBus
@@ -8,12 +9,38 @@ namespace GodhomeWinLossTracker.MessageBus
     {
         public virtual void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
+            logger.LogMod($"Loading {GetType().Name}");
             _mod = mod;
             _bus = bus;
             _logger = logger;
+            _loaded = true;
         }
 
-        public virtual void Unload() { }
+        public virtual void Unload()
+        {
+            _logger.LogMod($"Unloading {GetType().Name}");
+            _loaded = false;
+        }
+
+        public virtual void OnBusCommand(BusCommand cmd)
+        {
+            if (cmd.Command == BusCommand.Commands.Load)
+            {
+                // Only load if the handler hasn't been loaded
+                if (!_loaded)
+                {
+                    Load(_mod, _bus, _logger);
+                }
+            }
+            else if (cmd.Command == BusCommand.Commands.Unload)
+            {
+                // Only unload if the handler has been loaded
+                if (_loaded)
+                {
+                    Unload();
+                }
+            }
+        }
 
         public virtual void OnMessage(IMessage msg)
         {
@@ -73,5 +100,6 @@ namespace GodhomeWinLossTracker.MessageBus
         protected IGodhomeWinLossTracker _mod;
         protected TheMessageBus _bus;
         protected Modding.ILogger _logger;
+        protected bool _loaded = false;
     }
 }

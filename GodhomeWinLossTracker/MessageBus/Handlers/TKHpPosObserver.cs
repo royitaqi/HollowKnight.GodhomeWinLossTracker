@@ -12,6 +12,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             On.PlayerData.AddHealth += PlayerData_AddHealth;
         }
 
+        public override void Unload()
+        {
+            base.Unload();
+            On.PlayerData.TakeHealth -= PlayerData_TakeHealth;
+            On.PlayerData.AddHealth -= PlayerData_AddHealth;
+        }
+
         private void PlayerData_AddHealth(On.PlayerData.orig_AddHealth orig, PlayerData self, int amount)
         {
             int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
