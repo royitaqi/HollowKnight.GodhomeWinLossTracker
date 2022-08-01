@@ -49,6 +49,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
     internal class BossHpPosUpdater : Handler
     {
+        public override void Unload()
+        {
+            base.Unload();
+            _bossGOs.Clear();
+            _isInFight = false;
+            _maxHP = 0;
+        }
         public void OnBossChange(BossChange msg)
         {
             _bossGOs.Clear();

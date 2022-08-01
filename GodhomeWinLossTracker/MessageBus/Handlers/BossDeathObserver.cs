@@ -11,6 +11,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             On.BossSceneController.EndBossScene += OnEndBossScene;
         }
 
+        public override void Unload()
+        {
+            base.Unload();
+            On.BossSceneController.EndBossScene -= OnEndBossScene;
+        }
+
         private void OnEndBossScene(On.BossSceneController.orig_EndBossScene orig, BossSceneController self)
         {
             _mod.LogMod("OnEndBossScene");

@@ -12,6 +12,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             On.BossChallengeUI.Setup += BossChallengeUI_Setup;
         }
 
+        public override void Unload()
+        {
+            base.Unload();
+            On.BossDoorChallengeUI.Setup -= BossDoorChallengeUI_Setup;
+            On.BossChallengeUI.Setup -= BossChallengeUI_Setup;
+        }
+
         private void BossDoorChallengeUI_Setup(On.BossDoorChallengeUI.orig_Setup orig, BossDoorChallengeUI self, BossSequenceDoor door)
         {
             orig(self, door);

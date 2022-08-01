@@ -18,11 +18,15 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
             base.Load(mod, bus, logger);
-            Directory.CreateDirectory(ModSaveDirectory);
-            Directory.CreateDirectory(ModBackupDirectory);
-
             ModHooks.SavegameLoadHook += ModHooks_LoadHook;
             ModHooks.SavegameSaveHook += ModHooks_SaveHook;
+            Directory.CreateDirectory(ModSaveDirectory);
+            Directory.CreateDirectory(ModBackupDirectory);
+        }
+
+        public override void Unload()
+        {
+            // Don't unload
         }
 
         private void ModHooks_SaveHook(int obj)
@@ -106,7 +110,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
-                _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} records");
+                _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} wins/losses and {_mod.folderData.RawHits.Count} hits");
             }
             else
             {
