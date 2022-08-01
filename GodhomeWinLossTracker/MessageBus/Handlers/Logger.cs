@@ -14,6 +14,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             base.OnMessage(msg);
         }
 
+        public override void Unload()
+        {
+            // Don't unload
+        }
+
         private void LogMessage(IMessage msg)
         {
             string log = $"Message on bus: {msg.GetType().Name}: {msg}";

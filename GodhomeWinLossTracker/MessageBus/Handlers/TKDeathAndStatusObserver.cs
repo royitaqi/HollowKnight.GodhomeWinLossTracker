@@ -28,13 +28,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     .LocateMyFSM("Hero Death Anim")
                     .GetState("Anim Start") // For TK real death, use "Map Zone" instead of "Anim Start".
                     .AddMethod(Fsm_OnHeroDeathAnimStart);
-                _logger.LogMod("Hooked TK's FSM event: HeroDeathAnimStart");
+                _logger.LogMod("Hooked TK's FSM event: Fsm_OnHeroDeathAnimStart");
 
                 // Hook TK early damage event
                 hero.LocateMyFSM("ProxyFSM")
                     .GetState("Damaged")
                     .InsertMethod(0, Fsm_OnKnightDamaged);
-                _logger.LogMod("Hooked TK's FSM event: _OnKnightDamaged");
+                _logger.LogMod("Hooked TK's FSM event: Fsm_OnKnightDamaged");
 
                 _hooked = true;
             }

@@ -10,32 +10,33 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             base.Load(mod, bus, logger);
             ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
-
-            // Mark the bus' status
             _on = true;
+            _mod.LogModTEMP($"_on={_on}");
         }
 
         public override void Unload()
         {
             // Don't unload
-
-            // Mark the bus' status
-            _on = false;
         }
 
         private string ModHooks_BeforeSceneLoadHook(string sceneName)
         {
             _mod.LogMod($"OnSceneLoad: {sceneName}");
+            _mod.LogModTEMP($"_on={_on}");
 
             if (sceneName.StartsWith("GG_") && sceneName != "GG_Waterways")
             {
                 // Load the bus if it isn't loaded
                 if (!_on)
                 {
+                    _mod.LogModTEMP($"sending Load");
                     _bus.Put(new BusCommand { Command = BusCommand.Commands.Load });
+                    _on = true;
+                    _mod.LogModTEMP($"_on={_on}");
                 }
 
                 // Annouce scene change after bus is loaded
+                _mod.LogModTEMP($"sending new scene name");
                 _bus.Put(new SceneChange { Name = sceneName });
             }
             else
@@ -43,10 +44,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 // Unload the bus if it is loaded
                 if (_on)
                 {
+                    _mod.LogModTEMP($"sending Unload");
                     _bus.Put(new BusCommand { Command = BusCommand.Commands.Unload });
+                    _on = false;
+                    _mod.LogModTEMP($"_on={_on}");
                 }
             }
 
+            _mod.LogModTEMP($"end of function");
             return sceneName;
         }
 

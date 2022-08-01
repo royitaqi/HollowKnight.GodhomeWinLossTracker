@@ -100,6 +100,8 @@ namespace GodhomeWinLossTracker.MessageBus
         protected IGodhomeWinLossTracker _mod;
         protected TheMessageBus _bus;
         protected Modding.ILogger _logger;
+        // The value is undefined in Load() and Unload() functions. In other functions, the value indicates the loaded or unloaded state of the handler.
+        // When the buss has load/unload bus commands, first the value will be checked, and then the Load()/Unload() functions called only when necessary.
         protected bool _loaded = false;
     }
 }
