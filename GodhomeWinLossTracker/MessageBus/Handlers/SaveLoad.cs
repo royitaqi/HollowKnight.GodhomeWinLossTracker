@@ -110,7 +110,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
-                _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} records");
+                _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} wins/losses and {_mod.folderData.RawHits.Count} hits");
             }
             else
             {
