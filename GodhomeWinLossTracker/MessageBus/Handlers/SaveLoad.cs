@@ -41,6 +41,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         public void OnSaveFolderData(SaveFolderData msg)
         {
+            // Skip saving when data hasn't changed
+            if (GetDataHash() == _loadedDataHash)
+            {
+                _logger.LogMod($"Skipping save because current data hash equals to loaded data hash ({_loadedDataHash})");
+                return;
+            }
+
             WriteAndMaybeWait(() =>
             {
                 SaveFolderData(msg.Slot);
@@ -54,6 +61,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         public void OnLoadFolderData(LoadFolderData msg)
         {
             LoadFolderData(msg.Slot);
+            _loadedDataHash = GetDataHash();
+
             WriteAndMaybeWait(() =>
             {
                 BackupFolderData(msg.Slot);
@@ -62,6 +71,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         public void OnExportFolderData(ExportFolderData msg)
         {
+            // Skip saving when data hasn't changed
+            if (GetDataHash() == _loadedDataHash)
+            {
+                _logger.LogMod($"Skipping export because current data hash equals to loaded data hash ({_loadedDataHash})");
+                return;
+            }
+
             WriteAndMaybeWait(() =>
             {
                 ExportFolderData(msg.Slot);
@@ -230,5 +246,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             return $"Export.Hit.Save{slot}.txt";
         }
+
+        private int GetDataHash()
+        {
+            return _mod.folderData.RawWinLosses.Count + _mod.folderData.RawHits.Count;
+        }
+
+        private int _loadedDataHash;
     }
 }
