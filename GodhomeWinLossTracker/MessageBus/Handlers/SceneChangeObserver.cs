@@ -22,7 +22,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             _mod.LogMod($"OnSceneLoad: {sceneName}");
 
-            if (sceneName.StartsWith("GG_") && sceneName != "GG_Waterways")
+            if (sceneName.StartsWith("GG_") && sceneName != "GG_Waterways" && sceneName != "GG_Pipeway")
             {
                 // Load the bus if it isn't loaded
                 if (!_on)
