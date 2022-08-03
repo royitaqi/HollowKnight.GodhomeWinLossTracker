@@ -9,29 +9,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
             base.Load(mod, bus, logger);
-            ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
-            ModHooks.SceneChanged += ModHooks_SceneChanged;
             On.GameManager.BeginScene += GameManager_BeginScene;
-            On.GameManager.BeginSceneTransition += GameManager_BeginSceneTransition;
             _on = true;
-        }
-
-        private void GameManager_BeginSceneTransition(On.GameManager.orig_BeginSceneTransition orig, GameManager self, GameManager.SceneLoadInfo info)
-        {
-            orig(self, info);
-            _mod.LogModTEMP($"GameManager_BeginSceneTransition: {self.sceneName}");
-        }
-
-        private void GameManager_BeginScene(On.GameManager.orig_BeginScene orig, GameManager self)
-        {
-            orig(self);
-            _mod.LogModTEMP($"GameManager_BeginScene: {self.sceneName}");
-        }
-
-        private void ModHooks_SceneChanged(string sceneName)
-        {
-            _mod.LogModTEMP($"ModHooks_SceneChanged: {sceneName}");
-            _mod.LogModTEMP($"ModHooks_SceneChanged: scene={GameManager.instance.sceneName}");
         }
 
         public override void Unload()
@@ -39,9 +18,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // Don't unload
         }
 
-        private string ModHooks_BeforeSceneLoadHook(string sceneName)
+        private void GameManager_BeginScene(On.GameManager.orig_BeginScene orig, GameManager self)
         {
-            _mod.LogMod($"ModHooks_BeforeSceneLoadHook: {sceneName}");
+            orig(self);
+
+            string sceneName = self.sceneName;
+            _mod.LogMod($"OnSceneLoad: {sceneName}");
 
             if (sceneName.StartsWith("GG_") && sceneName != "GG_Waterways" && sceneName != "GG_Pipeway")
             {
@@ -64,8 +46,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     _on = false;
                 }
             }
-
-            return sceneName;
         }
 
         private bool _on = false;
