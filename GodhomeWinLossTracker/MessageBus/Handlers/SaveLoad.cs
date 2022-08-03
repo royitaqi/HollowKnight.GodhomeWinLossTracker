@@ -56,12 +56,17 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     ExportFolderData(msg.Slot);
                 }
             });
+
+            _loadedDataHash = GetDataHash();
+            _logger.LogMod($"Updating data hash to {_loadedDataHash}");
         }
 
         public void OnLoadFolderData(LoadFolderData msg)
         {
             LoadFolderData(msg.Slot);
+
             _loadedDataHash = GetDataHash();
+            _logger.LogMod($"Updating data hash to {_loadedDataHash}");
 
             WriteAndMaybeWait(() =>
             {
@@ -109,7 +114,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
 
             File.WriteAllText(path, jsonString);
-            _logger.LogMod($"{path} saved: {_mod.folderData.RawWinLosses.Count} records");
+            _logger.LogMod($"{path} saved: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits");
         }
 
         private void LoadFolderData(int slot)
@@ -126,7 +131,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
-                _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} wins/losses and {_mod.folderData.RawHits.Count} hits");
+                _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits");
             }
             else
             {
