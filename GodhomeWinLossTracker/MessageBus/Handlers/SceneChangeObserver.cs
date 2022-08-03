@@ -9,7 +9,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
             base.Load(mod, bus, logger);
-            ModHooks.BeforeSceneLoadHook += ModHooks_BeforeSceneLoadHook;
+            On.GameManager.BeginScene += GameManager_BeginScene;
             _on = true;
         }
 
@@ -18,8 +18,11 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // Don't unload
         }
 
-        private string ModHooks_BeforeSceneLoadHook(string sceneName)
+        private void GameManager_BeginScene(On.GameManager.orig_BeginScene orig, GameManager self)
         {
+            orig(self);
+
+            string sceneName = self.sceneName;
             _mod.LogMod($"OnSceneLoad: {sceneName}");
 
             if (sceneName.StartsWith("GG_") && sceneName != "GG_Waterways" && sceneName != "GG_Pipeway")
@@ -43,8 +46,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     _on = false;
                 }
             }
-
-            return sceneName;
         }
 
         private bool _on = false;
