@@ -7,9 +7,21 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class TKDeathAndStatusObserver: Handler
     {
-        public void OnSceneChange(SceneChange _)
+        // Shouldn't unload, because we need OnSceneChange() to get "Menu_Title" scene event and so we can clear _hooked.
+        public override void Unload()
         {
-            if (!_hooked)
+            // Don't unload
+        }
+
+        public void OnSceneChange(SceneChange msg)
+        {
+            // Clear _hooked, because the hero game object has been killed.
+            if (msg.Name == "Menu_Title")
+            {
+                _hooked = false;
+            }
+            // For other scenes (assuming in game), hook if haven't
+            else if (!_hooked)
             {
                 _logger.LogMod("Hooking TK's FSM events");
 

@@ -33,9 +33,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     _bus.Put(new BusCommand { Command = BusCommand.Commands.Load });
                     _on = true;
                 }
-
-                // Annouce scene change after bus is loaded
-                _bus.Put(new SceneChange { Name = sceneName });
             }
             else
             {
@@ -46,6 +43,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                     _on = false;
                 }
             }
+
+            // Annouce scene change after bus load/unload is done
+            _bus.Put(new SceneChange { Name = sceneName });
         }
 
         private bool _on = false;

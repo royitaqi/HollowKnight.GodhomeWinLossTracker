@@ -46,6 +46,13 @@ namespace GodhomeWinLossTracker.MessageBus
         {
             var msgType = msg.GetType();
 
+            // If handler is unloaded, don't process any message other than BusCommand.
+            // Have to process BusCommand because it might be a Load command.
+            if (!_loaded && msgType.Name != "BusCommand")
+            {
+                return;
+            }
+
             // Getting message processing method by name.
             // The method name should have been validated by `Validate()`.
             // Using name to find the method is faster than using paramter types.
