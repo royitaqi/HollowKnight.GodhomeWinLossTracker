@@ -84,11 +84,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }
                 else
                 {
-                    int requiredBossKills = GodhomeUtils.GetKillsRequiredToWin(_currentBoss.SceneName);
-                    DevUtils.Assert(_bossKills <= requiredBossKills, "Actually boss kill counts should never exceed required counts");
-
                     // 2.2 and 2.3
-                    EmitRawWinLoss(_bossKills == requiredBossKills);
+                    // Coding defensively here that if the boss kill count is greater than the required kills, we will still consider it a "win".
+                    int requiredBossKills = GodhomeUtils.GetKillsRequiredToWin(_currentBoss.SceneName);
+                    if (_bossKills > requiredBossKills)
+                    {
+                        _logger.LogModWarn($"Actually boss kill count ({_bossKills}) should not exceed required count ({requiredBossKills})");
+                    }
+                    EmitRawWinLoss(_bossKills >= requiredBossKills);
                 }
                 // 2.4
                 Reset();
