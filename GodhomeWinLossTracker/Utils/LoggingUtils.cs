@@ -22,13 +22,11 @@ namespace GodhomeWinLossTracker.Utils
         // - Unexpected issue but okay to continue.
         public static void LogModWarn(this Modding.ILogger logger, string message)
         {
-#if DEBUG
             if (LogLevel <= Modding.LogLevel.Warn)
             {
                 var time = DateTime.Now.ToString("HH':'mm':'ss'.'fff");
-                logger.Log($"{time} [W] {message}");
+                logger.LogWarn($"{time} [W] {message}");
             }
-#endif
         }
 
         // These logs are accepted:

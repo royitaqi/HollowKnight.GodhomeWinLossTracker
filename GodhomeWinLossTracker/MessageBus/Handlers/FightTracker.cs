@@ -76,10 +76,14 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             // If a boss fight was on going (and hasn't been concluded yet), it's time to conclude the boss fight and register either a win or a loss.
             if (_currentBoss != null)
             {
-                DevUtils.Assert(_tkDreamDeaths == 0 || _tkDreamDeaths == 1, "TK can only die zero or one time during a boss fight");
                 if (_tkDreamDeaths > 0)
                 {
                     // 2.1
+                    // Coding defensively here that if the TK death count is greater than 1, we will still consider it a "lose".
+                    if (_tkDreamDeaths > 1)
+                    {
+                        _logger.LogModWarn($"TK dream death count ({_tkDreamDeaths}) should only be 0 or 1");
+                    }
                     EmitRawWinLoss(false);
                 }
                 else
