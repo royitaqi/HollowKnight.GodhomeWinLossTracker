@@ -13,7 +13,7 @@ namespace UnitTests
 
         private static readonly RawWinLoss[] RecordsWon = PantheonScenes
             .Zip(Enumerable.Range(0, PantheonScenes.Length))
-            .Select(tuple => new RawWinLoss("", SequenceName, "", tuple.First, PantheonScenes.Length - tuple.Second, 0, 0, 0, 0, 0, 0, 0, G.RecordSources.Test))
+            .Select(tuple => new RawWinLoss("", SequenceName, "", tuple.First, PantheonScenes.Length - tuple.Second, 0, 0, 0, 0, 0, 0, 0, G.RecordSources.Test, 0))
             .ToArray();
         private static readonly string ExpectedWon = "Runs: 10 | PB: Win | null";
 
@@ -24,17 +24,17 @@ namespace UnitTests
                 // Wins in first segment
                 if (tuple.Second < PantheonScenes.Length / 2)
                 {
-                    return new RawWinLoss("", SequenceName, "", tuple.First, PantheonScenes.Length - tuple.Second, 1, 0, 0, 0, 0, 0, 0, G.RecordSources.Test);
+                    return new RawWinLoss("", SequenceName, "", tuple.First, PantheonScenes.Length - tuple.Second, 1, 0, 0, 0, 0, 0, 0, G.RecordSources.Test, 0);
                 }
                 // Lost in the middle
                 else if (tuple.Second == PantheonScenes.Length / 2)
                 {
-                    return new RawWinLoss("", SequenceName, "", tuple.First, 0, 1, 0, 0, 0, 0, 0, 0, G.RecordSources.Test);
+                    return new RawWinLoss("", SequenceName, "", tuple.First, 0, 1, 0, 0, 0, 0, 0, 0, G.RecordSources.Test, 0);
                 }
                 // No win/loss in second segment
                 else
                 {
-                    return new RawWinLoss("", SequenceName, "", tuple.First, 0, 0, 0, 0, 0, 0, 0, 0, G.RecordSources.Test);
+                    return new RawWinLoss("", SequenceName, "", tuple.First, 0, 0, 0, 0, 0, 0, 0, 0, G.RecordSources.Test, 0);
                 }
             })
             .ToArray();
@@ -42,7 +42,7 @@ namespace UnitTests
 
         private static readonly RawWinLoss[] RecordsFailedFromStart = PantheonScenes
             .Take(1)
-            .Select(scene => new RawWinLoss("", SequenceName, "", scene, 0, 4, 0, 0, 0, 0, 0, 0, G.RecordSources.Test))
+            .Select(scene => new RawWinLoss("", SequenceName, "", scene, 0, 4, 0, 0, 0, 0, 0, 0, G.RecordSources.Test, 0))
             .ToArray();
         private static readonly string ExpectedFailedFromStart = "Runs: 4 | null | Top churns: Vengefly King 0%";
 

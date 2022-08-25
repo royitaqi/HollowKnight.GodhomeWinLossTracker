@@ -18,8 +18,8 @@ namespace UnitTests
         private readonly BossHpPos BossHpPos40 = new BossHpPos { MaxHP = 100, HP = 40, X = 11, Y = 22 };
         private readonly BossHpPos BossHpPos20 = new BossHpPos { MaxHP = 100, HP = 20, X = 11, Y = 22 };
         private readonly BossHpPos BossHpPos0 = new BossHpPos { MaxHP = 100, HP = 0, X = 11, Y = 22 };
-        private readonly RawWinLoss Win = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 0, 0, 0.8f, 0, G.RecordSources.Test);
-        private readonly RawWinLoss Loss = new RawWinLoss("", SequenceName, BossName, BossSceneName, 0, 1, 0, 0, 0, 0, 0.8f, 0, G.RecordSources.Test);
+        private readonly RawWinLoss Win = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 0, 0, 0.8f, 0, G.RecordSources.Test, 0);
+        private readonly RawWinLoss Loss = new RawWinLoss("", SequenceName, BossName, BossSceneName, 0, 1, 0, 0, 0, 0, 0.8f, 0, G.RecordSources.Test, 0);
         private readonly BossDeath BossKill = new BossDeath();
         private readonly TKDreamDeath TKDeath = new TKDreamDeath();
         private readonly TKStatus TKStatus4 = new TKStatus { Status = 8375 };
@@ -293,7 +293,7 @@ namespace UnitTests
                 },
                 new TestUtils.MessageBusTestCase
                 {
-                    Name = testSet + "boss > tk death > tk death > non-boss => exception",
+                    Name = testSet + "boss > tk death > tk death > non-boss => loss",
                     InputMessages = new IMessage[]
                     {
                         Boss,
@@ -301,11 +301,18 @@ namespace UnitTests
                         TKDeath,
                         NonBoss,
                     },
-                    ExpectedException = new G.Utils.AssertionFailedException("TK can only die zero or one time during a boss fight"),
+                    ExpectedMessages = new IMessage[]
+                    {
+                        Boss,
+                        TKDeath,
+                        TKDeath,
+                        NonBoss,
+                        Loss,
+                    },
                 },
                 new TestUtils.MessageBusTestCase
                 {
-                    Name = testSet + "boss > boss kill > boss kill > non-boss => exception",
+                    Name = testSet + "boss > boss kill > boss kill > non-boss => win",
                     InputMessages = new IMessage[]
                     {
                         Boss,
@@ -313,7 +320,14 @@ namespace UnitTests
                         BossKill,
                         NonBoss,
                     },
-                    ExpectedException = new G.Utils.AssertionFailedException("Actually boss kill counts should never exceed required counts"),
+                    ExpectedMessages = new IMessage[]
+                    {
+                        Boss,
+                        BossKill,
+                        BossKill,
+                        NonBoss,
+                        Win,
+                    },
                 },
             };
         }
@@ -386,7 +400,8 @@ namespace UnitTests
                             (int)Math.Round(BossHpPos100.X),
                             (int)Math.Round(BossHpPos100.Y),
                             0,
-                            GodhomeWinLossTracker.RecordSources.Test
+                            GodhomeWinLossTracker.RecordSources.Test,
+                            0
                         ),
                         new RawHit(
                             "",
@@ -404,7 +419,8 @@ namespace UnitTests
                             (int)Math.Round(BossHpPos80.X),
                             (int)Math.Round(BossHpPos80.Y),
                             0,
-                            GodhomeWinLossTracker.RecordSources.Test
+                            GodhomeWinLossTracker.RecordSources.Test,
+                            0
                         ),
                         new RawHit(
                             "",
@@ -422,7 +438,8 @@ namespace UnitTests
                             (int)Math.Round(BossHpPos60.X),
                             (int)Math.Round(BossHpPos60.Y),
                             0,
-                            GodhomeWinLossTracker.RecordSources.Test
+                            GodhomeWinLossTracker.RecordSources.Test,
+                            0
                         ),
                     },
                 },
@@ -460,7 +477,8 @@ namespace UnitTests
                             (int)Math.Round(BossHpPos100.X),
                             (int)Math.Round(BossHpPos100.Y),
                             0,
-                            GodhomeWinLossTracker.RecordSources.Test
+                            GodhomeWinLossTracker.RecordSources.Test,
+                            0
                         ),
                         new RawHit(
                             "",
@@ -478,7 +496,8 @@ namespace UnitTests
                             (int)Math.Round(BossHpPos100.X),
                             (int)Math.Round(BossHpPos100.Y),
                             0,
-                            GodhomeWinLossTracker.RecordSources.Test
+                            GodhomeWinLossTracker.RecordSources.Test,
+                            0
                         ),
                     },
                 },
@@ -493,6 +512,97 @@ namespace UnitTests
                 testCase.HandlersCreator = _ => new[] { new FightTracker(() => 0) };
                 testCase.InputMessages = new[] { new SequenceChange { Name = "Test" } }.Concat(testCase.InputMessages);
                 testCase.OutputMessageFilter = msgs => msgs.Where(msg => msg is RawHit);
+
+                TestUtils.TestMessageBus(testCase);
+            }
+        }
+
+        private IEnumerable<TestUtils.MessageBusTestCase> GetTestCasesBossPhase()
+        {
+            string SequenceName = "Test";
+            string BossName = "Absoluate Radiance";
+            string BossSceneName = "GG_Radiance";
+            string BossState = "N/A"; // This is the hardcoded value in FightTracker as initial value for boss state.
+            BossChange NonBoss = new BossChange();
+            BossChange Boss = new BossChange(BossName, BossSceneName);
+            int MaxHP = 2280;
+            int Phase = 3;
+            int PhaseHP = 1280;
+            BossHpPos BossHpPos = new BossHpPos { MaxHP = MaxHP, HP = PhaseHP, X = 11, Y = 22 };
+            BossDeath BossKill = new BossDeath();
+            TKDreamDeath TKDeath = new TKDreamDeath();
+            TKStatus TKStatus4 = new TKStatus { Status = 8375 };
+            TKHit TKHit4To3 = new TKHit { Damage = 1, HealthAfter = 3 };
+            TKHpPos TKHpPos3 = new TKHpPos { HP = 3, X = 1, Y = 2 };
+
+            string testSet = "BossPhase - ";
+            return new[]
+            {
+                new TestUtils.MessageBusTestCase
+                {
+                    Name = testSet + "TK dies to AbsRad phase 3",
+                    InputMessages = new IMessage[]
+                    {
+                        Boss,
+                        BossHpPos, // From BossHpPosUpdater
+                        TKStatus4,
+                        TKHit4To3,
+                        TKHpPos3, // From TKHpPosObserver
+                        // Should RawHit
+                        TKDeath,
+                        NonBoss,
+                        // Should RawWinLoss
+                    },
+                    ExpectedMessages = new IMessage[]
+                    {
+                        new RawHit(
+                            "",
+                            SequenceName,
+                            BossName,
+                            BossSceneName,
+                            TKStatus4.Status,
+                            (int)Math.Round(TKHpPos3.X),
+                            (int)Math.Round(TKHpPos3.Y),
+                            TKHit4To3.HealthBefore,
+                            TKHit4To3.Damage,
+                            TKHit4To3.DamageSource,
+                            (float)PhaseHP / MaxHP,
+                            BossState,
+                            (int)Math.Round(BossHpPos.X),
+                            (int)Math.Round(BossHpPos.Y),
+                            0,
+                            GodhomeWinLossTracker.RecordSources.Test,
+                            Phase
+                        ),
+                        new RawWinLoss(
+                            "",
+                            SequenceName,
+                            BossName,
+                            BossSceneName,
+                            0,
+                            1,
+                            0,
+                            0,
+                            1,
+                            1,
+                            (float)PhaseHP / MaxHP,
+                            0,
+                            GodhomeWinLossTracker.RecordSources.Test,
+                            Phase
+                        ),
+                    },
+                },
+            };
+        }
+
+        [TestMethod]
+        public void TestBossPhase()
+        {
+            foreach (var testCase in GetTestCasesBossPhase())
+            {
+                testCase.HandlersCreator = _ => new[] { new FightTracker(() => 0) };
+                testCase.InputMessages = new[] { new SequenceChange { Name = "Test" } }.Concat(testCase.InputMessages);
+                testCase.OutputMessageFilter = msgs => msgs.Where(msg => msg is RawHit || msg is RawWinLoss);
 
                 TestUtils.TestMessageBus(testCase);
             }

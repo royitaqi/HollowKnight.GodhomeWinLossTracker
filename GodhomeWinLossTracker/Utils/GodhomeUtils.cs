@@ -140,6 +140,47 @@ namespace GodhomeWinLossTracker.Utils
             return PantheonBossSceneNames[index];
         }
 
+        internal static int GetBossPhase(string bossScene, int maxHP, int hp)
+        {
+            if (!BossPhases.ContainsKey(bossScene))
+            {
+                return 0;
+            }
+
+            int[][] configs = BossPhases[bossScene];
+            var config = configs.FirstOrDefault(config => config[0] == maxHP);
+            if (config == null)
+            {
+                GodhomeWinLossTracker.instance?.LogModWarn($"BossPhases data contains boss {bossScene} but has no matching configuration for max HP {maxHP}");
+                return 0;
+            }
+
+            int phase;
+            for (phase = 1; phase < config.Length; phase++)
+            {
+                if (hp > config[phase])
+                {
+                    break;
+                }
+            }
+            return phase;
+        }
+
+        internal static readonly Dictionary<string, int[][]> BossPhases = new()
+        {
+            { "GG_Radiance", new[] {
+                new[] {
+                    2280, // 1
+                    2280 - 400, // 2
+                    2280 - 400 - 450, // 3
+                    2280 - 400 - 450 - 300, // 4
+                    2280 - 400 - 450 - 300 - 750, // 5
+                    280, // 6
+                    int.MinValue,
+                },
+            } },
+        };
+
         internal static readonly List<string> PantheonDescriptionKeys = new()
         {
             "UI_CHALLENGE_DESC_1",

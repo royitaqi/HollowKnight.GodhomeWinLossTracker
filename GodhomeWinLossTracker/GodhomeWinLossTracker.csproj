@@ -19,7 +19,7 @@
     <FileVersion></FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
-    <Version>0.5.8</Version>
+    <Version>0.5.9</Version>
   </PropertyGroup>
 
   <Target Name="CopyModToGame" AfterTargets="PostBuildEvent">

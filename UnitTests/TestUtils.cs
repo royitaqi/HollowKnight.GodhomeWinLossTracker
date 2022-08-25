@@ -77,18 +77,21 @@ namespace UnitTests
                 }
                 catch (Exception ex)
                 {
+                    // Look for expected exception in inner exceptions, recursively.
+                    var innerEx = ex;
                     do
                     {
-                        if (ex.GetType() == typeof(AssertionFailedException) && ex.Message == testCase.ExpectedException.Message)
+                        if (innerEx.GetType() == typeof(AssertionFailedException) && innerEx.Message == testCase.ExpectedException.Message)
                         {
                             // Found the expected exception. Good.
                             return;
                         }
-                        ex = ex.InnerException;
+                        ex = innerEx;
+                        innerEx = innerEx.InnerException;
                     }
-                    while (ex != null);
+                    while (innerEx != null);
 
-                    // Didn't find expected exception. Bad.
+                    // Didn't find expected exception. Bad. Report the innermost exception.
                     throw new AssertFailedException($"{ex.ToString()}. {testCase}", ex);
                 }
             }

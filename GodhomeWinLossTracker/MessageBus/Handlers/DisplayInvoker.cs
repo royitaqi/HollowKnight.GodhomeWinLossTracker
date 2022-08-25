@@ -20,13 +20,20 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (_mod.globalData.NotifyForRecord)
             {
                 RawWinLoss record = msg.InnerMessage;
-                DevUtils.Assert(record.Wins > 0 != record.Losses > 0, "Only 1 win or 1 loss record can be notified");
+                DevUtils.Assert((record.Wins == 1) != (record.Losses == 1), "Only 1 win or 1 loss record can be notified");
 
                 // Generate the basic message
+                string format = (record.Wins, record.Losses, record.BossPhase) switch {
+                    (1, 0, _) => "Notification/Won against {0} in {1}",
+                    (0, 1, 0) => "Notification/Lost to {0} in {1}",
+                    (0, 1, _) => "Notification/Lost to {0} phase {2} in {1}",
+                    _ => throw new AssertionFailedException("Should never arrive here")
+                };
                 string winLossString = string.Format(
-                    _localizer(record.Wins > 0 ? "Notification/Won against {0} in {1}" : "Notification/Loss to {0} in {1}"),
+                    _localizer(format),
                     _localizer($"Boss/{record.BossName}"),
-                    _localizer($"Sequence/{record.SequenceName}")
+                    _localizer($"Sequence/{record.SequenceName}"),
+                    record.BossPhase
                 );
 
                 // Generate pb messsage

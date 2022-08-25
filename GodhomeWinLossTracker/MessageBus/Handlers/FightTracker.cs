@@ -142,7 +142,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 (int)Math.Round(_lastBossHpPos.X),
                 (int)Math.Round(_lastBossHpPos.Y),
                 _getGameTime() - _fightStartGameTime,
-                RecordSources.Mod
+                RecordSources.Mod,
+                GodhomeUtils.GetBossPhase(_currentBoss.SceneName, _lastBossHpPos.MaxHP, _lastBossHpPos.HP)
             ));
         }
 
@@ -176,7 +177,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _hitAmount,
                 _lastBossHpPos.MaxHP != 0 ? (float)_lastBossHpPos.HP / _lastBossHpPos.MaxHP : 1,
                 _getGameTime() - _fightStartGameTime,
-                RecordSources.Mod
+                RecordSources.Mod,
+                GodhomeUtils.GetBossPhase(_currentBoss.SceneName, _lastBossHpPos.MaxHP, _lastBossHpPos.HP)
             ));
         }
 

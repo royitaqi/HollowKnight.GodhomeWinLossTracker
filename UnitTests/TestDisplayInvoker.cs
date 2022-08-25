@@ -6,15 +6,19 @@ namespace UnitTests
         private const string SequenceName = "HoG";
         private const string BossName = "The Collector";
         private const string BossSceneName = "GG_Collector_V";
-        private readonly RawWinLoss WinHitless150s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 0, 0, 0, 150000, G.RecordSources.Test);
-        private readonly RawWinLoss Win1Hit150s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 1, 0, 0, 150000, G.RecordSources.Test);
-        private readonly RawWinLoss Win2Hits150s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 2, 0, 0, 150000, G.RecordSources.Test);
-        private readonly RawWinLoss WinHitless100s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 0, 0, 0, 100000, G.RecordSources.Test);
-        private readonly RawWinLoss Win1Hit100s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 1, 0, 0, 100000, G.RecordSources.Test);
-        private readonly RawWinLoss Win2Hits100s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 2, 0, 0, 100000, G.RecordSources.Test);
-        private readonly RawWinLoss WinHitless50s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 0, 0, 0, 50000, G.RecordSources.Test);
-        private readonly RawWinLoss Win1Hit50s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 1, 0, 0, 50000, G.RecordSources.Test);
-        private readonly RawWinLoss Win2Hits50s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 2, 0, 0, 50000, G.RecordSources.Test);
+        private const string BossName2 = "Absolute Radiance";
+        private const string BossSceneName2 = "GG_Radiance";
+        private readonly RawWinLoss WinHitless150s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 0, 0, 0, 150000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss Win1Hit150s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 1, 0, 0, 150000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss Win2Hits150s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 2, 0, 0, 150000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss WinHitless100s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 0, 0, 0, 100000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss Win1Hit100s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 1, 0, 0, 100000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss Win2Hits100s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 2, 0, 0, 100000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss WinHitless50s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 0, 0, 0, 50000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss Win1Hit50s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 1, 0, 0, 50000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss Win2Hits50s = new RawWinLoss("", SequenceName, BossName, BossSceneName, 1, 0, 0, 0, 2, 0, 0, 50000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss Lost100sNoPhase = new RawWinLoss("", SequenceName, BossName2, BossSceneName2, 0, 1, 0, 0, 0, 0, 0, 100000, G.RecordSources.Test, 0);
+        private readonly RawWinLoss Lost100sPhase3 = new RawWinLoss("", SequenceName, BossName2, BossSceneName2, 0, 1, 0, 0, 0, 0, 0, 100000, G.RecordSources.Test, 3);
 
         private IEnumerable<TestUtils.MessageBusTestCase> GetTestCases()
         {
@@ -61,6 +65,34 @@ namespace UnitTests
                     ExpectedMessages = new IMessage[]
                     {
                         new BusEvent { ForTest = true, Event = "Won against The Collector in HoG (PB 1:40)" },
+                    },
+                },
+                new TestUtils.MessageBusTestCase
+                {
+                    Name = "first record, lost, no phase",
+                    GlobalData = new G.GlobalData { NotifyForRecord = true },
+                    FolderData = new G.FolderData { RawWinLosses = new List<RawWinLoss>() },
+                    InputMessages = new IMessage[]
+                    {
+                        Lost100sNoPhase,
+                    },
+                    ExpectedMessages = new IMessage[]
+                    {
+                        new BusEvent { ForTest = true, Event = "Lost to Absolute Radiance in HoG" },
+                    },
+                },
+                new TestUtils.MessageBusTestCase
+                {
+                    Name = "first record, lost, has phase",
+                    GlobalData = new G.GlobalData { NotifyForRecord = true },
+                    FolderData = new G.FolderData { RawWinLosses = new List<RawWinLoss>() },
+                    InputMessages = new IMessage[]
+                    {
+                        Lost100sPhase3,
+                    },
+                    ExpectedMessages = new IMessage[]
+                    {
+                        new BusEvent { ForTest = true, Event = "Lost to Absolute Radiance phase 3 in HoG" },
                     },
                 },
 
