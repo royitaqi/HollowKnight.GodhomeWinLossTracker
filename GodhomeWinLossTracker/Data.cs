@@ -11,6 +11,7 @@ namespace GodhomeWinLossTracker
         [JsonProperty("RawRecords")]
         public List<RawWinLoss> RawWinLosses = new();
         public List<RawHit> RawHits = new();
+        public List<RawPhase> RawPhases = new();
     }
 
     [Serializable]

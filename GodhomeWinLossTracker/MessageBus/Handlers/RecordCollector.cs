@@ -16,5 +16,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             _mod.folderData.RawHits.Add(msg);
         }
+
+        public void OnRawPhase(RawPhase msg)
+        {
+            _mod.folderData.RawPhases.Add(msg);
+        }
     }
 }

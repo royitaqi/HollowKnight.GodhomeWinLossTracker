@@ -114,7 +114,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
 
             File.WriteAllText(path, jsonString);
-            _logger.LogMod($"{path} saved: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits");
+            _logger.LogMod($"{path} saved: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits, {_mod.folderData.RawPhases.Count} phases");
         }
 
         private void LoadFolderData(int slot)
@@ -131,7 +131,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 string jsonString = File.ReadAllText(path);
                 _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
-                _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits");
+                _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits, {_mod.folderData.RawPhases.Count} phases");
             }
             else
             {
@@ -163,7 +163,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         private void ExportFolderData(int slot)
         {
             ExportWinLoss(slot);
-            ExportTKHit(slot);
+            ExportHit(slot);
+            ExportPhases(slot);
             _bus.Put(new ExportedFolderData());
         }
 
@@ -178,15 +179,26 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             ExportList(filename, _mod.folderData.RawWinLosses);
         }
 
-        private void ExportTKHit(int slot)
+        private void ExportHit(int slot)
         {
-            string filename = GetExportTKHitSaveFilename(slot);
+            string filename = GetExportHitSaveFilename(slot);
             // Skip if not a valid profile ID
             if (filename == null)
             {
                 return;
             }
             ExportList(filename, _mod.folderData.RawHits);
+        }
+
+        private void ExportPhases(int slot)
+        {
+            string filename = GetExportPhaseSaveFilename(slot);
+            // Skip if not a valid profile ID
+            if (filename == null)
+            {
+                return;
+            }
+            ExportList(filename, _mod.folderData.RawPhases);
         }
 
         private void ExportList<T>(string filename, List<T> list)
@@ -243,7 +255,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             return $"Export.WinLoss.Save{slot}.txt";
         }
 
-        private string GetExportTKHitSaveFilename(int slot)
+        private string GetExportHitSaveFilename(int slot)
         {
             if (slot == 0)
             {
@@ -252,9 +264,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             return $"Export.Hit.Save{slot}.txt";
         }
 
+        private string GetExportPhaseSaveFilename(int slot)
+        {
+            if (slot == 0)
+            {
+                return null;
+            }
+            return $"Export.Phase.Save{slot}.txt";
+        }
+
         private int GetDataHash()
         {
-            return _mod.folderData.RawWinLosses.Count + _mod.folderData.RawHits.Count;
+            return _mod.folderData.RawWinLosses.Count + _mod.folderData.RawHits.Count + _mod.folderData.RawPhases.Count;
         }
 
         private int _loadedDataHash;

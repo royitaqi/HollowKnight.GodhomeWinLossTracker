@@ -47,6 +47,7 @@ namespace GodhomeWinLossTracker
                 new FightTracker(() => GameManagerUtils.PlayTimeMs),
                 new HoGStatsQueryProcessor(str => str.Localize()),
                 new PantheonStatsQueryProcessor(str => str.Localize()),
+                new PhaseTracker(() => GameManagerUtils.PlayTimeMs),
                 new RecordCollector(),
                 new SaveLoad(),
                 new SceneChangeObserver(),

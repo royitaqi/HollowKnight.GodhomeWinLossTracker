@@ -30,7 +30,7 @@ namespace GodhomeWinLossTracker.Utils
         }
 
         // These logs are accepted:
-        // - The only log for a *manually triggered*, *infrequent* event (a few in a minute).
+        // - The only log for a *manually triggered*, *infrequent* event (a few in a minute; e.g. change scene; start boss fight).
         public static void LogMod(this Modding.ILogger logger, string message)
         {
 #if DEBUG
@@ -43,8 +43,8 @@ namespace GodhomeWinLossTracker.Utils
         }
 
         // These logs are accepted:
-        // - The more detailed logs for a *manually triggered*, *infrequent* event (a few in a minute).
-        // - The only log for a *manually triggered*, *frequent* event (once every second).
+        // - The more detailed logs for a *manually triggered*, *infrequent* event (a few in a minute; e.g. change scene; start boss fight).
+        // - The only log for a *manually triggered*, *frequent* event (once every second; e.g. deal damage; take hits; TK status change).
         public static void LogModDebug(this Modding.ILogger logger, string message)
         {
 #if DEBUG
@@ -57,7 +57,7 @@ namespace GodhomeWinLossTracker.Utils
         }
 
         // These logs are accepted:
-        // - The more detailed logs for a *manually triggered*, *frequent* event (once every second).
+        // - The more detailed logs for a *manually triggered*, *frequent* event (once every second; e.g. deal damage; take hits; TK status change).
         // - Automatic events.
         public static void LogModFine(this Modding.ILogger logger, string message)
         {

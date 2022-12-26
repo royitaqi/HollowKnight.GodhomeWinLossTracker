@@ -140,6 +140,18 @@ namespace GodhomeWinLossTracker.Utils
             return PantheonBossSceneNames[index];
         }
 
+        internal static int GetBossInitialPhase(string bossScene)
+        {
+            if (!BossPhases.ContainsKey(bossScene))
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
+        }
+
         internal static int GetBossPhase(string bossScene, int maxHP, int hp)
         {
             if (!BossPhases.ContainsKey(bossScene))
