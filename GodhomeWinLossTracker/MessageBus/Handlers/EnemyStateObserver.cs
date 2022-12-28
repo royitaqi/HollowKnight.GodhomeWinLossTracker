@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 using Modding;
 using UnityEngine;
+using Vasi;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -30,15 +32,51 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private bool ModHooks_OnEnableEnemyHook(GameObject enemy, bool isAlreadyDead)
         {
+            _logger.LogModFine($"EnemyStateObserver: Setting up FSM for enemy {enemy.name}");
             var isBoss = IsBoss(enemy);
-            var fsm = isBoss ? SelectFSM(enemy) : null;
 
+            // Set up things with the boss' FSM
+            var fsm = isBoss ? SelectFSM(enemy) : null;
             if (fsm != null)
             {
+                _logger.LogModFine($"EnemyStateObserver:   FSM found for enemy: {fsm.FsmName}");
                 FsmUtils.HookAllStates(fsm, state =>
                 {
                     _bus.Put(new BossStateChange { BossGO = enemy, FSM = fsm, State = state });
                 });
+            }
+
+            // Set up damage source hooks
+            var damageSourceFsms = GodhomeUtils.GetBossDamageSourceFsms(enemy.name);
+            if (damageSourceFsms != null)
+            {
+                _logger.LogModFine($"EnemyStateObserver:   Damage source FSMs found for enemy: {String.Join(",", damageSourceFsms.Select(dsf => dsf.DamageSource + "-" + dsf.DamageSourceDetail))}");
+                foreach (var dsf in damageSourceFsms)
+                {
+                    var lambda = () =>
+                    {
+                        var damageSourceGo = dsf.VariableName != null
+                            ? fsm.FsmVariables.GetFsmGameObject(dsf.VariableName).Value
+                            : enemy;
+                        _logger.LogModFine($"EnemyStateObserver: Damage source {damageSourceGo.name} spawned");
+
+                        damageSourceGo.SetGoTag(dsf.DamageSource, dsf.DamageSourceDetail);
+
+                        _logger.LogModFine($"EnemyStateObserver: Damage source {damageSourceGo.name} tagged with \"{dsf.DamageSource}-{dsf.DamageSourceDetail}\"");
+                    };
+
+                    var fsmState = enemy
+                        .LocateMyFSM(dsf.FsmName)
+                        .GetState(dsf.StateName);
+
+                    if (dsf.ActionIndex == null)
+                    {
+                        fsmState.AddMethod(lambda);
+                    } else
+                    {
+                        fsmState.InsertMethod(dsf.ActionIndex.Value, lambda);
+                    }
+                }
             }
 
             _bus.Put(new EnemyEnabled { EnemyGO = enemy, IsBoss = isBoss, FSM = fsm });
@@ -54,6 +92,13 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private PlayMakerFSM SelectFSM(GameObject enemy)
         {
+            // Check if an FSM has been pre-decided for the boss.
+            var fsmName = GodhomeUtils.GetBossFsm(enemy.name);
+            if (fsmName != null)
+            {
+                return enemy.LocateMyFSM(fsmName);
+            }
+
             // Priority of selection:
             // 1. The only FSM
             // 2. The FSM with name "BOSS_NAME Control"
