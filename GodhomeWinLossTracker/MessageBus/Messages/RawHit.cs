@@ -37,7 +37,7 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
             string msg = $"TK hit by {BossName} in {SequenceName} at {TKHealthBefore} masks and {(int)(BossHP * 100)}% boss HP";
             if (DamageSource != null)
             {
-                msg += $" with boss attack {DamageSource}";
+                msg += $" with {DamageSource}";
             }
             if (BossPhase != 0)
             {

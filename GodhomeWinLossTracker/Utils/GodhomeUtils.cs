@@ -898,5 +898,36 @@ namespace GodhomeWinLossTracker.Utils
                 }
             },
         };
+
+        /**
+         * Cleans a damage source and maps it to a user-understandable description.
+         * Returns the cleaned string if the damage source is unknown.
+         */
+        internal static string MapDamageSource(string damageSource)
+        {
+            int idx = damageSource.IndexOf('(');
+            if (idx >= 0)
+            {
+                damageSource = damageSource.Substring(0, idx).Trim();
+            }
+            
+            if (DamageSourceMap.ContainsKey(damageSource))
+            {
+                return DamageSourceMap[damageSource];
+            }
+            return damageSource;
+        }
+
+        internal static readonly Dictionary<string, string> DamageSourceMap = new()
+        {
+            // AbsRad
+            { "Radiant Beam R", "Beam Wall" },
+            { "Radiant Beam", "Face Beam" },
+            { "Cloud Hazard", "Fall" },
+            { "Spike Collider", "Fall" },
+            { "Radiant Spike", "Floor Spike" },
+            // AbsRad, Soul Warrior
+            { "Hero Hurter", "Orb" },
+        };
     }
 }

@@ -45,11 +45,28 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (damage != 0)
             {
                 var tag = go.GetGoTag();
+                string damageSource = null;
+                string damageSourceDetail = null;
+
+                if (tag != null)
+                {
+                    // Has tag. Just use the tag.
+                    damageSource = tag.DamageSource;
+                    damageSourceDetail = tag.DamageSourceDetail;
+                }
+                else
+                {
+                    // Put mapped string as damage source and Go's name as detail.
+                    damageSource = GodhomeUtils.MapDamageSource(go.name);
+                    damageSourceDetail = go.name;
+                }
+
+
                 _bus.Put(new TKHit {
                     Damage = damage,
                     HealthAfter = healthAfter,
-                    DamageSource = tag != null ? tag.DamageSource : go.name,
-                    DamageSourceDetail = tag != null ? tag.DamageSourceDetail : null,
+                    DamageSource = damageSource,
+                    DamageSourceDetail = damageSourceDetail,
                 });
             }
         }
