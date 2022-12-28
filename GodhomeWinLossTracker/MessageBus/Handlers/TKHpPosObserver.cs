@@ -1,7 +1,6 @@
 ﻿using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 
-
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class TKHpPosObserver : Handler
