@@ -48,7 +48,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 string damageSource = null;
                 string damageSourceDetail = null;
 
-                if (tag != null)
+                if (tag != null && tag.DamageSource != null)
                 {
                     // Has tag. Just use the tag.
                     damageSource = tag.DamageSource;

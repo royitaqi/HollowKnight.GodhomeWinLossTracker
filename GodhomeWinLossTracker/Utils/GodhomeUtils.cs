@@ -819,6 +819,9 @@ namespace GodhomeWinLossTracker.Utils
         {
             public string FsmName;
             public string StateName;
+            // The index of where to insert the tagging logic.
+            // If unspecified, append at the end.
+            public int? ActionIndex;
             public string VariableName;
             public string DamageSource;
             public string DamageSourceDetail;
@@ -826,7 +829,44 @@ namespace GodhomeWinLossTracker.Utils
 
         internal static readonly Dictionary<string, DamageSourceFsm[]> BossGoNameToDamageSourceFsms = new()
         {
-            { "Absolute Radiance", new[]
+            {
+                "Mage Knight",
+                new[]
+                {
+                    // Down dash
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Mage Knight",
+                        StateName = "Up Tele",
+                        DamageSource = "Down Dash",
+                        DamageSourceDetail = "Up Tele",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Mage Knight",
+                        StateName = "Stomp Recover",
+                        DamageSource = null, // Clear GoTag
+                    },
+                    // Forward dash
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Mage Knight",
+                        StateName = "Slash Aim",
+                        ActionIndex = 0, // There is a possible jump to the end in this state at index 5
+                        DamageSource = "Forward Dash",
+                        DamageSourceDetail = "Slash Aim",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Mage Knight",
+                        StateName = "Slash Recover",
+                        DamageSource = null, // Clear GoTag
+                    },
+                }
+            },
+            {
+                "Absolute Radiance",
+                new[]
                 {
                     // Face swords
                     new DamageSourceFsm
@@ -926,8 +966,10 @@ namespace GodhomeWinLossTracker.Utils
             { "Cloud Hazard", "Fall" },
             { "Spike Collider", "Fall" },
             { "Radiant Spike", "Floor Spike" },
-            // AbsRad, Soul Warrior
+            // All - orb attacks
             { "Hero Hurter", "Orb" },
+            // All - bump into boss
+            { "Mage Knight", "Bump" },
         };
     }
 }

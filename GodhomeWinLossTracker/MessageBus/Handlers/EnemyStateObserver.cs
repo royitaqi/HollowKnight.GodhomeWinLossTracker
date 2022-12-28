@@ -44,24 +44,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 {
                     _bus.Put(new BossStateChange { BossGO = enemy, FSM = fsm, State = state });
                 });
-
-                _logger.LogModTEMP($"Boss FSM name = {fsm.name}");
-                if (fsm.name == "Mage Knight")
-                {
-                    fsm
-                        .GetState("Shoot")
-                        .AddMethod(() =>
-                        {
-                            var orb = fsm.FsmVariables.GetFsmGameObject("Orb").Value;
-                            _logger.LogModTEMP($"Orb name = {orb.name}");
-                            var tag = orb.AddComponent<GoTag>();
-                            _logger.LogModTEMP($"tag == null? {tag == null}");
-                            if (tag != null)
-                            {
-                                tag.DamageSource = "Shoot";
-                            }
-                        });
-                }
             }
 
             // Set up damage source hooks
@@ -71,36 +53,29 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _logger.LogModFine($"EnemyStateObserver:   Damage source FSMs found for enemy: {String.Join(",", damageSourceFsms.Select(dsf => dsf.DamageSource + "-" + dsf.DamageSourceDetail))}");
                 foreach (var dsf in damageSourceFsms)
                 {
-                    enemy
+                    var lambda = () =>
+                    {
+                        var damageSourceGo = dsf.VariableName != null
+                            ? fsm.FsmVariables.GetFsmGameObject(dsf.VariableName).Value
+                            : enemy;
+                        _logger.LogModFine($"EnemyStateObserver: Damage source {damageSourceGo.name} spawned");
+
+                        damageSourceGo.SetGoTag(dsf.DamageSource, dsf.DamageSourceDetail);
+
+                        _logger.LogModFine($"EnemyStateObserver: Damage source {damageSourceGo.name} tagged with \"{dsf.DamageSource}-{dsf.DamageSourceDetail}\"");
+                    };
+
+                    var fsmState = enemy
                         .LocateMyFSM(dsf.FsmName)
-                        .GetState(dsf.StateName)
-                        .AddMethod(() =>
-                        {
-                            var damageSourceGo = fsm.FsmVariables.GetFsmGameObject(dsf.VariableName).Value;
-                            _logger.LogModFine($"EnemyStateObserver: Damage source {damageSourceGo.name} spawned");
+                        .GetState(dsf.StateName);
 
-                            damageSourceGo.SetGoTag(dsf.DamageSource, dsf.DamageSourceDetail);
-
-                            //// Tag the damage source GO
-                            //GoTag tag = null;
-                            //if (!damageSourceGo.TryGetComponent<GoTag>(out tag))
-                            //{
-                            //    tag = damageSourceGo.AddComponent<GoTag>();
-                            //}
-                            //DevUtils.Assert(tag != null, $"Should be able to find/add a GoTag for damage source {damageSourceGo.name}");
-                            //tag.DamageSource = ;
-                            //tag.DamageSourceDetail = ;
-
-                            //// Override existing tags in children GO
-                            //var tags = damageSourceGo.GetComponentsInChildren<GoTag>(true);
-                            //foreach (var t in tags)
-                            //{
-                            //    t.DamageSource = dsf.DamageSource;
-                            //    t.DamageSourceDetail = dsf.DamageSourceDetail;
-                            //}
-
-                            _logger.LogModFine($"EnemyStateObserver: Damage source {damageSourceGo.name} tagged with \"{dsf.DamageSource}-{dsf.DamageSourceDetail}\"");
-                        });
+                    if (dsf.ActionIndex == null)
+                    {
+                        fsmState.AddMethod(lambda);
+                    } else
+                    {
+                        fsmState.InsertMethod(dsf.ActionIndex.Value, lambda);
+                    }
                 }
             }
 
