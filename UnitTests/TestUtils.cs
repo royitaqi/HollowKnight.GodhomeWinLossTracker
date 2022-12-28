@@ -14,7 +14,7 @@ namespace UnitTests
             public Func<IEnumerable<IMessage>, IEnumerable<IMessage>> OutputMessageFilter { get; set; }
             public IEnumerable<IMessage> InputMessages { get; set; }
             public IEnumerable<IMessage> ExpectedMessages { get; set; }
-            public AssertionFailedException ExpectedException { get; set; }
+            public Exception ExpectedException { get; set; }
 
             public override string ToString()
             {
@@ -73,7 +73,7 @@ namespace UnitTests
                 try
                 {
                     RunMessageBus(testCase.Name, testCase.GlobalData, testCase.LocalData, testCase.FolderData, testCase.HandlersCreator, testCase.InputMessages);
-                    throw new AssertFailedException($"Should throw AssertionFailedException(\"{testCase.ExpectedException.Message}\"). {testCase}");
+                    throw new AssertFailedException($"Should throw {testCase.ExpectedException.GetType().Name}(\"{testCase.ExpectedException.Message}\"). {testCase}");
                 }
                 catch (Exception ex)
                 {
@@ -81,7 +81,7 @@ namespace UnitTests
                     var innerEx = ex;
                     do
                     {
-                        if (innerEx.GetType() == typeof(AssertionFailedException) && innerEx.Message == testCase.ExpectedException.Message)
+                        if (innerEx.GetType() == testCase.ExpectedException.GetType() && innerEx.Message == testCase.ExpectedException.Message)
                         {
                             // Found the expected exception. Good.
                             return;
@@ -92,7 +92,7 @@ namespace UnitTests
                     while (innerEx != null);
 
                     // Didn't find expected exception. Bad. Report the innermost exception.
-                    throw new AssertFailedException($"{ex.ToString()}. {testCase}", ex);
+                    throw new AssertFailedException($"Should throw {testCase.ExpectedException.GetType().Name}(\"{testCase.ExpectedException.Message}\"). Caught {ex.GetType().Name}(\"{ex.Message}\"). {testCase}", ex);
                 }
             }
         }
