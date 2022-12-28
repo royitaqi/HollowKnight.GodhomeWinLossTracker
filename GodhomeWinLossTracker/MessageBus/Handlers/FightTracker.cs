@@ -137,6 +137,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 _lastTKHit.HealthBefore,
                 _lastTKHit.Damage,
                 _lastTKHit.DamageSource,
+                _lastTKHit.DamageSourceDetail,
                 _lastBossHpPos.MaxHP != 0 ? (float)_lastBossHpPos.HP / _lastBossHpPos.MaxHP : 1,
                 _bossState,
                 (int)Math.Round(_lastBossHpPos.X),
