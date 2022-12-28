@@ -37,13 +37,6 @@ namespace GodhomeWinLossTracker
         public FolderData folderData { get; set; }
     }
 
-    public enum DamageSources
-    {
-        Unknown = 0,
-        Enemy = 1,
-        Hazard = 2,
-    }
-
     public enum RecordSources
     {
         Manual = 0,
