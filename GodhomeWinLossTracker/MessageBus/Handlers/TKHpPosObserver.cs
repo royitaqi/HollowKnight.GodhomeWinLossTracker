@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using GodhomeWinLossTracker.MessageBus.Messages;
+﻿using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 
 
