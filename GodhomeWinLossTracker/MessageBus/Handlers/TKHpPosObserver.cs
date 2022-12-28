@@ -1,5 +1,8 @@
-﻿using GodhomeWinLossTracker.MessageBus.Messages;
+﻿using System;
+using System.Linq;
+using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
+
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -10,6 +13,25 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             base.Load(mod, bus, logger);
             On.PlayerData.TakeHealth += PlayerData_TakeHealth;
             On.PlayerData.AddHealth += PlayerData_AddHealth;
+            On.HeroController.TakeDamage += HeroController_TakeDamage;
+        }
+
+        private void HeroController_TakeDamage(On.HeroController.orig_TakeDamage orig, HeroController self, UnityEngine.GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
+        {
+            int healthBefore = PlayerData.instance.health + PlayerData.instance.healthBlue;
+            orig(self, go, damageSide, damageAmount, hazardType);
+            int healthAfter = PlayerData.instance.health + PlayerData.instance.healthBlue;
+            int damage = healthBefore - healthAfter;
+
+            if (damage != 0)
+            {
+                _logger.LogModFine($"TKHpPosObserver: HeroController_TakeDamage: {go.name} {healthBefore} {healthAfter}");
+                var tag = go.GetGoTag();
+                if (tag != null)
+                {
+                    _logger.LogModFine($"TKHpPosObserver: HeroController_TakeDamage: Damage source: \"{tag.DamageSource}-{tag.DamageSourceDetail}\"");
+                }
+            }
         }
 
         public override void Unload()

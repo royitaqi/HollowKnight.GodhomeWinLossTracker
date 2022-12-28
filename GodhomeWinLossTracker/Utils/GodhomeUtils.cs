@@ -202,7 +202,7 @@ namespace GodhomeWinLossTracker.Utils
             "UI_CHALLENGE_DESC_5",
         };
 
-        internal static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new Dictionary<string, int>
+        internal static readonly Dictionary<string, int> BossSceneToKillsRequiredToWin = new()
         {
             //[INFO]:[GodhomeWinLossTracker] - OnSceneLoad: GG_Vengefly_V
             //[INFO]:[GodhomeWinLossTracker] - Message on bus: Scene changed to GG_Vengefly_V
@@ -783,6 +783,119 @@ namespace GodhomeWinLossTracker.Utils
                 HoGEnglishName = "Radiance",
                 HoGDescriptionKey ="GG_S_RADIANCE",
                 HoGEnglishDescription = "Forgotten god of light",
+            },
+        };
+
+        internal static string GetBossFsm(string bossGoName)
+        {
+            if (BossGoNameToFsm.ContainsKey(bossGoName))
+            {
+                return BossGoNameToFsm[bossGoName];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        internal static readonly Dictionary<string, string> BossGoNameToFsm = new()
+        {
+            { "Absolute Radiance", "Attack Commands" },
+        };
+
+        internal static DamageSourceFsm[] GetBossDamageSourceFsms(string bossGoName)
+        {
+            if (BossGoNameToDamageSourceFsms.ContainsKey(bossGoName))
+            {
+                return BossGoNameToDamageSourceFsms[bossGoName];
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        internal struct DamageSourceFsm
+        {
+            public string FsmName;
+            public string StateName;
+            public string VariableName;
+            public string DamageSource;
+            public string DamageSourceDetail;
+        }
+
+        internal static readonly Dictionary<string, DamageSourceFsm[]> BossGoNameToDamageSourceFsms = new()
+        {
+            { "Absolute Radiance", new[]
+                {
+                    // Face swords
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Attack Commands",
+                        StateName = "CW Spawn",
+                        VariableName = "Attack Obj",
+                        DamageSource = "Face Swords",
+                        DamageSourceDetail = "CW Spawn",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Attack Commands",
+                        StateName = "CCW Spawn",
+                        VariableName = "Attack Obj",
+                        DamageSource = "Face Swords",
+                        DamageSourceDetail = "CCW Spawn",
+                    },
+                    // Rain swords
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Attack Commands",
+                        StateName = "Comb Top",
+                        VariableName = "Attack Obj",
+                        DamageSource = "Rain Swords",
+                        DamageSourceDetail = "Comb Top",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Attack Commands",
+                        StateName = "Comb Top 2",
+                        VariableName = "Attack Obj",
+                        DamageSource = "Rain Swords",
+                        DamageSourceDetail = "Comb Top 2",
+                    },
+                    // Sword wall
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Attack Commands",
+                        StateName = "Comb L",
+                        VariableName = "Attack Obj",
+                        DamageSource = "Sword Wall",
+                        DamageSourceDetail = "Comb L",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Attack Commands",
+                        StateName = "Comb R",
+                        VariableName = "Attack Obj",
+                        DamageSource = "Sword Wall",
+                        DamageSourceDetail = "Comb R",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Attack Commands",
+                        StateName = "Comb L 2",
+                        VariableName = "Attack Obj",
+                        DamageSource = "Sword Wall",
+                        DamageSourceDetail = "Comb L 2",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Attack Commands",
+                        StateName = "Comb R 2",
+                        VariableName = "Attack Obj",
+                        DamageSource = "Sword Wall",
+                        DamageSourceDetail = "Comb R 2",
+                    },
+                }
             },
         };
     }
