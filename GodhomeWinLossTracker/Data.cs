@@ -43,4 +43,10 @@ namespace GodhomeWinLossTracker
         Mod = 1,
         Test = 2,
     }
+
+    internal class VersionedFolderData
+    {
+        public string Version { get; set; }
+        public FolderData FolderData { get; set; }
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
@@ -91,7 +92,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private void WriteAndMaybeWait(Action write)
         {
-            Task writeJson = new Task(write);
+            // Wrap the write operation so that async exceptions that are thrown in the Task can be logged to mod log
+            Task writeJson = new Task(() =>
+            {
+                try
+                {
+                    write();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogModWarn($"Async exception was thrown from SaveLoad: {ex.ToString()}");
+                }
+            });
             writeJson.Start();
 
             // If writes should be synchronize, wait for writes.
@@ -111,9 +123,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             string path = Path.Combine(ModSaveDirectory, filename);
 
-            string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
+            SaveLoadUtils.Save(path, new VersionedFolderData
+            {
+                Version = _mod.GetVersion(),
+                FolderData = _mod.folderData,
+            });
 
-            File.WriteAllText(path, jsonString);
             _logger.LogMod($"{path} saved: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits, {_mod.folderData.RawPhases.Count} phases");
         }
 
@@ -127,10 +142,10 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             string path = Path.Combine(ModSaveDirectory, filename);
 
-            if (File.Exists(path))
+            var vfd = SaveLoadUtils.Load(path);
+            if (vfd != null)
             {
-                string jsonString = File.ReadAllText(path);
-                _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
+                _mod.folderData = vfd.FolderData;
                 _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits, {_mod.folderData.RawPhases.Count} phases");
             }
             else
@@ -243,7 +258,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 return null;
             }
-            return $"Data.Save{slot}.json";
+            return $"Data.Save{slot}";
         }
 
         private string GetExportWinLossSaveFilename(int slot)
