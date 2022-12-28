@@ -45,9 +45,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             if (damage != 0)
             {
                 var tag = go.GetGoTag();
-                _logger.LogModFine($"TKHpPosObserver: HeroController_TakeDamage: {go.name} {healthBefore}->{healthAfter} {tag?.DamageSource}-{tag?.DamageSourceDetail}");
-
-                _bus.Put(new TKHit { Damage = damage, HealthAfter = healthAfter, DamageSource = tag?.DamageSource, DamageSourceDetail = tag?.DamageSourceDetail });
+                _bus.Put(new TKHit {
+                    Damage = damage,
+                    HealthAfter = healthAfter,
+                    DamageSource = tag != null ? tag.DamageSource : go.name,
+                    DamageSourceDetail = tag != null ? tag.DamageSourceDetail : null,
+                });
             }
         }
 

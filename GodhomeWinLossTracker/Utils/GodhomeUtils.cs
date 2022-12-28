@@ -845,13 +845,13 @@ namespace GodhomeWinLossTracker.Utils
                         DamageSource = "Face Swords",
                         DamageSourceDetail = "CCW Spawn",
                     },
-                    // Rain swords
+                    // Sword rain
                     new DamageSourceFsm
                     {
                         FsmName = "Attack Commands",
                         StateName = "Comb Top",
                         VariableName = "Attack Obj",
-                        DamageSource = "Rain Swords",
+                        DamageSource = "Sword Rain",
                         DamageSourceDetail = "Comb Top",
                     },
                     new DamageSourceFsm
@@ -859,7 +859,7 @@ namespace GodhomeWinLossTracker.Utils
                         FsmName = "Attack Commands",
                         StateName = "Comb Top 2",
                         VariableName = "Attack Obj",
-                        DamageSource = "Rain Swords",
+                        DamageSource = "Sword Rain",
                         DamageSourceDetail = "Comb Top 2",
                     },
                     // Sword wall
