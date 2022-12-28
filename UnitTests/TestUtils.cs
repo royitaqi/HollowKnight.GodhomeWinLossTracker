@@ -150,7 +150,7 @@ namespace UnitTests
             return sb.ToString();
         }
 
-        private static string ConvertMessageToString(IMessage msg)
+        internal static string ConvertMessageToString(IMessage msg)
         {
             var skipNames = new HashSet<string>
             {

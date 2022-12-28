@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Threading.Tasks;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
@@ -13,7 +14,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
     internal class SaveLoad : Handler
     {
         private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
-        private static readonly string ModBackupDirectory = ModSaveDirectory + "/backup";
 
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {
@@ -21,7 +21,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             ModHooks.SavegameLoadHook += ModHooks_LoadHook;
             ModHooks.SavegameSaveHook += ModHooks_SaveHook;
             Directory.CreateDirectory(ModSaveDirectory);
-            Directory.CreateDirectory(ModBackupDirectory);
         }
 
         public override void Unload()
@@ -67,11 +66,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
             _loadedDataHash = GetDataHash();
             _logger.LogMod($"Updating data hash to {_loadedDataHash}");
-
-            WriteAndMaybeWait(() =>
-            {
-                BackupFolderData(msg.Slot);
-            });
         }
 
         public void OnExportFolderData(ExportFolderData msg)
@@ -91,7 +85,18 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private void WriteAndMaybeWait(Action write)
         {
-            Task writeJson = new Task(write);
+            // Wrap the write operation so that async exceptions that are thrown in the Task can be logged to mod log
+            Task writeJson = new Task(() =>
+            {
+                try
+                {
+                    write();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogModWarn($"Async exception was thrown from SaveLoad: {ex.ToString()}");
+                }
+            });
             writeJson.Start();
 
             // If writes should be synchronize, wait for writes.
@@ -111,9 +116,12 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             string path = Path.Combine(ModSaveDirectory, filename);
 
-            string jsonString = JsonConvert.SerializeObject(_mod.folderData, Formatting.Indented);
+            SaveLoadUtils.Save(path, new VersionedFolderData
+            {
+                Version = _mod.GetVersion(),
+                FolderData = _mod.folderData,
+            });
 
-            File.WriteAllText(path, jsonString);
             _logger.LogMod($"{path} saved: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits, {_mod.folderData.RawPhases.Count} phases");
         }
 
@@ -127,36 +135,16 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             }
             string path = Path.Combine(ModSaveDirectory, filename);
 
-            if (File.Exists(path))
+            var vfd = SaveLoadUtils.Load(path);
+            if (vfd != null)
             {
-                string jsonString = File.ReadAllText(path);
-                _mod.folderData = JsonConvert.DeserializeObject<FolderData>(jsonString);
+                _mod.folderData = vfd.FolderData;
                 _logger.LogMod($"{path} loaded: {_mod.folderData.RawWinLosses.Count} wins/losses, {_mod.folderData.RawHits.Count} hits, {_mod.folderData.RawPhases.Count} phases");
             }
             else
             {
                 _mod.folderData = new FolderData();
                 _logger.LogMod($"{path} doesn't exist. New/empty folder data will be used.");
-            }
-        }
-
-        private void BackupFolderData(int slot)
-        {
-            string filename = GetDataSaveFilename(slot);
-            // Skip if not a valid profile ID
-            if (filename == null)
-            {
-                return;
-            }
-            string path = Path.Combine(ModSaveDirectory, filename);
-
-            string backupSuffix = DateTime.Now.ToString("yyyyMMdd.HHmmss.fff") + ".json";
-            string backupPath = Path.Combine(ModBackupDirectory, $"{filename}.{backupSuffix}");
-
-            if (File.Exists(path))
-            {
-                File.Copy(path, backupPath);
-                _logger.LogMod($"{path} backed up to {backupPath}");
             }
         }
 
@@ -243,7 +231,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             {
                 return null;
             }
-            return $"Data.Save{slot}.json";
+            return $"Data.Save{slot}";
         }
 
         private string GetExportWinLossSaveFilename(int slot)
