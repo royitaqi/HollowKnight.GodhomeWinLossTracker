@@ -13,12 +13,16 @@ Either create an issue here in github.com, or join discord server: https://disco
 ## Features and screenshots
 
 All in Godhome (both Hall of Gods and pantheons):
-* [**Win/loss and hit stats tracking**](#winloss-and-hit-stats-tracking) happens automatically during boss fights.
+* [**Stats tracking**](#stats-tracking) happens automatically during boss fights.
   * Win/loss stats
-    <kbd>![win_loss_stats](https://user-images.githubusercontent.com/14790745/178205066-a55fed00-2781-4d1c-add4-19cb3e1befc1.png)</kbd>
+    <kbd>![win_loss_stats](https://user-images.githubusercontent.com/14790745/209986250-8e553795-defa-41a4-88a2-b9d44bde45fd.png)</kbd>
 
   * Hit stats
-    <kbd>![hit_stats](https://user-images.githubusercontent.com/14790745/178205079-78a5285e-7a53-42a7-81f1-18fb1c7cf51d.png)</kbd>
+    <kbd>![hit_stats](https://user-images.githubusercontent.com/14790745/209986007-4d9b9896-d87d-405b-9fc7-03d1e7639d7a.png)</kbd>
+    
+  * Phase stats
+    <kbd>![phase_stats](https://user-images.githubusercontent.com/14790745/209984975-20f605e6-1292-4fea-bf02-85ac82696da5.png)</kbd>
+
 
 * [**Localized stats display**](#localized-stats-display) are available in "Challenge" menu.
   <kbd>![hog_stats](https://user-images.githubusercontent.com/14790745/177464675-5db99441-65d8-4602-b30c-f38993e9f92d.png)</kbd>
@@ -35,6 +39,10 @@ All in Godhome (both Hall of Gods and pantheons):
 
   * [**Hit analyzer**](https://docs.google.com/spreadsheets/d/1xsUuBEHeK0b4EGq_4CI5zIcj9u66XZsUfC3Oq_eTMAw/edit#gid=668467742)
     <kbd>![stats_4](https://user-images.githubusercontent.com/14790745/178206768-b99b3525-9ed5-406a-bbbc-be18495b0a71.png)</kbd>
+    
+  * [**Phase analyzer**](https://docs.google.com/spreadsheets/d/1nLC3oCugQAmzn215GQGOMpfDGqmzEuUwvAEF6eZFu0I/edit#gid=510744525&range=A69) (for AbsRad)
+    <kbd>![stats_5](https://user-images.githubusercontent.com/14790745/209984705-13ed75b7-e2ed-4011-9692-2a5a3cfb4071.png)</kbd>
+
 
 
 Other features:
@@ -48,7 +56,7 @@ Other features:
 ---
 
 
-## Win/loss and hit stats tracking
+## Stats tracking
 
 The mod automatically tracks your boss fights' win/loss and hit stats.
 
@@ -65,20 +73,38 @@ The mod automatically tracks your boss fights' win/loss and hit stats.
 * Hit amount (the amount of masks your hero lost)
 * Boss HP (0~1, the amount of remaining HP the boss has at the end of the fight)
 * Fight length (in milliseconds, from entering to leaving boss scene)
+* Boss phase (0..6, the maximum boss phase achieved in the fight, 0 being no phase info)
 * See [example records](https://docs.google.com/spreadsheets/d/1_hglw_48YHSVsaKsA3nuqnbMoC0DbbKKl-uB-i44FbM/edit?usp=sharing)
 
-**Hit records** (one line of record per hit your hero took):
+**Hit records** (one line of record per hit the hero took):
 * Timestamp
 * Sequence name
 * Boss name
 * Scene name
 * Hero status (standing/walking, airborne, dashing, etc)
+* Hero position in scene
 * Hero health before took hit (in number of masks)
 * Damage amount (of the hit)
+* Damage source (e.g. for AbsRad, this can be "Orb", "Face Swords", etc)
+* Damage source detail (the actual name of the damage source used in game code)
 * Boss HP (0~1, at the time of the hit)
 * Boss state (the action the boss was performing at the time of the hit; can usually tell what attack the boss was using)
+* Boss position in scene
 * Time into fight (in milliseconds, from entering boss scene to the time of the hit)
 * See [example records](https://docs.google.com/spreadsheets/d/1xsUuBEHeK0b4EGq_4CI5zIcj9u66XZsUfC3Oq_eTMAw/edit?usp=sharing)
+* Boss phase (0..6, the boss phase in which the hero took the hit)
+
+**Phase records** (one line of record per phase the boss fight enters)
+* Timestamp
+* Sequence name
+* Boss name
+* Scene name
+* Phase (1..6)
+* Heals
+* Heal amount
+* Hits
+* Hit amount
+* Time spent in phase (in milliseconds, from entering the phase to leaving the phase)
 
 
 ## Localized stats display
