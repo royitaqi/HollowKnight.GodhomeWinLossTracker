@@ -98,6 +98,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _hitCount = -1;
             _hitAmount = -1;
             _phaseStartGameTime = -1;
+
+            _bus.Put(new PhaseChange(0));
         }
 
         private void Init(BossChange newBoss, int phase)
@@ -110,6 +112,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             _hitCount = 0;
             _hitAmount = 0;
             _phaseStartGameTime = _getGameTime();
+
+            _bus.Put(new PhaseChange(phase));
         }
 
         Func<long> _getGameTime;

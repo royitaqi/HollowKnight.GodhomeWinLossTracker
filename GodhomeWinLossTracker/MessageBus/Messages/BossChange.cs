@@ -18,8 +18,8 @@ namespace GodhomeWinLossTracker.MessageBus.Messages
         public bool IsNoBoss() => BossName == null;
         public bool IsBoss() => BossName != null;
 
-        public string BossName { get; }
-        public string SceneName { get; }
+        public string BossName { get; private set; }
+        public string SceneName { get; private set; }
 
         public override string ToString()
         {

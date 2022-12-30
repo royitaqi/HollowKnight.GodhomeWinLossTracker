@@ -13,7 +13,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
     internal class SaveLoad : Handler
     {
-        private static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
+        public static readonly string ModSaveDirectory = Application.persistentDataPath + "/GodhomeWinLossTracker";
 
         public override void Load(IGodhomeWinLossTracker mod, TheMessageBus bus, Modding.ILogger logger)
         {

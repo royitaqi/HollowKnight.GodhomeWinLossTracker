@@ -23,6 +23,8 @@ namespace GodhomeWinLossTracker
         public bool NotifyForExport = false;
         public bool AutoExport = false;
         public bool AsyncWrites = false;
+        public bool AutoScreenCapture = false;
+        public List<AutoScreenCaptureConfig> AutoScreenCaptureConfigs = new();
     }
 
     [Serializable]
@@ -48,5 +50,18 @@ namespace GodhomeWinLossTracker
     {
         public string Version { get; set; }
         public FolderData FolderData { get; set; }
+    }
+
+    public class AutoScreenCaptureConfig
+    {
+        public enum Triggers
+        {
+            Hits = 0,
+        }
+        public Triggers Trigger { get; set; }
+        public string SequenceName { get; set; }
+        public string SceneName { get; set; }
+        public string DamageSource { get; set; }
+        public int BossPhase { get; set; }
     }
 }

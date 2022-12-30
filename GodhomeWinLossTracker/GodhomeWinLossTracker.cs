@@ -41,7 +41,9 @@ namespace GodhomeWinLossTracker
                 new BossDeathObserver(),
                 new BossHpPosUpdater(),
                 new ChallengeMenuInjector(),
+#if DEBUG
                 new Debugger(),
+#endif
                 new DisplayInvoker(str => str.Localize(), ModDisplay.instance.Notify),
                 new EnemyStateObserver(),
                 new FightTracker(() => GameManagerUtils.PlayTimeMs),
@@ -51,6 +53,7 @@ namespace GodhomeWinLossTracker
                 new RecordCollector(),
                 new SaveLoad(),
                 new SceneChangeObserver(),
+                new ScreenCaptureTaker(),
                 new SequenceChangeDetector(),
                 new TKDeathAndStatusObserver(),
                 new TKHpPosObserver()

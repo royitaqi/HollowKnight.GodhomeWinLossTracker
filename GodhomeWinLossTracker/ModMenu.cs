@@ -110,6 +110,15 @@ namespace GodhomeWinLossTracker
                     },
                     () => GodhomeWinLossTracker.instance.globalData.AsyncWrites? 1 : 0
                 ),
+                new HorizontalOption(
+                    "Menu/Auto screen capture".Localize(),
+                    "Menu/Auto screen capture description".Localize(),
+                    new []{ "Menu/Off".Localize(), "Menu/On".Localize() },
+                    selectedIndex => {
+                        GodhomeWinLossTracker.instance.globalData.AutoScreenCapture = selectedIndex == 1;
+                    },
+                    () => GodhomeWinLossTracker.instance.globalData.AutoScreenCapture? 1 : 0
+                ),
 #if DEBUG
                 new MenuButton(
                     "DEBUG: Load FsmUtils",
