@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -15,7 +16,11 @@ namespace GodhomeWinLossTracker.Utils
         /**
          * Returns null when no loader can load (e.g. when there is no save file to load).
          */
-        public static VersionedFolderData Load(string path)
+        public static VersionedFolderData Load(
+            string path,
+            // For testing. See TestSaveLoadUtils.
+            IEnumerable<IFolderDataAdaptor> adaptors = null
+        )
         {
             // Run Loaders to load from available files
             VersionedFolderData vfd = Loaders
@@ -28,7 +33,7 @@ namespace GodhomeWinLossTracker.Utils
             }
 
             // Run Adaptors to migrate data towards latest version
-            foreach (var adaptor in Adaptors)
+            foreach (var adaptor in adaptors ?? Adaptors)
             {
                 // Only run adaptor if data version is smaller than adaptor's version
                 if (SaveLoadUtils.ConvertVersionToInt(vfd.Version) < SaveLoadUtils.ConvertVersionToInt(adaptor.AdaptToVersion))
@@ -88,6 +93,9 @@ namespace GodhomeWinLossTracker.Utils
         {
             // IMPORTANT: Adaptors should be listed in ascending order of their version numbers.
             new FolderDataAdaptor_v_0_7_1_0(),
+            new FolderDataAdaptor_v_0_7_4_0(),
+            // IMPORTANT: The closing adaptor should always be the last adaptor in the sequence.
+            new ClosingFolderDataAdaptor(),
         };
     }
 
@@ -193,9 +201,9 @@ namespace GodhomeWinLossTracker.Utils
     }
 
     /**
-     * # What changed in this version
+     * # What changed in v0.7.1.0
      * 
-     * In v0.7.1.0, in **hits* data, the type and meaning of "DamageSource" has changed:
+     * In **hits* data, the type and meaning of "DamageSource" has changed:
      * - Before v0.7.1.0: int, 0-2
      * - At v0.7.1.0: string, a human-understandable representation of the damage source, e.g. "Orb" or "Face Beam"
      * 
@@ -226,6 +234,84 @@ namespace GodhomeWinLossTracker.Utils
                     ds.SetValue(hit, null);
                     PropertyInfo dsd = typeof(RawHit).GetProperty("DamageSourceDetail");
                     dsd.SetValue(hit, null);
+                }
+            }
+
+            vfd.Version = AdaptToVersion;
+        }
+    }
+
+    /**
+     * # What changed in v0.7.4.0
+     * 
+     * In **hits* data, damage sources for Pure Vessel is added. Some
+     * 
+     * 
+     * # How does the adaptor migrate this change
+     * 
+     * - For all damage sources in previous **hits** data, try to replace them with DamageSourceNameMap.
+     */
+    internal class FolderDataAdaptor_v_0_7_4_0 : IFolderDataAdaptor
+    {
+        public string AdaptToVersion => "0.7.4.0";
+
+        public void Adapt(VersionedFolderData vfd)
+        {
+            DevUtils.Assert(
+                SaveLoadUtils.ConvertVersionToInt(vfd.Version) < SaveLoadUtils.ConvertVersionToInt(AdaptToVersion),
+                $"Should adaptor from a lower version ({vfd.Version}) to a higher version ({AdaptToVersion})"
+            );
+
+            foreach (var hit in vfd.FolderData.RawHits)
+            {
+                if (hit.DamageSource == "Slash1" || hit.DamageSource == "Slash2")
+                {
+                    // Use Reflection to work around the private setter
+                    PropertyInfo ds = typeof(RawHit).GetProperty("DamageSource");
+                    ds.SetValue(hit, "Triple Slash");
+                }
+                else if (hit.DamageSource == "hero_damager")
+                {
+                    // Use Reflection to work around the private setter
+                    PropertyInfo ds = typeof(RawHit).GetProperty("DamageSource");
+                    ds.SetValue(hit, "Focus");
+                }
+                else if (hit.DamageSource == "Dash Antic")
+                {
+                    // Use Reflection to work around the private setter
+                    PropertyInfo ds = typeof(RawHit).GetProperty("DamageSource");
+                    ds.SetValue(hit, "Dash");
+                }
+            }
+
+            vfd.Version = AdaptToVersion;
+        }
+    }
+
+    /**
+     * This is an adaptor that should always be run AFTER all versioned adaptors.
+     * 
+     * # What does this adaptor do
+     * - For all damage sources in previous **hits** data, try to replace them with DamageSourceNameMap.
+     */
+    internal class ClosingFolderDataAdaptor : IFolderDataAdaptor
+    {
+        public string AdaptToVersion => "99.99.99.99";
+
+        public void Adapt(VersionedFolderData vfd)
+        {
+            DevUtils.Assert(
+                SaveLoadUtils.ConvertVersionToInt(vfd.Version) < SaveLoadUtils.ConvertVersionToInt(AdaptToVersion),
+                $"Should adaptor from a lower version ({vfd.Version}) to a higher version ({AdaptToVersion})"
+            );
+
+            foreach (var hit in vfd.FolderData.RawHits)
+            {
+                if (hit.DamageSource != null && GodhomeUtils.DamageSourceNameMap.ContainsKey(hit.DamageSource))
+                {
+                    // Use Reflection to work around the private setter
+                    PropertyInfo ds = typeof(RawHit).GetProperty("DamageSource");
+                    ds.SetValue(hit, GodhomeUtils.DamageSourceNameMap[hit.DamageSource]);
                 }
             }
 

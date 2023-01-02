@@ -69,12 +69,17 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                         .LocateMyFSM(dsf.FsmName)
                         .GetState(dsf.StateName);
 
-                    if (dsf.ActionIndex == null)
+                    // Pick an index for the new action. Priority is:
+                    // 1) If dsf.ActionIndex is specified, use it.
+                    // 2) If dsf.VariableName is not specified, use 0 (because it doesn't have to wait for the variable object to be initialized by one of the actions.
+                    // 3) After all existing actions.
+                    int? index = dsf.ActionIndex ?? (dsf.VariableName == null ? 0 : null);
+                    if (index == null)
                     {
                         fsmState.AddMethod(lambda);
                     } else
                     {
-                        fsmState.InsertMethod(dsf.ActionIndex.Value, lambda);
+                        fsmState.InsertMethod(index.Value, lambda);
                     }
                 }
             }

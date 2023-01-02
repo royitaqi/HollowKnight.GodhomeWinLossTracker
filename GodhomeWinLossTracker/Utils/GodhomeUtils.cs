@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GodhomeWinLossTracker.Utils
 {
@@ -819,47 +820,155 @@ namespace GodhomeWinLossTracker.Utils
         {
             public string FsmName;
             public string StateName;
+            public string VariableName;
             // The index of where to insert the tagging logic.
             // If unspecified, append at the end.
             public int? ActionIndex;
-            public string VariableName;
             public string DamageSource;
             public string DamageSourceDetail;
         }
 
+        // This will cover two scenarios:
+        // 1) Any damage source that is a descendant of the boss GO. See GoTagExtension where the root lookup is implemented. E.g. Mage Knight's dash and stomp.
+        // 2) Any damage source that is NOT a descendant of the boss GO but the same damage source is used in different boss attacks. E.g. AbsRad's different sword attacks.
         internal static readonly Dictionary<string, DamageSourceFsm[]> BossGoNameToDamageSourceFsms = new()
         {
             {
-                "Mage Knight",
+                "Mage Knight", // Soul Warrior
                 new[]
                 {
-                    // Down dash
+                    // Stomp
                     new DamageSourceFsm
                     {
                         FsmName = "Mage Knight",
                         StateName = "Up Tele",
-                        DamageSource = "Down Dash",
+                        VariableName = null, // Soul Warrior itself
+                        DamageSource = "Stomp",
                         DamageSourceDetail = "Up Tele",
                     },
                     new DamageSourceFsm
                     {
                         FsmName = "Mage Knight",
                         StateName = "Stomp Recover",
+                        VariableName = null, // Soul Warrior itself
                         DamageSource = null, // Clear GoTag
                     },
-                    // Forward dash
+                    // Dash
                     new DamageSourceFsm
                     {
                         FsmName = "Mage Knight",
                         StateName = "Slash Aim",
-                        ActionIndex = 0, // There is a possible jump to the end in this state at index 5
-                        DamageSource = "Forward Dash",
+                        VariableName = null, // Soul Warrior itself
+                        DamageSource = "Dash",
                         DamageSourceDetail = "Slash Aim",
                     },
                     new DamageSourceFsm
                     {
                         FsmName = "Mage Knight",
                         StateName = "Slash Recover",
+                        VariableName = null, // Soul Warrior itself
+                        DamageSource = null, // Clear GoTag
+                    },
+                }
+            },
+            {
+                "HK Prime", // Pure Vessel
+                new[]
+                {
+                    // Triple Slash (SLASH)
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Slash1 Antic",
+                        VariableName = null, // PV itself
+                        DamageSource = "Triple Slash",
+                        DamageSourceDetail = "Slash1 Antic",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Slash3 Recover",
+                        VariableName = null, // PV itself
+                        DamageSource = null, // Clear GoTag
+                    },
+                    // Stomp + Floor Spike (DSTAB) (generates HK Plume Prime)
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Stomp Antic",
+                        VariableName = null, // PV itself
+                        DamageSource = "Stomp",
+                        DamageSourceDetail = "Stomp Antic",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Stomp Recover",
+                        VariableName = null, // PV itself
+                        DamageSource = null, // Clear GoTag
+                    },
+                    // Fan (SMALL SHOT) (generates Shot HK Shadow)
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "SmallShot Antic",
+                        VariableName = null, // PV itself
+                        DamageSource = "Fan",
+                        DamageSourceDetail = "SmallShot Antic",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "SmallShot Recover",
+                        VariableName = null, // PV itself
+                        DamageSource = null, // Clear GoTag
+                    },
+                    // Focus (FOCUS) (generates hero_damager)
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Focus Charge",
+                        VariableName = null, // PV itself
+                        DamageSource = "Focus",
+                        DamageSourceDetail = "Focus Charge",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Focus Wait",
+                        VariableName = null, // PV itself
+                        DamageSource = null, // Clear GoTag
+                    },
+                    // Dash (DASH)
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Dash Antic",
+                        VariableName = null, // PV itself
+                        DamageSource = "Dash",
+                        DamageSourceDetail = "Dash Antic",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Dash End",
+                        VariableName = null, // PV itself
+                        DamageSource = null, // Clear GoTag
+                    },
+                    // Tendril (TENDRIL)
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Tendril Antic",
+                        VariableName = null, // PV itself
+                        DamageSource = "Tendril",
+                        DamageSourceDetail = "Tendril Antic",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Tendril Recover",
+                        VariableName = null, // PV itself
                         DamageSource = null, // Clear GoTag
                     },
                 }
@@ -943,33 +1052,59 @@ namespace GodhomeWinLossTracker.Utils
          * Cleans a damage source and maps it to a user-understandable description.
          * Returns the cleaned string if the damage source is unknown.
          */
-        internal static string MapDamageSource(string damageSource)
+        internal static string MapDamageSource(GameObject go)
         {
+            // Walk up the parent tree for generic damage sources
+            while (DamageSourceLookAtParent.Contains(go.name))
+            {
+                go = go.transform.parent.gameObject;
+            }
+
+            // Clean up damage source name
+            string damageSource = go.name;
             int idx = damageSource.IndexOf('(');
             if (idx >= 0)
             {
                 damageSource = damageSource.Substring(0, idx).Trim();
             }
-            
-            if (DamageSourceMap.ContainsKey(damageSource))
+
+            // Map damage source name if exists
+            if (DamageSourceNameMap.ContainsKey(damageSource))
             {
-                return DamageSourceMap[damageSource];
+                return DamageSourceNameMap[damageSource];
             }
             return damageSource;
         }
 
-        internal static readonly Dictionary<string, string> DamageSourceMap = new()
+        // This should cover any damage source that is NOT a descendant of the boss GO AND can uniquely identify the boss attack.
+        // To cover other damage sources, see BossGoNameToDamageSourceFsms.
+        internal static readonly Dictionary<string, string> DamageSourceNameMap = new()
         {
-            // AbsRad
-            { "Radiant Beam R", "Beam Wall" },
-            { "Radiant Beam", "Face Beam" },
-            { "Cloud Hazard", "Fall" },
-            { "Spike Collider", "Fall" },
-            { "Radiant Spike", "Floor Spike" },
             // All - orb attacks
             { "Hero Hurter", "Orb" },
-            // All - bump into boss
-            { "Mage Knight", "Bump" },
+            // PV
+            { "Blast", "Focus" },
+            { "Counter", "Parry" },
+            { "Dash Stab", "Dash" },
+            { "Dstab Damage", "Dash" },
+            { "HK Plume Prime", "Floor Spike" },
+            { "Shot HK Shadow", "Fan" },
+            { "Slash", "Parry" },
+            { "T Hit", "Tendril" },
+            // AbsRad
+            { "Cloud Hazard", "Fall" },
+            { "Radiant Beam R", "Beam Wall" },
+            { "Radiant Beam", "Face Beam" },
+            { "Radiant Spike", "Floor Spike" },
+            { "Spike Collider", "Fall" },
+        };
+
+        // A set of in-game damage sources which are so generic that they don't indicate a specific boss attack.
+        // Their parents should be looked up to decide which boss attack caused the damage.
+        internal static readonly HashSet<string> DamageSourceLookAtParent = new()
+        {
+            // PV: Battle Scene -> Focus Blasts -> HK Prime Blast -> Blast -> hero_damager
+            "hero_damager",
         };
     }
 }

@@ -45,7 +45,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 string damageSource = null;
                 string damageSourceDetail = null;
 
-                if (tag != null && tag.DamageSource != null)
+                if (tag?.DamageSource != null)
                 {
                     // Has tag. Just use the tag.
                     damageSource = tag.DamageSource;
@@ -54,7 +54,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 else
                 {
                     // Put mapped string as damage source and Go's name as detail.
-                    damageSource = GodhomeUtils.MapDamageSource(go.name);
+                    damageSource = GodhomeUtils.MapDamageSource(go);
                     damageSourceDetail = go.name;
                 }
 
