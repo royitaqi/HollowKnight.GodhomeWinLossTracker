@@ -26,9 +26,9 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         
         public void OnSceneChange(SceneChange _)
         {
-            if (!_hooked)
+            if (!_hooked && HeroController.instance != null)
             {
-                HeroController.instance?.StartCoroutine(RefillMasksPeriodically());
+                HeroController.instance.StartCoroutine(RefillMasksPeriodically());
                 _hooked = true;
             }
         }
