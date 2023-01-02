@@ -40,8 +40,8 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         public void OnSaveFolderData(SaveFolderData msg)
         {
-            // Skip saving when data hasn't changed
-            if (GetDataHash() == _loadedDataHash)
+            // Skip saving when data hasn't changed and the save is not forced
+            if (GetDataHash() == _loadedDataHash && !msg.Forced)
             {
                 _logger.LogMod($"Skipping save because current data hash equals to loaded data hash ({_loadedDataHash})");
                 return;

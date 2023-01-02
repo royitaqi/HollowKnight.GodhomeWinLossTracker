@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
@@ -14,12 +15,22 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
         {
             base.Load(mod, bus, logger);
             ModHooks.HeroUpdateHook += OnHeroUpdate;
+            _hooked = false;
         }
 
         public override void Unload()
         {
             base.Unload();
             ModHooks.HeroUpdateHook -= OnHeroUpdate;
+        }
+        
+        public void OnSceneChange(SceneChange _)
+        {
+            if (!_hooked)
+            {
+                HeroController.instance?.StartCoroutine(RefillMasksPeriodically());
+                _hooked = true;
+            }
         }
 
         private void OnHeroUpdate()
@@ -71,34 +82,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }
 
                 // Save data right now!
-                _bus.Put(new SaveFolderData { Slot = GameManager.instance.profileID });
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha9))
-            {
-                _mod.LogMod("Debugger: '9' pressed - loading FsmUtils");
-
-                // Turn this line on/off to get FSM related events
-                //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Mage Knight" && fsm.FsmName == "Mage Knight");
-                //FsmUtils.Load(this, fsm => fsm.gameObject.name == "Giant Fly" && fsm.FsmName == "Big Fly Control");
-                FsmUtils.Load(_logger);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha8))
-            {
-                _mod.LogMod("Debugger: '8' pressed - loading ModDisplayUtils");
-
-                // Turn this line on/off to get ModDisplay related backdoors
-                ModDisplayUtils.Initialize(); 
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                //WipeRawHitTkStats();
-                //WipeRawHitTkBossPos();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
+                _bus.Put(new SaveFolderData { Slot = GameManager.instance.profileID, Forced = true });
             }
         }
 
@@ -131,5 +115,23 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
             LogLevel.Debug,
             LogLevel.Info,
         };
+
+        public static bool RefillMasks = false;
+        private bool _hooked = false;
+
+        private static IEnumerator RefillMasksPeriodically()
+        {
+            while (true)
+            {
+                yield return new WaitForSeconds(1);
+
+                // Do healing here
+                if (RefillMasks && PlayerData.instance.health != PlayerData.instance.maxHealth)
+                {
+                    HeroController.instance.AddHealth(PlayerData.instance.maxHealth);
+                    //PlayerData.instance.AddHealth(PlayerData.instance.maxHealth);
+                }
+            }
+        }
     }
 }

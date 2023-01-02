@@ -1,4 +1,5 @@
-﻿using GodhomeWinLossTracker.MessageBus.Messages;
+﻿using GodhomeWinLossTracker.MessageBus.Handlers;
+using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 using Modding;
 using Osmi.Utils;
@@ -108,7 +109,7 @@ namespace GodhomeWinLossTracker
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.AsyncWrites = selectedIndex == 1;
                     },
-                    () => GodhomeWinLossTracker.instance.globalData.AsyncWrites? 1 : 0
+                    () => GodhomeWinLossTracker.instance.globalData.AsyncWrites ? 1 : 0
                 ),
                 new HorizontalOption(
                     "Menu/Auto screen capture".Localize(),
@@ -117,13 +118,22 @@ namespace GodhomeWinLossTracker
                     selectedIndex => {
                         GodhomeWinLossTracker.instance.globalData.AutoScreenCapture = selectedIndex == 1;
                     },
-                    () => GodhomeWinLossTracker.instance.globalData.AutoScreenCapture? 1 : 0
+                    () => GodhomeWinLossTracker.instance.globalData.AutoScreenCapture ? 1 : 0
                 ),
 #if DEBUG
                 new MenuButton(
                     "DEBUG: Load FsmUtils",
                     "",
                     _ => FsmUtils.Load(GodhomeWinLossTracker.instance)
+                ),
+                new HorizontalOption(
+                    "DEBUG: Refill Masks",
+                    "",
+                    new []{ "Off", "On" },
+                    selectedIndex => {
+                        Debugger.RefillMasks = selectedIndex == 1;
+                    },
+                    () => Debugger.RefillMasks? 1 : 0
                 ),
 #endif
             });
