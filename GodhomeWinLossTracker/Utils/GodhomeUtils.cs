@@ -971,6 +971,29 @@ namespace GodhomeWinLossTracker.Utils
                         VariableName = null, // PV itself
                         DamageSource = null, // Clear GoTag
                     },
+                    // Parry (COUNTER)
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Counter Antic",
+                        VariableName = null, // PV itself
+                        DamageSource = "Parry",
+                        DamageSourceDetail = "Counter Antic",
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "Recollider",
+                        VariableName = null, // PV itself
+                        DamageSource = null, // Clear GoTag
+                    },
+                    new DamageSourceFsm
+                    {
+                        FsmName = "Control",
+                        StateName = "CSlash Recover",
+                        VariableName = null, // PV itself
+                        DamageSource = null, // Clear GoTag
+                    },
                 }
             },
             {
@@ -1084,13 +1107,15 @@ namespace GodhomeWinLossTracker.Utils
             { "Hero Hurter", "Orb" },
             // PV
             { "Blast", "Focus" },
-            { "Counter", "Parry" },
-            { "Dash Stab", "Dash" },
-            { "Dstab Damage", "Dash" },
+            //{ "Counter", "Parry" }, // migration
+            //{ "Dash Stab", "Dash" }, // migration
+            //{ "Dstab Damage", "Dash" }, // migration
             { "HK Plume Prime", "Floor Spike" },
             { "Shot HK Shadow", "Fan" },
-            { "Slash", "Parry" },
-            { "T Hit", "Tendril" },
+            //{ "Slash Antic", "Parry" }, // migration
+            //{ "Slash", "Parry" }, // migration
+            //{ "Slash2", "Parry" }, // migration
+            //{ "T Hit", "Tendril" }, // migration
             // AbsRad
             { "Cloud Hazard", "Fall" },
             { "Radiant Beam R", "Beam Wall" },
