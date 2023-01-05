@@ -1107,15 +1107,8 @@ namespace GodhomeWinLossTracker.Utils
             { "Hero Hurter", "Orb" },
             // PV
             { "Blast", "Focus" },
-            //{ "Counter", "Parry" }, // migration
-            //{ "Dash Stab", "Dash" }, // migration
-            //{ "Dstab Damage", "Dash" }, // migration
             { "HK Plume Prime", "Floor Spike" },
             { "Shot HK Shadow", "Fan" },
-            //{ "Slash Antic", "Parry" }, // migration
-            //{ "Slash", "Parry" }, // migration
-            //{ "Slash2", "Parry" }, // migration
-            //{ "T Hit", "Tendril" }, // migration
             // AbsRad
             { "Cloud Hazard", "Fall" },
             { "Radiant Beam R", "Beam Wall" },

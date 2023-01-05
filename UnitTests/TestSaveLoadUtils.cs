@@ -98,10 +98,9 @@ namespace UnitTests
             data.RawHits = new List<RawHit>
             {
                 // These should be replaced
-                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Shot HK Shadow", "Shot HK Shadow", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
-                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Dstab Damage", "Dstab Damage", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
+                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Blast", "Blast", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
                 new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "HK Plume Prime", "HK Plume Prime", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
-                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "T Hit", "T Hit", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
+                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Shot HK Shadow", "Shot HK Shadow", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
             };
 
             return new VersionedFolderData
@@ -117,10 +116,9 @@ namespace UnitTests
             data.RawHits = new List<RawHit>
             {
                 // These should be replaced
-                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Fan", "Shot HK Shadow", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
-                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Dash", "Dstab Damage", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
+                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Focus", "Blast", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
                 new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Floor Spike", "HK Plume Prime", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
-                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Tendril", "T Hit", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
+                new RawHit("test ts", "test seq", "test boss", "test scene", 0, 0, 0, 0, 0, "Fan", "Shot HK Shadow", 0, "test state", 0, 0, 0, RecordSources.Test, 0),
             };
 
             return new VersionedFolderData
