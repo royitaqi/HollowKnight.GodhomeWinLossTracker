@@ -44,6 +44,28 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 {
                     _bus.Put(new BossStateChange { BossGO = enemy, FSM = fsm, State = state });
                 });
+
+                if (Debugger.ForceBossAttacks)
+                {
+                    if (enemy.name == "HK Prime")
+                    {
+                        fsm.GetState("Choice P1").InsertMethod(0, () =>
+                        {
+                            fsm.SendEvent("DASH");
+                        });
+                    }
+                    if (enemy.name == "White Defender")
+                    {
+                        fsm.GetState("Move Choice").InsertMethod(0, () =>
+                        {
+                            fsm.SetState("Roll Speed");
+                        });
+                        fsm.GetState("Air Dive?").AddMethod(() =>
+                        {
+                            fsm.FsmVariables.GetFsmInt("Bounces").Value = 9999;
+                        });
+                    }
+                }
             }
 
             // Set up damage source hooks

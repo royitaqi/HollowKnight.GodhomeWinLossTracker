@@ -135,6 +135,15 @@ namespace GodhomeWinLossTracker
                     },
                     () => Debugger.RefillMasks? 1 : 0
                 ),
+                new HorizontalOption(
+                    "DEBUG: Force Boss Attacks",
+                    "",
+                    new []{ "Off", "On" },
+                    selectedIndex => {
+                        Debugger.ForceBossAttacks = selectedIndex == 1;
+                    },
+                    () => Debugger.ForceBossAttacks? 1 : 0
+                ),
 #endif
             });
         }

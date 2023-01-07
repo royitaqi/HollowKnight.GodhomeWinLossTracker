@@ -132,5 +132,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 }
             }
         }
+
+        public static bool ForceBossAttacks = false;
     }
 }
