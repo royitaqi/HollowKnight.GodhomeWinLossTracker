@@ -129,7 +129,6 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 if (RefillMasks && PlayerData.instance.health != PlayerData.instance.maxHealth)
                 {
                     HeroController.instance.AddHealth(PlayerData.instance.maxHealth);
-                    //PlayerData.instance.AddHealth(PlayerData.instance.maxHealth);
                 }
             }
         }
