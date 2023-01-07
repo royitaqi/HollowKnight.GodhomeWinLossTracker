@@ -30,13 +30,28 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
 
         private void ModHooks_SaveHook(int obj)
         {
+            _lastSlot = obj;
             _bus.Put(new SaveFolderData { Slot = obj });
         }
 
         private void ModHooks_LoadHook(int obj)
         {
+            _lastSlot = obj;
             _bus.Put(new LoadFolderData { Slot = obj });
         }
+
+        public void OnBossChange(BossChange msg)
+        {
+            // Save when game is advancing to the next boss (in Pantheons).
+            if (_lastBoss.IsBoss() && msg.IsBoss())
+            {
+                DevUtils.Assert(_lastSlot.HasValue, "Should have loaded/saved before entering a boss scene.");
+                _bus.Put(new SaveFolderData { Slot = _lastSlot.Value });
+            }
+            _lastBoss = msg;
+        }
+        private int? _lastSlot = null;
+        private BossChange _lastBoss = new BossChange();
 
         public void OnSaveFolderData(SaveFolderData msg)
         {
