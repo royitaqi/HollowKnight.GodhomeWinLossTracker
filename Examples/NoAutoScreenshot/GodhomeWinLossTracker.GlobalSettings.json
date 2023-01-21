@@ -1,0 +1,10 @@
+{
+  "ShowStatsInChallengeMenu": true,
+  "NotifyForRecord": true,
+  "NotifyPB": true,
+  "NotifyForExport": false,
+  "AutoExport": true,
+  "AsyncWrites": true,
+  "AutoScreenCapture": true,
+  "AutoScreenCaptureConfigs": []
+}
