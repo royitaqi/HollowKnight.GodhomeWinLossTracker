@@ -7,7 +7,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using Newtonsoft.Json;
-using Vasi;
 
 namespace GodhomeWinLossTracker.Utils
 {

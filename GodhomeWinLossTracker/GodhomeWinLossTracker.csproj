@@ -19,20 +19,22 @@
     <FileVersion></FileVersion>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <LangVersion>latest</LangVersion>
-    <Version>0.7.6</Version>
+    <Version>0.7.7</Version>
   </PropertyGroup>
 
-  <Target Name="CopyModToGame" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Debug'">
-    <MakeDir Condition="!Exists('$(HollowKnightRefs)/Mods/$(TargetName)/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)/" />
-    <Copy Condition="'$(DocumentationFile)' != ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
-    <Copy Condition="'$(DocumentationFile)' == ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)/" />
-  </Target>
-
-  <Target Name="ClearExportDir" AfterTargets="PostBuildEvent">
+  <Target Name="ClearModAndExportDir" AfterTargets="PostBuildEvent">
+    <RemoveDir Condition="Exists('$(HollowKnightRefs)/Mods/$(TargetName)_Debug/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)_Debug/" />
+    <RemoveDir Condition="Exists('$(HollowKnightRefs)/Mods/$(TargetName)_Release/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)_Release/" />
     <RemoveDir Condition="Exists('$(ExportDir)/')" Directories="$(ExportDir)/" />
   </Target>
 
-  <Target Name="ExportMod" AfterTargets="ClearExportDir" Condition="'$(Configuration)' == 'Release'">
+  <Target Name="CopyModToGame" AfterTargets="ClearModAndExportDir">
+    <MakeDir Condition="!Exists('$(HollowKnightRefs)/Mods/$(TargetName)_$(Configuration)/')" Directories="$(HollowKnightRefs)/Mods/$(TargetName)_$(Configuration)/" />
+    <Copy Condition="'$(DocumentationFile)' != ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb;$(TargetDir)/$(TargetName).xml" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)_$(Configuration)/" />
+    <Copy Condition="'$(DocumentationFile)' == ''" SourceFiles="$(TargetPath);$(TargetDir)/$(TargetName).pdb" DestinationFolder="$(HollowKnightRefs)/Mods/$(TargetName)_$(Configuration)/" />
+  </Target>
+
+  <Target Name="ExportMod" AfterTargets="ClearModAndExportDir" Condition="'$(Configuration)' == 'Release'">
     <MakeDir Directories="$(ExportDir)/" />
     <MakeDir Directories="$(ExportDir)/$(TargetName)/" />
     <MakeDir Directories="$(ExportDir)/$(TargetName)/zip/" />
@@ -78,11 +80,6 @@
     <!-- For fsm.MakeLog(). -->
     <Reference Include="SFCore">
       <HintPath>$(HollowKnightRefs)/Mods/SFCore/SFCore.dll</HintPath>
-    </Reference>
-
-    <!-- For PlayerMakerFSM.GetState() then .AddMethod(). -->
-    <Reference Include="Vasi, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(HollowKnightRefs)/Mods/Vasi/Vasi.dll</HintPath>
     </Reference>
 
     <Reference Include="Assembly-CSharp">

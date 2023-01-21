@@ -3,8 +3,8 @@ using System.Linq;
 using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
 using Modding;
+using SFCore.Utils;
 using UnityEngine;
-using Vasi;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -79,7 +79,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                         fsmState.AddMethod(lambda);
                     } else
                     {
-                        fsmState.InsertMethod(index.Value, lambda);
+                        fsmState.InsertMethod(lambda, index.Value);
                     }
                 }
             }

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Security.Cryptography;
 using GodhomeWinLossTracker.MessageBus;
 using GodhomeWinLossTracker.MessageBus.Handlers;
 using GodhomeWinLossTracker.Utils;
 using Modding;
 using UnityEngine;
-using Vasi;
 using Logger = GodhomeWinLossTracker.MessageBus.Handlers.Logger;
 
 namespace GodhomeWinLossTracker
@@ -20,9 +23,22 @@ namespace GodhomeWinLossTracker
         ///
         /// Mod
         ///
+#if (DEBUG)
+        public override string GetVersion() => version.Value + "-DEBUG";
+#else
+        public override string GetVersion() => version.Value;
+#endif
+        private static readonly Lazy<string> version = new(() =>
+        {
+            Assembly asm = typeof(GodhomeWinLossTracker).Assembly;
+            string ver = asm.GetName().Version.ToString();
+            using var sha = SHA256.Create();
+            using FileStream stream = File.OpenRead(asm.Location);
+            byte[] hashBytes = sha.ComputeHash(stream);
+            string hash = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
+            return $"{ver}-{hash.Substring(0, 6)}";
+        });
 
-        // <breaking change>.<non-breaking major feature/fix>.<non-breaking minor feature/fix>.<patch>
-        public override string GetVersion() => VersionUtil.GetVersion<GodhomeWinLossTracker>();
         // Make sure this mod is loaded after GodSeeker+.
         public override int LoadPriority() => 5;
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)

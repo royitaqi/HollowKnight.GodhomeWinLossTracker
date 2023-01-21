@@ -1,7 +1,7 @@
 ﻿using GodhomeWinLossTracker.MessageBus.Messages;
 using GodhomeWinLossTracker.Utils;
+using SFCore.Utils;
 using UnityEngine;
-using Vasi;
 
 namespace GodhomeWinLossTracker.MessageBus.Handlers
 {
@@ -45,7 +45,7 @@ namespace GodhomeWinLossTracker.MessageBus.Handlers
                 // Hook TK early damage event
                 hero.LocateMyFSM("ProxyFSM")
                     .GetState("Damaged")
-                    .InsertMethod(0, Fsm_OnKnightDamaged);
+                    .InsertMethod(Fsm_OnKnightDamaged, 0);
                 _logger.LogModDebug("Hooked TK's FSM event: Fsm_OnKnightDamaged");
 
                 _hooked = true;
