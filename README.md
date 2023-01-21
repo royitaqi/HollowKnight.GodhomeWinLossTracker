@@ -52,6 +52,9 @@ Other features:
 * [**Mod menu**](#mod-menu)
   <kbd>![Hollow Knight 6_26_2022 9_28_33 AM](https://user-images.githubusercontent.com/14790745/175827615-de51d8c0-44f0-4b66-83ab-aa3168c466d0.png)</kbd>
 
+* [**Auto-screenshot on hits**](#auto-screenshot-on-hits)
+  <kbd>![Hit__20230121 064121](https://user-images.githubusercontent.com/14790745/213871924-71674d8d-84a8-4439-8bd7-826e377a5b50.png)</kbd>
+
 
 ---
 
@@ -122,7 +125,7 @@ In the **mod's menu** (see below), either choose **Auto export stats** or **Expo
 
 **Step 2: Find the export**
 
-All stats can be found in the `GodhomeWinLossTracker` subfolder in your game's save folder.
+All stats can be found in the `GodhomeWinLossTracker` subfolder in the game's save folder.
 * On a PC: `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker"`
 
 The exported files are:
@@ -164,3 +167,28 @@ You can find the mod's menu by pausing the game -> "Options" -> "Mods" -> "Godho
 * **Export stats now**: While playing (i.e. when a game save is loaded), this will write stats into `Export.WinLoss.SaveX.txt` and `Export.Hit.SaveX.txt` in TSV format. They each contain win/loss and hit records. The exported files can then be imported into spreadsheet apps for data analysis (see examples above).
 
 * **Auto export stats**: This makes the mod export every time the game is being saved. This helps if you plan to constantly pull stats into data analysis.
+
+
+## Auto-screenshot on hits
+
+The mod can automatically take screenshots when the hero takes a hit. This feature can be turned on/off in the [mod menu](#mod-menu). The filters, however, need to be manually configured in the mod's global settings file.
+
+**Where to find the mod's global settings file:**
+The file can be found in the game's save folder, named "GodhomeWinLossTracker.GlobalSettings.json":
+* On a PC: `"%AppData%/../LocalLow/Team Cherry/Hollow Knight/GodhomeWinLossTracker.GlobalSettings.json"`
+
+**How to config:**
+Learning from examples is the fastest: [screenshot all hits](https://github.com/royitaqi/HollowKnight.GodhomeWinLossTracker/blob/main/Examples/AutoScreenshotOnAllHits/GodhomeWinLossTracker.GlobalSettings.json), [screenshot AbsRad's beam hits](https://github.com/royitaqi/HollowKnight.GodhomeWinLossTracker/blob/main/Examples/AutoScreenshotOnAbsRadBeamHits/GodhomeWinLossTracker.GlobalSettings.json), [disable screenshots](https://github.com/royitaqi/HollowKnight.GodhomeWinLossTracker/blob/main/Examples/NoAutoScreenshot/GodhomeWinLossTracker.GlobalSettings.json).
+
+If you want to customize your own config:
+* `"AutoScreenCapture"` should be a boolean value (`true` or `false`).
+* `"AutoScreenCaptureConfigs"` should be an array, containing zero or more config objects, which have the following fields.
+    * All config objects work as disjunction filters (OR). When hero is hit, the mod will take one screenshot if the situation matches any of the config objects.
+    * All fields within one config object work as conjunction filters (AND). For the situation to match a config object, the situation need to satisfy all of the specified fields.
+    * Fields:
+        * Only `"Trigger"` is required. All others are optional and be specified to scope down when to take screenshots.
+        * `"Trigger"` should always be `0`, which means "hits". This field exists for future extensibility.
+        * `"SequenceName"` should be one of "HoG", "P1" to "P5".
+        * `"SceneName"` should be one of the [boss scene names in Godhome](https://github.com/royitaqi/HollowKnight.GodhomeWinLossTracker/blob/main/GodhomeWinLossTracker/Utils/GodhomeUtils.cs#L411-L468) (the ones starting with "GG_").
+        * `"DamageSource"` should be one of the damage sources that show up in your **hit records**. If you don't know what this is, don't add this field or leave it to be `null`.
+        * `"BossPhase"` is only useful for AbsRad. Value can be from `1` to `6`. `0` means "all boss phases".
